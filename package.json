@@ -1,0 +1,32 @@
+{
+  "name": "odin-todos",
+  "version": "1.0.0",
+  "description": "Odin Project lesson on building a ToDo application using ES6 modules",
+  "private": true,
+  "scripts": {
+    "watch": "webpack --watch",
+    "start": "webpack serve --open",
+    "build": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cjacqo/odin-todos.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cjacqo/odin-todos/issues"
+  },
+  "homepage": "https://github.com/cjacqo/odin-todos#readme",
+  "devDependencies": {
+    "css-loader": "^6.7.1",
+    "csv-loader": "^3.0.3",
+    "html-webpack-plugin": "^5.5.0",
+    "lodash": "^4.17.21",
+    "style-loader": "^3.3.1",
+    "webpack": "^5.70.0",
+    "webpack-cli": "^4.9.2",
+    "webpack-dev-server": "^4.7.4"
+  }
+}
