@@ -32,6 +32,7 @@ const ListItem = (dataAttribute, itemData, controllerFunction) => {
             const chevron = document.createElement('i')
             icon.classList.add('fa-solid', 'fa-folder', 'yellow')
             chevron.classList.add('fa-solid', 'fa-chevron-right')
+            countBox.classList.add('countBox')
             let count = Controller.getItemCountInFolder(attributeValue)
             countText.innerText = count
             iconBox.appendChild(icon)
@@ -49,7 +50,7 @@ const ListItem = (dataAttribute, itemData, controllerFunction) => {
     li.appendChild(textBox)
     const editIconsContainer = document.createElement('div')
     editIconsContainer.classList.add('edit-icon-container', 'hidden', 'flex')
-    const toggleEditMenuIcon = EditIcon({iconClass: 'fa-ellipsis', tableItemId: attributeValue, actionType: 'open-edit-modal'})
+    const toggleEditMenuIcon = EditIcon({iconClass: 'fa-ellipsis', tableItemId: attributeValue, actionType: 'open-edit-modal', isYellow: true})
     const dragEditItemIcon = EditIcon({iconClass: 'fa-bars', tableItemId: attributeValue, actionType: 'drag-table-item'})
     li.addEventListener('click', () => {
         switch(controllerFunction) {
@@ -68,12 +69,12 @@ const ListItem = (dataAttribute, itemData, controllerFunction) => {
 }
 
 const EditIcon = (editObj) => {
-    const { iconClass, tableItemId, actionType } = editObj
+    const { iconClass, tableItemId, actionType, isYellow } = editObj
     const editIconContainer = document.createElement('div')
     const editIcon = document.createElement('i')
     editIconContainer.setAttribute('data-table-item-id', tableItemId)
-    editIconContainer.classList.add('edit-icon-container')
-    editIcon.classList.add('fa-solid', `${iconClass}`)
+    editIconContainer.classList.add('edit-icon-wrapper')
+    editIcon.classList.add('fa-solid', `${iconClass}`, `${isYellow && 'yellow'}`)
     editIconContainer.appendChild(editIcon)
     return editIconContainer
 }

@@ -181,13 +181,15 @@ const Controller = (() => {
     // --- Toggle Edit
     const toggleEdit = (isChecked) => {
         let editContainers = document.querySelectorAll('.edit-icon-container')
-        console.log(editContainers)
+        let countContainers = document.querySelectorAll('.countBox')
 
         if (isChecked) {
             editContainers.forEach(editContainer => editContainer.classList.remove('hidden'))
+            countContainers.forEach(editContainer => editContainer.classList.add('hidden'))
             console.log("DO STUFF DEPENDING ON WHAT IS BEING EDITED")
         } else {
             editContainers.forEach(editContainer => editContainer.classList.add('hidden'))
+            countContainers.forEach(editContainer => editContainer.classList.remove('hidden'))
             console.log("TURN OFF EDITING STATE & VIEW")
         }
     }

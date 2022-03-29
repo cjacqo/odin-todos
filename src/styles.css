@@ -203,6 +203,8 @@ h4, h6 {
     font-size: var(--slightly-bigger);
     min-height: 40px;
     gap: 10px;
+    position: relative;
+    overflow: hidden;
 }
 
 .table-item > .small-flex {
@@ -223,21 +225,39 @@ h4, h6 {
 .table-item :nth-child(2) > p { font-size: var(--normal); }
 .table-item :nth-child(3) { order: 2; font-size: var(--slightly-bigger) !important; }
 
+.countBox {
+    opacity: 1;
+    transition: opacity 350ms ease-in-out;
+}
+
+.countBox.hidden {
+    opacity: 0;
+}
+
 .fa-chevron-right {
     font-size: var(--small) !important;
 }
 
 .edit-icon-container {
-    position: relative;
-    border: 1px solid #000;
+    position: absolute;
+    width: 20%;
+    height: 100%;
+    right: 0;
+    /* border: 1px solid #000; */
     text-align: center;
     align-items: center;
     justify-content: center;
+    transition: right 350ms ease-in-out;
 }
 .edit-icon-container.hidden {
-    display: none;
+    right: -100%;
 }
 .edit-icon-container > * {
+}
+
+.edit-icon-wrapper {
+    font-size: var(--x-small);
+    line-height: 0;
 }
 
 .search-bar-container {
