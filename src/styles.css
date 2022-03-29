@@ -11,3 +11,26 @@
 .show-edit-options {
     background-color: red;
 }
+
+body {
+    font-family: sans-serif;
+}
+
+/* @@TEST */
+/* --- Testing styles of the header text elements */
+h4, h6 {
+    margin: 2px 0;
+}
+
+.main-title {
+    font-size: 32px;
+    font-weight: 800;
+}
+.back-button {
+    font-size: 16px;
+}
+
+.main-title,
+#headerTitle.back-button {
+    transition: font-size 150ms ease-out;
+}

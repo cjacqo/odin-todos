@@ -5,12 +5,13 @@ import { Folders, Items } from "../data/data"
 import PageView from "../view"
 
 const Controller = (() => {
-    let _state = { folder: '', item: '' }
+    let _state = { folder: null, item: null }
+    let _prevState = { folder: null, item: null }
     let _view = PageView
 
     // --- INIT --- //
     // --- Starts the app with initial view
-    const init = () => { return _view.init(getFoldersFromDb()) }
+    const init = () => { return _view.init(getFoldersFromDb(), _state) }
 
     // --- DATA HANDLERS --- //
     const getFolders = () => { return Folders }
@@ -26,10 +27,44 @@ const Controller = (() => {
     // --- Handle changing the page titles when a table item
     //     is clicked. If it is a folder that is clicked, the
     //     page title will change to the name of the folder
-    const changeHeaderTitle = (theCase, folderName) => {
+    const changeHeaderTitle = (action, state) => {
         const headerTitle = Header.getHeaderTitle()
-        _state.folder = folderName
-        headerTitle.innerText = _state.folder
+        const subHeaderTitle = Header.getSubHeaderTitle()
+
+        switch(action) {
+            case 'open-folder':
+                headerTitle.innerText = 'Folders'
+                headerTitle.classList.remove('main-title')
+                headerTitle.classList.add('back-button')
+                if (_state.folder) {
+                    headerTitle.removeEventListener('click', changeHeaderTitle())
+                    _state = { folder: state.folder, item: null }
+                    headerTitle.addEventListener('click', () => {
+                        changeHeaderTitle('default', state)
+                    })
+                }
+                subHeaderTitle.classList.remove('hidden')
+                subHeaderTitle.classList.add('main-title')
+                subHeaderTitle.innerText = state.folder
+                break
+            case 'open-item':
+                headerTitle.innerText = state.folder
+                subHeaderTitle.innerText = state.item
+                headerTitle.removeEventListener('click', changeHeaderTitle())
+                headerTitle.addEventListener('click', () => {
+                    changeHeaderTitle('open-folder', state)
+                })
+                break
+            case 'default':
+                console.log(_state)
+                subHeaderTitle.classList.remove('main-title')
+                subHeaderTitle.classList.add('hidden')
+                headerTitle.classList.remove('back-button')
+                headerTitle.classList.add('main-title')
+                headerTitle.removeEventListener('click', changeHeaderTitle())
+                subHeaderTitle.innerText = ''
+                break
+        }
     }
     // --- Update the tables when new data is added
     const updateTable = (tableType) => {
@@ -53,8 +88,9 @@ const Controller = (() => {
         let hiddenTable
         switch(type) {
             case 'folder':
-                // - change the header title
-                changeHeaderTitle('folder', title)
+                // - change the header title for opening a folder
+                _state.folder = title
+                changeHeaderTitle('open-folder', _state)
                 visibleTable = Main.getItemsTable()
                 hiddenTable = Main.getFoldersTable()
                 // - get data
@@ -90,6 +126,9 @@ const Controller = (() => {
     }
     // --- Toggle Item
     const toggleItem = ({ type, value, title }) => {
+        // - change the header title
+        _state.item = title
+        changeHeaderTitle('open-item', _state)
         // !!! TODO !!!
         // COMPLETE THE FUNCTIONS TO OPEN THE EDIT VIEW OF THE SELECTED ITEM
         console.log("OPEN ITEM: " + title)

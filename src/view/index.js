@@ -8,10 +8,12 @@ const PageView = (() => {
     let _footer = Footer
 
     // --- Initializes the DOM elements of the app and appends to the DOM
-    const init = (data) => {
+    const init = (data, state) => {
         // - create the parent container for the app
         let _appContainer = document.createElement('div')
         _appContainer.setAttribute('id', 'appContainer')
+
+        console.log(state)
 
         // - initialize the DOM elements for each section and pass data where
         //   needed
