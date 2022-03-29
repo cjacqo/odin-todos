@@ -16,10 +16,15 @@ const ListItem = (dataAttribute, itemData, controllerFunction) => {
     const { elementText } = itemData
 
     const li = document.createElement('div')
+    const textBox = document.createElement('p')
     li.classList.add('table-item', 'flex')
     li.setAttribute(attributeName, attributeValue)
-    li.innerText = elementText
-    const editIcon = EditIcon(attributeValue)
+    textBox.innerText = elementText
+    li.appendChild(textBox)
+    const editIconsContainer = document.createElement('div')
+    editIconsContainer.classList.add('edit-icon-container', 'hidden', 'flex')
+    const toggleEditMenuIcon = EditIcon({iconClass: 'fa-ellipsis', tableItemId: attributeValue, actionType: 'open-edit-modal'})
+    const dragEditItemIcon = EditIcon({iconClass: 'fa-bars', tableItemId: attributeValue, actionType: 'drag-table-item'})
     li.addEventListener('click', () => {
         switch(controllerFunction) {
             case 'toggle-table':
@@ -30,16 +35,19 @@ const ListItem = (dataAttribute, itemData, controllerFunction) => {
                 break
         }
     })
-    li.appendChild(editIcon)
+    editIconsContainer.appendChild(toggleEditMenuIcon)
+    editIconsContainer.appendChild(dragEditItemIcon)
+    li.appendChild(editIconsContainer)
     return li
 }
 
-const EditIcon = (tableItemId) => {
+const EditIcon = (editObj) => {
+    const { iconClass, tableItemId, actionType } = editObj
     const editIconContainer = document.createElement('div')
     const editIcon = document.createElement('i')
     editIconContainer.setAttribute('data-table-item-id', tableItemId)
-    editIconContainer.classList.add('edit-icon-container', 'hidden')
-    editIcon.classList.add('fa-solid', 'fa-ellipsis')
+    editIconContainer.classList.add('edit-icon-container')
+    editIcon.classList.add('fa-solid', `${iconClass}`)
     editIconContainer.appendChild(editIcon)
     return editIconContainer
 }
