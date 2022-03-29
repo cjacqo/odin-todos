@@ -1,3 +1,4 @@
+import { EditModal } from "../components/elements"
 import { AddFolderForm } from "../components/forms"
 import Header from "../components/header/Header"
 import Main from "../components/main/Main"
@@ -88,6 +89,10 @@ const Controller = (() => {
                 return
         }
     }
+    // --- Open Edit Modal
+    const toggleEditModal = (folderId) => {
+
+    }
     // --- Toggle class names of hidden and visible table based
     //     on user click action
     //          + action { type, value }
@@ -129,9 +134,14 @@ const Controller = (() => {
         // COMPLETE THE FUNCTIONS TO HANDLE MODAL TOGGLES
         let isOpen = !_modalOpen
         _modalOpen = isOpen
+        let value
 
         // @@TEST: Test creating a folder and adding it to the database
-        const value = e.currentTarget.value ? e.currentTarget.value : 'close'
+        if (e) {
+            value = e.currentTarget.value ? e.currentTarget.value : e.currentTarget.dataset.action ? e.currentTarget.dataset.action : 'close'
+        } else {
+            value = 'close'
+        }
         const modalContainer = document.querySelector('.modal-container')
 
         switch(value) {
@@ -158,8 +168,21 @@ const Controller = (() => {
                     updateTable('item')
                 }
                 return
+            case 'open-edit-modal':
+                if (isOpen) {
+                    const editFolderModal = EditModal(e.currentTarget.dataset.tableItemId)
+                    modalContainer.appendChild(editFolderModal)
+                } else {
+                    while (modalContainer.children.length > 0) {
+                        modalContainer.children[0].remove()
+                    }
+                }
+                modalContainer.classList.toggle('hidden')
+                return
             case 'close':
-                modalContainer.children[0].remove()
+                while (modalContainer.children.length > 0) {
+                    modalContainer.children[0].remove()
+                }
                 modalContainer.classList.add('hidden')
                 return
 
@@ -180,15 +203,21 @@ const Controller = (() => {
 
     // --- Toggle Edit
     const toggleEdit = (isChecked) => {
+        const overlay = document.createElement('div')
+        const appContainer = document.getElementById('appContainer')
         let editContainers = document.querySelectorAll('.edit-icon-container')
         let tableItems = document.querySelectorAll('.table-item')
         let countContainers = document.querySelectorAll('.countBox')
 
         if (isChecked) {
+            overlay.classList.add('overlay')
+            // appContainer.appendChild(overlay)
             editContainers.forEach(editContainer => editContainer.classList.remove('hidden'))
             countContainers.forEach(editContainer => editContainer.classList.add('hidden'))
             console.log("DO STUFF DEPENDING ON WHAT IS BEING EDITED")
         } else {
+            _modalOpen = true
+            toggleModal()
             editContainers.forEach(editContainer => editContainer.classList.add('hidden'))
             countContainers.forEach(editContainer => editContainer.classList.remove('hidden'))
             console.log("TURN OFF EDITING STATE & VIEW")

@@ -220,6 +220,15 @@ h4, h6 {
     text-align: left;
 }
 
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    z-index: 5;
+}
+
 .table-item :nth-child(1) { order: 1; font-size: 1.5rem; flex: 1; }
 .table-item :nth-child(2) { order: 3; color: var(--grey-text); justify-content: center; align-items: center; gap: 10px; flex: 1;}
 .table-item :nth-child(2) > p { font-size: var(--normal); }
@@ -248,7 +257,7 @@ h4, h6 {
     align-items: center;
     justify-content: center;
     transition: right 350ms ease-in-out;
-    z-index: 3;
+    z-index: 5;
 }
 .edit-icon-container.hidden {
     right: -100%;

@@ -53,8 +53,6 @@ const ListItem = (dataAttribute, itemData, controllerFunction) => {
     const toggleEditMenuIcon = EditIcon({iconClass: 'fa-ellipsis', tableItemId: attributeValue, actionType: 'open-edit-modal', isYellow: true})
     const dragEditItemIcon = EditIcon({iconClass: 'fa-bars', tableItemId: attributeValue, actionType: 'drag-table-item'})
     li.addEventListener('click', (e) => {
-        e.stopImmediatePropagation()
-        e.stopPropagation()
         switch(controllerFunction) {
             case 'toggle-table':
                 Controller.toggleTable({type: 'folder', value: attributeValue, title: elementText})
@@ -65,7 +63,8 @@ const ListItem = (dataAttribute, itemData, controllerFunction) => {
         }
     })
     toggleEditMenuIcon.addEventListener('click', (e) => {
-        Controller.toggleModal()
+        e.stopPropagation()
+        Controller.toggleModal(e)
     })
     dragEditItemIcon.addEventListener('ondrag', (e) => {
         console.log("Hi")
@@ -81,6 +80,7 @@ const EditIcon = (editObj) => {
     const editIconContainer = document.createElement('div')
     const editIcon = document.createElement('i')
     editIconContainer.setAttribute('data-table-item-id', tableItemId)
+    editIconContainer.setAttribute('data-action', `${actionType}`)
     editIconContainer.classList.add('edit-icon-wrapper')
     editIcon.classList.add('fa-solid', `${iconClass}`, `${isYellow && 'yellow'}`)
     editIconContainer.appendChild(editIcon)
@@ -141,4 +141,40 @@ const Modal = () => {
     return modalContainer
 }
 
-export {ListItem, EditCheckBox, SearchBar, Modal}
+const EditModal = (folderName) => {
+    const options = [
+        { name: 'Share Folder' },
+        { name: 'Add Folder' },
+        { name: 'Move Folder' },
+        { name: 'Rename' },
+        { name: 'Delete' },
+    ]
+    
+    const editModal = document.createElement('div')
+    const titleContainer = document.createElement('div')
+    const optionsListContainer = document.createElement('div')
+    const titleText = document.createElement('p')
+    const optionsListWrapper = document.createElement('ul')
+    const optionsListItemContainer = document.createElement('li')
+    const optionTitleBox = document.createElement('span')
+    const optionIconBox = document.createElement('span')
+    const optionText = document.createElement('p')
+
+    titleText.innerText = folderName
+    titleContainer.appendChild(titleText)
+    options.forEach(option => {
+        optionText.innerText = option
+        optionTitleBox.appendChild(optionText)
+        optionsListItemContainer.appendChild(optionTitleBox)
+        optionsListWrapper.appendChild(optionsListItemContainer)
+    })
+
+    optionsListContainer.appendChild(optionsListWrapper)
+
+    editModal.appendChild(titleContainer)
+    editModal.appendChild(optionsListContainer)
+
+    return editModal
+}
+
+export {ListItem, EditCheckBox, SearchBar, Modal, EditModal}
