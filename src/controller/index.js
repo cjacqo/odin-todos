@@ -58,6 +58,7 @@ const Controller = (() => {
                 visibleTable = Main.getItemsTable()
                 hiddenTable = Main.getFoldersTable()
                 // - get data
+                console.log(value)
                 data = getItemsByFolderId(value)
                 // - load the table with the data
                 Main.loadItemsTable(data, title)
@@ -95,7 +96,16 @@ const Controller = (() => {
         console.log("OPEN ITEM: " + title)
         console.log("ITEM ID: " + value)
     }
+    // --- Toggle Edit
+    const toggleEdit = (isChecked) => {
+        if (isChecked) {
+            console.log("DO STUFF DEPENDING ON WHAT IS BEING EDITED")
+        } else {
+            console.log("TURN OFF EDITING STATE & VIEW")
+        }
+    }
 
+    
     return {
         init: init,
         getFolders: getFolders,
@@ -104,6 +114,7 @@ const Controller = (() => {
         toggleTable: toggleTable,
         toggleModal: toggleModal,
         toggleItem: toggleItem,
+        toggleEdit: toggleEdit,
         getFoldersFromDb: getFoldersFromDb
     }
 })(PageView)

@@ -1,3 +1,5 @@
+import Controller from "../../controller"
+
 // --- Returns a div
 // --- Params
 //          + dataAttribute
@@ -5,11 +7,7 @@
 //              ~~ attributeValue
 //          + item data
 //              ~~ elementText
-//              ~~ 
-
-import Controller from "../../controller"
-
-//          + Controller Function
+//          + controllerFunction: string
 const ListItem = (dataAttribute, itemData, controllerFunction) => {
     const { attributeName, attributeValue } = dataAttribute
     const { elementText } = itemData
@@ -30,4 +28,14 @@ const ListItem = (dataAttribute, itemData, controllerFunction) => {
     return li
 }
 
-export {ListItem}
+const EditCheckBox = () => {
+    const checkBox = document.createElement('input')
+    checkBox.setAttribute('id', 'editCheckBox')
+    checkBox.setAttribute('type', 'checkbox')
+    checkBox.addEventListener('click', (e) => {
+        Controller.toggleEdit(e.target.checked)
+    })
+    return checkBox
+}
+
+export {ListItem, EditCheckBox}

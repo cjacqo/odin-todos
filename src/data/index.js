@@ -20,7 +20,7 @@ const Database = (function() {
 
     const init = (function() {
         _defaultFolders.forEach(_folder => {
-            const folderObj = FolderItem('folder', _folderCounter(), {name: _folder, items: [], canDelete: false})
+            const folderObj = FolderItem('folder', _folder, {name: _folder, items: [], canDelete: false})
             _foldersDB.push(folderObj)
         })
         return
@@ -40,15 +40,26 @@ const Database = (function() {
     }
 
     // --- ITEMS
-    function addItemToFolderById(folderId, item) {
+    function _addItemToFolderById(folderId, item) {
         let theItemFolder = _filterFolder(folderId)
         theItemFolder.setItems({items: item})
         return
     }
 
+    function _addItemToAllFolder(item) {
+        let allFolder = _filterFolder('all')
+        allFolder.setItems({items: item})
+    }
+
+    function _addItemToDefaultFolder(folderName, item) {
+        let defaultFolder = _filterFolder(folderName)
+        defaultFolder.setItems({items: item})
+    }
+
     function addItem(item) {
         const { type, data } = item
         let itemObj
+        // !!! TODO !!!
         switch(type) {
             case 'todo':
                 itemObj = ToDoItem('todo', _itemsCounter(), data)
@@ -61,12 +72,16 @@ const Database = (function() {
                 break
         }
 
-        // --- used to check to value of the form to add an item
+        // --- Add item to it's default folder, and add each item to All folder
+        _addItemToAllFolder(itemObj)
+        _addItemToDefaultFolder(`${type}s`, itemObj)
+
+        // --- used to check value of the form to add an item
         //     ~~ If user selects to add item to folder, call function
         //        to do so
-        if (data.folderId !== null) {
-            addItemToFolderById(data.folderId, itemObj)
-        }
+        // if (data.folderId !== null) {
+        //     _addItemToFolderById(data.folderId, itemObj)
+        // }
         
         _itemsDB.push(itemObj)
         return

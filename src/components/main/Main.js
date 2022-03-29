@@ -70,6 +70,9 @@ const Main = (function() {
             _itemsTable.children[0].remove()
         }
 
+        console.log(data)
+        console.log(folderName)
+
         // - check if the length of the data is greater then 0
         if (data.length > 0) {
             // TRUE: create table elements to append to the table
