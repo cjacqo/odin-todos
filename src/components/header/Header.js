@@ -6,7 +6,6 @@ const Header = (function() {
     let _headerTitle
     let _subHeaderTitle
     let _editCheckBox
-    let _searchBar
 
     // --- Initializes the DOM elements and returns the newly create DOM element
     function _init() {
@@ -15,7 +14,6 @@ const Header = (function() {
         _headerTitle = document.createElement('h4')
         _subHeaderTitle = document.createElement('h6')
         _editCheckBox = EditCheckBox()
-        _searchBar = SearchBar()
 
         _headerContainer.setAttribute('id', 'headerContainer')
         _headerTitle.setAttribute('id', 'headerTitle')
@@ -31,7 +29,6 @@ const Header = (function() {
         _headerContainer.appendChild(_headerTitle)
         _headerContainer.appendChild(_subHeaderTitle)
         _headerContainer.appendChild(_editCheckBox)
-        _headerContainer.appendChild(_searchBar)
         // - return container
         return _headerContainer
     }
@@ -40,7 +37,6 @@ const Header = (function() {
     function getHeaderContainer() { return _headerContainer }
     function getHeaderTitle() { return _headerTitle }
     function getSubHeaderTitle() { return _subHeaderTitle }
-    function getSearchBar() { return _searchBar }
     function getTitle() { return _title }
 
     return {
@@ -48,7 +44,6 @@ const Header = (function() {
         getHeaderContainer: getHeaderContainer,
         getHeaderTitle: getHeaderTitle,
         getSubHeaderTitle: getSubHeaderTitle,
-        getSearchBar: getSearchBar,
         getTitle: getTitle
     }
 })()

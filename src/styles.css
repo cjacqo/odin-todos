@@ -10,6 +10,8 @@
     --small: 0.618rem;
     --x-small: 0.382rem;
     --xx-small: 0.236rem;
+    --page-margin: 0 1.15rem;
+    --small-height: 4.5rem;
     /* COLORS */
     --white: rgb(255, 250, 255);
     --black: rgb(26, 23, 23);
@@ -93,6 +95,21 @@ p {
     flex-direction: column;
 }
 
+header,
+main,
+footer {
+    margin: var(--page-margin);
+    overflow: hidden;
+}
+
+header,
+footer {
+    left: 0;
+    right: 0;
+    min-height: var(--small-height);
+    z-index: 2;
+}
+
 /* @@TEST */
 /* --- Testing styles of the header text elements */
 h4, h6 {
@@ -113,7 +130,7 @@ h4, h6 {
 }
 
 #tableContainer {
-    width: 100vw;
+    width: 100%;
     height: 80vh;
     display: flex;
     flex: 1;
@@ -124,6 +141,7 @@ h4, h6 {
     position: absolute;
     flex: 1 0 auto;
     width: 100%;
+    overflow-y: auto;
 }
 
 #foldersTable {

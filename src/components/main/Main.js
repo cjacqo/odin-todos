@@ -1,9 +1,10 @@
 import Controller from "../../controller"
 import { capitalizeString } from "../../functions"
-import { ListItem, Modal } from "../elements"
+import { ListItem, Modal, SearchBar } from "../elements"
 
 const Main = (function() {
     let _mainContainer
+    let _searchBar
     let _tableContainer
     let _foldersTable
     let _itemsTable
@@ -12,6 +13,7 @@ const Main = (function() {
     function _init(data) {
         // - create the elements for the Main DOM element
         _mainContainer  = document.createElement('main')
+        _searchBar = SearchBar()
         _tableContainer = document.createElement('div')
         _foldersTable = document.createElement('div')
         _itemsTable = document.createElement('div')
@@ -40,6 +42,7 @@ const Main = (function() {
         // - append the elements
         _tableContainer.appendChild(_foldersTable)
         _tableContainer.appendChild(_itemsTable)
+        _mainContainer.appendChild(_searchBar)
         _mainContainer.appendChild(_tableContainer)
         // - return container
         return _mainContainer
@@ -89,6 +92,7 @@ const Main = (function() {
 
     function init(data) { return _init(data) }
     function getMainContainer() { return _mainContainer }
+    function getSearchBar() { return _searchBar }
     function getFoldersTable() { return _foldersTable }
     function getItemsTable() { return _itemsTable }
     function loadFoldersTable(data) {return _loadFoldersTable(data)}
@@ -97,6 +101,7 @@ const Main = (function() {
     return {
         init: init,
         getMainContainer: getMainContainer,
+        getSearchBar: getSearchBar,
         getFoldersTable: getFoldersTable,
         getItemsTable: getItemsTable,
         loadFoldersTable: loadFoldersTable,

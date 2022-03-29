@@ -13,6 +13,7 @@ const PageView = (() => {
     const init = (data, state) => {
         // - create the parent container for the app
         let _appContainer = document.createElement('div')
+        _appContainer.classList.add('flex', 'col')
         _appContainer.setAttribute('id', 'appContainer')
 
         // - initialize the DOM elements for each section and pass data where
