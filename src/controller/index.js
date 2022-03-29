@@ -58,7 +58,6 @@ const Controller = (() => {
                 visibleTable = Main.getItemsTable()
                 hiddenTable = Main.getFoldersTable()
                 // - get data
-                console.log(value)
                 data = getItemsByFolderId(value)
                 // - load the table with the data
                 Main.loadItemsTable(data, title)

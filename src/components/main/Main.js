@@ -27,12 +27,6 @@ const Main = (function() {
             const dataAttribute = { attributeName: 'data-folder-id', attributeValue: folder.getId() }
             const folderData = { elementText: folderName }
             const li = ListItem(dataAttribute, folderData, 'toggle-table')
-            // const li = document.createElement('div')
-            // li.setAttribute('data-folder-id', folder.getId())
-            // li.innerText = folderName
-            // li.addEventListener('click', (e) => {
-            //     Controller.toggleTable({type: 'folder', value: e.target.dataset, title: folderName})
-            // })
             _foldersTable.appendChild(li)
         })
 
@@ -61,7 +55,7 @@ const Main = (function() {
             const li = ListItem(dataAttribute, folderData, 'toggle-table')
             _foldersTable.appendChild(li)
         })
-
+        return
     }
     // --- Generates the items table and it's data to be displayed on the DOM
     function _loadItemsTable(data, folderName) {
@@ -69,9 +63,6 @@ const Main = (function() {
         while (_itemsTable.children.length > 0) {
             _itemsTable.children[0].remove()
         }
-
-        console.log(data)
-        console.log(folderName)
 
         // - check if the length of the data is greater then 0
         if (data.length > 0) {
@@ -81,16 +72,6 @@ const Main = (function() {
                 const dataAttribute = { attributeName: 'data-item-id', attributeValue: item.getId() }
                 const itemData = { elementText: itemName }
                 const li = ListItem(dataAttribute, itemData, 'toggle-item')
-
-                // const li = document.createElement('div')
-                // li.setAttribute('data-item-id', item.id)
-                // li.innerText = item.getName()
-                // li.addEventListener('click', (e) => {
-                //     // @TODO: BUILD FUNCTION TO OPEN AN ITEM ON CLICK
-                //     // Controller.openItem()
-                //     console.log("ITEM IS CLICKED: Build function to open the item")
-                // })
-                // - append table element to the table
                 _itemsTable.appendChild(li)
             })
         } else {
@@ -100,6 +81,7 @@ const Main = (function() {
             createItemInFolderMessage.innerText = `There are no items in ${folderName}. Would you like to create an item?`
             _itemsTable.appendChild(createItemInFolderMessage)
         }
+        return
     }
 
     function init(data) { return _init(data) }
