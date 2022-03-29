@@ -1,5 +1,6 @@
 import Controller from "../../controller"
 import { capitalizeString } from "../../functions"
+import { ListItem } from "../elements"
 
 const Main = (function() {
     let _mainContainer
@@ -23,12 +24,15 @@ const Main = (function() {
         // - take the data being passed by the Controller where the function chain started
         data.forEach(folder => {
             const folderName = capitalizeString(folder.getName())
-            const li = document.createElement('div')
-            li.setAttribute('data-folder-id', folder.getId())
-            li.innerText = folderName
-            li.addEventListener('click', (e) => {
-                Controller.toggleTable({type: 'folder', value: e.target.dataset, title: folderName})
-            })
+            const dataAttribute = { attributeName: 'data-folder-id', attributeValue: folder.getId() }
+            const folderData = { elementText: folderName }
+            const li = ListItem(dataAttribute, folderData, 'toggle-table')
+            // const li = document.createElement('div')
+            // li.setAttribute('data-folder-id', folder.getId())
+            // li.innerText = folderName
+            // li.addEventListener('click', (e) => {
+            //     Controller.toggleTable({type: 'folder', value: e.target.dataset, title: folderName})
+            // })
             _foldersTable.appendChild(li)
         })
 
@@ -52,12 +56,9 @@ const Main = (function() {
 
         data.forEach(folder => {
             const folderName = capitalizeString(folder.getName())
-            const li = document.createElement('div')
-            li.setAttribute('data-folder-id', folder.id)
-            li.innerText = folderName
-            li.addEventListener('click', (e) => {
-                Controller.toggleTable({type: 'folder', value: e.target.dataset, title: folderName})
-            })
+            const dataAttribute = { attributeName: 'data-folder-id', attributeValue: folder.getId() }
+            const folderData = { elementText: folderName }
+            const li = ListItem(dataAttribute, folderData, 'toggle-table')
             _foldersTable.appendChild(li)
         })
 
@@ -73,14 +74,19 @@ const Main = (function() {
         if (data.length > 0) {
             // TRUE: create table elements to append to the table
             data.forEach(item => {
-                const li = document.createElement('div')
-                li.setAttribute('data-item-id', item.id)
-                li.innerText = item.getName()
-                li.addEventListener('click', (e) => {
-                    // @TODO: BUILD FUNCTION TO OPEN AN ITEM ON CLICK
-                    // Controller.openItem()
-                    console.log("ITEM IS CLICKED: Build function to open the item")
-                })
+                const itemName = capitalizeString(item.getName())
+                const dataAttribute = { attributeName: 'data-item-id', attributeValue: item.getId() }
+                const itemData = { elementText: itemName }
+                const li = ListItem(dataAttribute, itemData, 'toggle-item')
+
+                // const li = document.createElement('div')
+                // li.setAttribute('data-item-id', item.id)
+                // li.innerText = item.getName()
+                // li.addEventListener('click', (e) => {
+                //     // @TODO: BUILD FUNCTION TO OPEN AN ITEM ON CLICK
+                //     // Controller.openItem()
+                //     console.log("ITEM IS CLICKED: Build function to open the item")
+                // })
                 // - append table element to the table
                 _itemsTable.appendChild(li)
             })

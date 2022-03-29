@@ -58,11 +58,8 @@ const Controller = (() => {
                 visibleTable = Main.getItemsTable()
                 hiddenTable = Main.getFoldersTable()
                 // - get data
-                let id = parseInt(value.folderId)
-                console.log(value)
-                data = getItemsByFolderId(id)
+                data = getItemsByFolderId(value)
                 // - load the table with the data
-                console.log(title)
                 Main.loadItemsTable(data, title)
                 break
             case 'home':
@@ -91,6 +88,11 @@ const Controller = (() => {
                 return
         }
     }
+    // --- Toggle Item
+    const toggleItem = ({ type, value, title }) => {
+        console.log("OPEN ITEM: " + title)
+        console.log("ITEM ID: " + value)
+    }
 
     return {
         init: init,
@@ -99,6 +101,7 @@ const Controller = (() => {
         updateTable: updateTable,
         toggleTable: toggleTable,
         toggleModal: toggleModal,
+        toggleItem: toggleItem,
         getFoldersFromDb: getFoldersFromDb
     }
 })(PageView)

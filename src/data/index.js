@@ -40,6 +40,12 @@ const Database = (function() {
     }
 
     // --- ITEMS
+    function addItemToFolderById(folderId, item) {
+        let theItemFolder = _filterFolder(folderId)
+        theItemFolder.setItems({items: item})
+        return
+    }
+
     function addItem(item) {
         const { type, data } = item
         let itemObj
@@ -54,13 +60,21 @@ const Database = (function() {
                 itemObj = CheckListItem('checklist', _itemsCounter(), data)
                 break
         }
-        let theItemFolder = _filterFolder(data.folderId)
-        theItemFolder.setItems({items: itemObj})
+
+        // --- used to check to value of the form to add an item
+        //     ~~ If user selects to add item to folder, call function
+        //        to do so
+        if (data.folderId !== null) {
+            addItemToFolderById(data.folderId, itemObj)
+        }
+        
+        _itemsDB.push(itemObj)
         return
     }
 
 
     function getFolders() { return _foldersDB }
+
     function getItemsByFolderId(folderId) {
         let theItemFolder = _filterFolder(folderId)
         return theItemFolder.getItems()
