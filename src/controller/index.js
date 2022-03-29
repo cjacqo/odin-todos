@@ -22,7 +22,6 @@ const Controller = (() => {
     // --- Get items by parent folder Id
     const getItemsByFolderId = (folderId) => {
         return Database.getItemsByFolderId(folderId)
-        // return Items.filter(item => item.folder_id === folderId)
     }
     // --- Create items
     const handleCreation = (itemType, data) => {
@@ -134,11 +133,11 @@ const Controller = (() => {
                     // - toggle the create folder form
                     const addFolderForm = AddFolderForm()
                     modalContainer.appendChild(addFolderForm)
-                    modalContainer.classList.remove('hidden')
+                    modalContainer.classList.toggle('hidden')
                     return true
                 } else if (!isOpen) {
                     modalContainer.children[0].remove()
-                    modalContainer.classList.add('hidden')
+                    modalContainer.classList.toggle('hidden')
                     return false
                 }
             case 'create-item':
