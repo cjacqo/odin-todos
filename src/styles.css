@@ -14,6 +14,8 @@
 
 body {
     font-family: sans-serif;
+    overflow: hidden;
+    margin: 0;
 }
 
 /* @@TEST */
@@ -33,4 +35,36 @@ h4, h6 {
 .main-title,
 #headerTitle.back-button {
     transition: font-size 150ms ease-out;
+}
+
+#tableContainer {
+    width: 100vw;
+    height: 80vh;
+    display: flex;
+    flex: 1;
+    position: relative;
+}
+
+#tableContainer > * {
+    position: absolute;
+    flex: 1 0 auto;
+    width: 100%;
+}
+
+#foldersTable {
+    left: 0;
+    transition: left 500ms ease-in-out;
+}
+
+#tableContainer > #foldersTable.hidden {
+    left: -100%;
+}
+
+#itemsTable {
+    right: 0;
+    transition: right 500ms ease-in-out;
+}
+
+#tableContainer > #itemsTable.hidden {
+    right: -100%;
 }

@@ -13,8 +13,6 @@ const PageView = (() => {
         let _appContainer = document.createElement('div')
         _appContainer.setAttribute('id', 'appContainer')
 
-        console.log(state)
-
         // - initialize the DOM elements for each section and pass data where
         //   needed
         _header = _header.init()

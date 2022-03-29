@@ -30,40 +30,40 @@ const Controller = (() => {
     const changeHeaderTitle = (action, state) => {
         const headerTitle = Header.getHeaderTitle()
         const subHeaderTitle = Header.getSubHeaderTitle()
+        headerTitle.removeEventListener('click', changeHeaderTitle)
 
         switch(action) {
             case 'open-folder':
                 headerTitle.innerText = 'Folders'
                 headerTitle.classList.remove('main-title')
                 headerTitle.classList.add('back-button')
-                if (_state.folder) {
-                    headerTitle.removeEventListener('click', changeHeaderTitle())
+                if (state.folder) {
                     _state = { folder: state.folder, item: null }
                     headerTitle.addEventListener('click', () => {
+                        toggleTable({type: 'home', value: 'default', title: null})
                         changeHeaderTitle('default', state)
                     })
                 }
                 subHeaderTitle.classList.remove('hidden')
                 subHeaderTitle.classList.add('main-title')
                 subHeaderTitle.innerText = state.folder
-                break
+                return
             case 'open-item':
                 headerTitle.innerText = state.folder
                 subHeaderTitle.innerText = state.item
-                headerTitle.removeEventListener('click', changeHeaderTitle())
                 headerTitle.addEventListener('click', () => {
                     changeHeaderTitle('open-folder', state)
                 })
-                break
+                return
             case 'default':
-                console.log(_state)
+                _state = { folder: null, item: null }
+                console.log("Hi") 
                 subHeaderTitle.classList.remove('main-title')
                 subHeaderTitle.classList.add('hidden')
                 headerTitle.classList.remove('back-button')
                 headerTitle.classList.add('main-title')
-                headerTitle.removeEventListener('click', changeHeaderTitle())
                 subHeaderTitle.innerText = ''
-                break
+                return
         }
     }
     // --- Update the tables when new data is added
@@ -99,10 +99,12 @@ const Controller = (() => {
                 Main.loadItemsTable(data, title)
                 break
             case 'home':
+                console.log("Him")
                 visibleTable = Main.getFoldersTable()
                 hiddenTable = Main.getItemsTable()
                 break
         }
+        console.log(visibleTable)
         visibleTable.classList.toggle('hidden')
         hiddenTable.classList.toggle('hidden')
     }
@@ -128,12 +130,14 @@ const Controller = (() => {
     const toggleItem = ({ type, value, title }) => {
         // - change the header title
         _state.item = title
+        console.log(_state)
         changeHeaderTitle('open-item', _state)
         // !!! TODO !!!
         // COMPLETE THE FUNCTIONS TO OPEN THE EDIT VIEW OF THE SELECTED ITEM
         console.log("OPEN ITEM: " + title)
         console.log("ITEM ID: " + value)
     }
+
     // --- Toggle Edit
     const toggleEdit = (isChecked) => {
         let tableItems = Main.getFoldersTable()
