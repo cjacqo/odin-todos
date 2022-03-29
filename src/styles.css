@@ -96,6 +96,10 @@ p {
     flex-direction: column;
 }
 
+.yellow {
+    color: var(--yellow-1);
+}
+
 header,
 main,
 footer {

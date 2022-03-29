@@ -16,7 +16,20 @@ const ListItem = (dataAttribute, itemData, controllerFunction) => {
     const { elementText } = itemData
 
     const li = document.createElement('div')
+    const icon = document.createElement('i')
     const textBox = document.createElement('p')
+    const countBox = document.createElement('p')
+
+    switch(attributeName) {
+        case 'data-folder-id':
+            icon.classList.add('fa-solid', 'fa-folder', 'yellow')
+            let count = Controller.getItemCountInFolder(attributeValue)
+            countBox.innerText = count
+            li.appendChild(icon)
+            li.appendChild(countBox)
+            break
+    }
+
     li.classList.add('table-item', 'flex')
     li.setAttribute(attributeName, attributeValue)
     textBox.innerText = elementText

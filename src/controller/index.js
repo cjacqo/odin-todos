@@ -23,13 +23,20 @@ const Controller = (() => {
     const getItemsByFolderId = (folderId) => {
         return Database.getItemsByFolderId(folderId)
     }
+    // --- Get count of items in a folder
+    const getItemCountInFolder = (folderId) => {
+        let _items = Database.getItemsByFolderId(folderId)
+        return _items.length
+    }
     // --- Create items
     const handleCreation = (itemType, data) => {
+        console.log(itemType)
         switch(itemType) {
             case 'folder':
-                console.log(data)
                 Database.addFolder(data)
                 return
+            case 'item':
+                console.log("DFSDFSDF")
         }
     }
 
@@ -146,6 +153,7 @@ const Controller = (() => {
                 }
                 let folderId = 'all'
                 Database.addItem({type: 'note', data: {name: 'Test Note', folderId: folderId}})
+                Main.loadFoldersTable(Database.getFolders())
                 if (folderId == _state.folder.id) {
                     updateTable('item')
                 }
@@ -189,6 +197,7 @@ const Controller = (() => {
         init: init,
         getFolders: getFolders,
         getItems: getItems,
+        getItemCountInFolder: getItemCountInFolder,
         handleCreation: handleCreation,
         updateTable: updateTable,
         toggleTable: toggleTable,
