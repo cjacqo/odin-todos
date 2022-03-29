@@ -123,11 +123,12 @@ h4, h6 {
 }
 .back-button {
     font-size: 16px;
+    color: var(--yellow-1);
 }
 
 .main-title,
 #headerTitle.back-button {
-    transition: font-size 150ms ease-out;
+    transition: all 150ms ease-out;
 }
 
 #mainContainer {
