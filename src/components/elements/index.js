@@ -62,10 +62,48 @@ const EditCheckBox = () => {
     return checkBox
 }
 
+const SearchBar = () => {
+    const searchBarContainer = document.createElement('div')
+    const magnifyingGlassWrapper = document.createElement('div')
+    const searchInputWrapper = document.createElement('div')
+    const microphoneWrapper = document.createElement('div')
+
+    searchBarContainer.classList.add('search-bar-container', 'flex')
+    magnifyingGlassWrapper.classList.add('search-bar-item-wrapper', 'search-bar-icon-wrapper', 'small-item')
+    searchInputWrapper.classList.add('search-bar-item-wrapper', 'search-bar-input-wrapper', 'fill-item')
+    microphoneWrapper.classList.add('search-bar-item-wrapper', 'search-bar-icon-wrapper', 'small-item')
+    
+    const magnifyingGlassIcon = document.createElement('i')
+    const searchInput = document.createElement('input')
+    const microphoneIcon = document.createElement('i')
+
+    magnifyingGlassIcon.classList.add('fa-solid', 'fa-magnifying-glass')
+    searchInput.classList.add('text-input')
+    microphoneIcon.classList.add('fa-solid', 'fa-microphone')
+
+    magnifyingGlassIcon.setAttribute('id', 'magnifyingGlassIcon')
+    searchInput.setAttribute('id', 'searchInput')
+    microphoneIcon.setAttribute('id', 'microphoneIcon')
+
+    searchInput.setAttribute('type', 'text')
+    searchInput.setAttribute('name', 'searc-bar-input')
+    searchInput.setAttribute('placeholder', 'Search')
+
+    magnifyingGlassWrapper.appendChild(magnifyingGlassIcon)
+    searchInputWrapper.appendChild(searchInput)
+    microphoneWrapper.appendChild(microphoneIcon)
+
+    searchBarContainer.appendChild(magnifyingGlassWrapper)
+    searchBarContainer.appendChild(searchInputWrapper)
+    searchBarContainer.appendChild(microphoneWrapper)
+
+    return searchBarContainer
+}
+
 const Modal = () => {
     const modalContainer = document.createElement('div')
     modalContainer.classList.add('modal-container', 'hidden')
     return modalContainer
 }
 
-export {ListItem, EditCheckBox, Modal}
+export {ListItem, EditCheckBox, SearchBar, Modal}
