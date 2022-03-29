@@ -1,6 +1,4 @@
-import _app from "../.."
 import Controller from "../../controller"
-import { Folders } from "../../data/data"
 
 const Main = (function() {
     let _mainContainer
@@ -42,37 +40,6 @@ const Main = (function() {
         _mainContainer.appendChild(_tableContainer)
         // - return container
         return _mainContainer
-
-        // if (state.folder && !state.items) {
-        //     itemsTable.classList.toggle('hidden')
-        //     foldersTable.classList.toggle('hidden')
-        //     Items.forEach(item => {
-        //         const li = document.createElement('div')
-        //         li.innerText = item.name
-        //         li.addEventListener('click', (e) => {
-        //             const headerTitle = document.getElementById('headerTitle')
-        //             // headerTitle.innerText = folder.name
-        //             Controller.changeView({folder: folder.name, item: ''})
-        //         })
-        //         itemsTable.appendChild(li)
-        //     })
-        // } else {
-        //     itemsTable.classList.toggle('hidden')
-        //     Folders.forEach(folder => {
-        //         const li = document.createElement('div')
-        //         li.innerText = folder.name
-        //         li.addEventListener('click', (e) => {
-        //             const headerTitle = document.getElementById('headerTitle')
-        //             // headerTitle.innerText = folder.name
-        //             Controller.changeView({folder: folder.name, item: ''})
-        //         })
-        //         foldersTable.appendChild(li)
-        //     })
-        // }
-            
-        // mainContainer.appendChild(foldersTable)
-        // mainContainer.appendChild(itemsTable)
-        // _element = mainContainer
     }
 
     // --- Generates the items table and it's data to be displayed on the DOM
