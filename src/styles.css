@@ -1,18 +1,75 @@
-/* .main-container > button:nth-child(1) {
-    position: absolute;
-    top: 0;
-    transition: top 1000ms ease-in;
+:root {
+    /* SIZING */
+    --base-size: 14px;
+    --xxx-large: 11.089rem;
+    --xx-large: 6.854rem;
+    --x-large: 4.236rem;
+    --large: 2.618rem;
+    --husky: 1.618rem;
+    --normal: 1rem;
+    --small: 0.618rem;
+    --x-small: 0.382rem;
+    --xx-small: 0.236rem;
+    /* COLORS */
+    --white: rgb(255, 250, 255);
+    --black: rgb(26, 23, 23);
+    --grey-bg: rgba(59, 58, 58, 0.932);
+    --grey-text: rgb(224, 224, 224);
+    --blue: rgb(34, 116, 165);
+    --yellow-1: rgb(246, 174, 45);
+    --yellow-2: rgb(246, 174, 40);
+    --purple: rgb(133, 71, 152);
+    --error-delete: rgb(223, 41, 53);
 }
 
-.active {
-    top: 500px;
-} */
+.main-text,
+.delete-color-secondary {
+    color: var(--white);
+}
+.secondary-text,
+.inactive {
+    color: var(--grey-text);
+}
+.accent-text,
+.pinned {
+    color: var(--yellow-1);
+}
+.ok-color {
+    color: var(--blue);
+}
+.locked {
+    color: var(--purple);
+}
+.error,
+.delete-color-primary {
+    color: var(--error-delete);
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+html,
+body {
+    font-size: 14px;
+    height: 100%;
+}
 
 .show-edit-options {
     background-color: red;
 }
 
 body {
+    background-color: rgb(10, 9, 9);
+    color: var(--white);
     font-family: sans-serif;
     overflow: hidden;
     margin: 0;
