@@ -139,7 +139,7 @@ const Controller = (() => {
 
         // @@TEST: Test creating a folder and adding it to the database
         if (e) {
-            value = e.currentTarget.value ? e.currentTarget.value : e.currentTarget.dataset.action ? e.currentTarget.dataset.action : e
+            value = e.currentTarget.value ? e.currentTarget.value : e.currentTarget.dataset.action ? e.currentTarget.dataset.action : e === 'close' ? 'close' : null
         } else {
             value = 'close'
         }

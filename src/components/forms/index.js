@@ -29,7 +29,7 @@ const AddFolderForm = () => {
     submitButton.addEventListener('click', (e) => {
         e.preventDefault()
         Controller.handleCreation('folder', textInput.value)
-        Controller.toggleModal(e)
+        Controller.toggleModal()
     })
 
     formControl.appendChild(inputLabel)
