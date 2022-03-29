@@ -20,6 +20,9 @@ const Main = (function() {
         _tableContainer.setAttribute('id', 'tableContainer')
         _foldersTable.setAttribute('id', 'foldersTable')
         _itemsTable.setAttribute('id', 'itemsTable')
+        _tableContainer.classList.add('table-container', 'flex', 'col')
+        _foldersTable.classList.add('folders-table', 'flex', 'col')
+        _itemsTable.classList.add('items-table', 'flex', 'col')
 
         // - take the data being passed by the Controller where the function chain started
         data.forEach(folder => {

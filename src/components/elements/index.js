@@ -1,4 +1,7 @@
 import Controller from "../../controller"
+import '@fortawesome/fontawesome-free/js/fontawesome'
+import '@fortawesome/fontawesome-free/js/solid'
+import '@fortawesome/fontawesome-free/js/regular'
 
 // --- Returns a div
 // --- Params
@@ -13,8 +16,10 @@ const ListItem = (dataAttribute, itemData, controllerFunction) => {
     const { elementText } = itemData
 
     const li = document.createElement('div')
+    li.classList.add('table-item', 'flex')
     li.setAttribute(attributeName, attributeValue)
     li.innerText = elementText
+    const editIcon = EditIcon(attributeValue)
     li.addEventListener('click', () => {
         switch(controllerFunction) {
             case 'toggle-table':
@@ -25,7 +30,18 @@ const ListItem = (dataAttribute, itemData, controllerFunction) => {
                 break
         }
     })
+    li.appendChild(editIcon)
     return li
+}
+
+const EditIcon = (tableItemId) => {
+    const editIconContainer = document.createElement('div')
+    const editIcon = document.createElement('i')
+    editIconContainer.setAttribute('data-table-item-id', tableItemId)
+    editIconContainer.classList.add('edit-icon-container', 'hidden')
+    editIcon.classList.add('fa-solid', 'fa-ellipsis')
+    editIconContainer.appendChild(editIcon)
+    return editIconContainer
 }
 
 const EditCheckBox = () => {

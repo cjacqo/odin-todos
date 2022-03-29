@@ -18,6 +18,14 @@ body {
     margin: 0;
 }
 
+.flex {
+    display: flex;
+}
+
+.col {
+    flex-direction: column;
+}
+
 /* @@TEST */
 /* --- Testing styles of the header text elements */
 h4, h6 {
@@ -67,4 +75,25 @@ h4, h6 {
 
 #tableContainer > #itemsTable.hidden {
     right: -100%;
+}
+
+.table-item {
+    flex: 1 0 auto;
+    padding: 0.3rem 0;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.edit-icon-container {
+    position: relative;
+    border: 1px solid #000;
+    border-radius: 100%;
+    width: 1rem;
+    height: 1rem;
+    text-align: center;
+}
+.edit-icon-container.hidden {
+    display: none;
+}
+.edit-icon-container > * {
 }

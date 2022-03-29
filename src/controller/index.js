@@ -138,17 +138,14 @@ const Controller = (() => {
 
     // --- Toggle Edit
     const toggleEdit = (isChecked) => {
-        let tableItems = Main.getFoldersTable()
+        let editContainers = document.querySelectorAll('.edit-icon-container')
+        console.log(editContainers)
 
         if (isChecked) {
-            for (let item of tableItems.children) {
-                item.classList.toggle('show-edit-options')
-            }
+            editContainers.forEach(editContainer => editContainer.classList.remove('hidden'))
             console.log("DO STUFF DEPENDING ON WHAT IS BEING EDITED")
         } else {
-            for (let item of tableItems.children) {
-                item.classList.toggle('show-edit-options')
-            }
+            editContainers.forEach(editContainer => editContainer.classList.add('hidden'))
             console.log("TURN OFF EDITING STATE & VIEW")
         }
     }
