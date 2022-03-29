@@ -6,6 +6,7 @@
     --x-large: 4.236rem;
     --large: 2.618rem;
     --husky: 1.618rem;
+    --slightly-bigger: 1.15rem;
     --normal: 1rem;
     --small: 0.618rem;
     --x-small: 0.382rem;
@@ -176,11 +177,12 @@ h4, h6 {
 
 .table-item {
     flex: 1 0 auto;
-    padding: 0.3rem 0;
+    padding: 0.3rem 10px;
     justify-content: space-between;
     align-items: center;
-    font-size: 1.25rem;
+    font-size: var(--slightly-bigger);
     min-height: 40px;
+    gap: 10px;
 }
 
 .table-item > .small-flex {
@@ -196,9 +198,10 @@ h4, h6 {
     text-align: left;
 }
 
-.table-item :nth-child(1) { order: 1; }
-.table-item :nth-child(2) { order: 3;  color: var(--grey-text); font-size: var(--normal); justify-content: center; align-items: center; gap: 10px;}
-.table-item :nth-child(3) { order: 2; }
+.table-item :nth-child(1) { order: 1; font-size: 1.5rem; flex: 1; }
+.table-item :nth-child(2) { order: 3; color: var(--grey-text); justify-content: center; align-items: center; gap: 10px; flex: 1;}
+.table-item :nth-child(2) > p { font-size: var(--normal); }
+.table-item :nth-child(3) { order: 2; font-size: var(--slightly-bigger) !important; }
 
 .fa-chevron-right {
     font-size: var(--small) !important;
@@ -233,6 +236,7 @@ h4, h6 {
 }
 #searchInput {
     caret-color: var(--yellow-2);
+    font-size: var(--slightly-bigger);
     background-color: transparent;
     color: var(--grey-text);
     width: 100%;
