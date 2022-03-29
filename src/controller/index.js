@@ -181,6 +181,7 @@ const Controller = (() => {
     // --- Toggle Edit
     const toggleEdit = (isChecked) => {
         let editContainers = document.querySelectorAll('.edit-icon-container')
+        let tableItems = document.querySelectorAll('.table-item')
         let countContainers = document.querySelectorAll('.countBox')
 
         if (isChecked) {

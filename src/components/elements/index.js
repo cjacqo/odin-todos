@@ -52,7 +52,9 @@ const ListItem = (dataAttribute, itemData, controllerFunction) => {
     editIconsContainer.classList.add('edit-icon-container', 'hidden', 'flex')
     const toggleEditMenuIcon = EditIcon({iconClass: 'fa-ellipsis', tableItemId: attributeValue, actionType: 'open-edit-modal', isYellow: true})
     const dragEditItemIcon = EditIcon({iconClass: 'fa-bars', tableItemId: attributeValue, actionType: 'drag-table-item'})
-    li.addEventListener('click', () => {
+    li.addEventListener('click', (e) => {
+        e.stopImmediatePropagation()
+        e.stopPropagation()
         switch(controllerFunction) {
             case 'toggle-table':
                 Controller.toggleTable({type: 'folder', value: attributeValue, title: elementText})
@@ -61,6 +63,12 @@ const ListItem = (dataAttribute, itemData, controllerFunction) => {
                 Controller.toggleItem({type: 'item', value: attributeValue, title: elementText})
                 break
         }
+    })
+    toggleEditMenuIcon.addEventListener('click', (e) => {
+        Controller.toggleModal()
+    })
+    dragEditItemIcon.addEventListener('ondrag', (e) => {
+        console.log("Hi")
     })
     editIconsContainer.appendChild(toggleEditMenuIcon)
     editIconsContainer.appendChild(dragEditItemIcon)

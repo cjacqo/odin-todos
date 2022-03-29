@@ -248,6 +248,7 @@ h4, h6 {
     align-items: center;
     justify-content: center;
     transition: right 350ms ease-in-out;
+    z-index: 3;
 }
 .edit-icon-container.hidden {
     right: -100%;
