@@ -1,5 +1,6 @@
 import Header from "../components/header/Header"
 import Main from "../components/main/Main"
+import Database from "../data"
 import { Folders, Items } from "../data/data"
 import PageView from "../view"
 
@@ -9,14 +10,16 @@ const Controller = (() => {
 
     // --- INIT --- //
     // --- Starts the app with initial view
-    const init = () => { return _view.init(getFolders()) }
+    const init = () => { return _view.init(getFoldersFromDb()) }
 
     // --- DATA HANDLERS --- //
     const getFolders = () => { return Folders }
+    const getFoldersFromDb = () => { return Database.getFolders()}
     const getItems = () => { return Items}
     // --- Get items by parent folder Id
     const getItemsByFolderId = (folderId) => {
-        return Items.filter(item => item.folder_id === folderId)
+        return Database.getItemsByFolderId(folderId)
+        // return Items.filter(item => item.folder_id === folderId)
     }
 
     // --- DOM HANDLERS --- //
@@ -27,6 +30,16 @@ const Controller = (() => {
         const headerTitle = Header.getHeaderTitle()
         _state.folder = folderName
         headerTitle.innerText = _state.folder
+    }
+    // --- Update the tables when new data is added
+    const updateTable = (tableType) => {
+        switch(tableType) {
+            case 'folder':
+                Main.loadFoldersTable(Database.getFolders())
+                return
+            case 'item':
+                return
+        }
     }
     // --- Toggle class names of hidden and visible table based
     //     on user click action
@@ -46,6 +59,7 @@ const Controller = (() => {
                 hiddenTable = Main.getFoldersTable()
                 // - get data
                 let id = parseInt(value.folderId)
+                console.log(value)
                 data = getItemsByFolderId(id)
                 // - load the table with the data
                 console.log(title)
@@ -61,16 +75,31 @@ const Controller = (() => {
     }
     // --- Toggle modal
     const toggleModal = (e) => {
-        // @TODO: COMPLETE THE FUNCTIONS TO HANDLE MODAL TOGGLES
+        // !!! TODO !!!
+        // COMPLETE THE FUNCTIONS TO HANDLE MODAL TOGGLES
         console.log(e.currentTarget.value)
+
+        // @@TEST: Test creating a folder and adding it to the database
+        const value = e.currentTarget.value
+
+        switch(value) {
+            case 'create-folder':
+                Database.addFolder('Test Folder')
+                return
+            case 'create-item':
+                Database.addItem({type: 'note', data: {name: 'Test Note', folderId: 0}})
+                return
+        }
     }
 
     return {
         init: init,
         getFolders: getFolders,
         getItems: getItems,
+        updateTable: updateTable,
         toggleTable: toggleTable,
-        toggleModal: toggleModal
+        toggleModal: toggleModal,
+        getFoldersFromDb: getFoldersFromDb
     }
 })(PageView)
 

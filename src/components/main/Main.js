@@ -1,4 +1,5 @@
 import Controller from "../../controller"
+import { capitalizeString } from "../../functions"
 
 const Main = (function() {
     let _mainContainer
@@ -21,11 +22,12 @@ const Main = (function() {
 
         // - take the data being passed by the Controller where the function chain started
         data.forEach(folder => {
+            const folderName = capitalizeString(folder.getName())
             const li = document.createElement('div')
-            li.setAttribute('data-folder-id', folder.id)
-            li.innerText = folder.name
+            li.setAttribute('data-folder-id', folder.getId())
+            li.innerText = folderName
             li.addEventListener('click', (e) => {
-                Controller.toggleTable({type: 'folder', value: e.target.dataset, title: folder.name})
+                Controller.toggleTable({type: 'folder', value: e.target.dataset, title: folderName})
             })
             _foldersTable.appendChild(li)
         })
@@ -42,6 +44,24 @@ const Main = (function() {
         return _mainContainer
     }
 
+    // --- Generates the folders table and it's data to be displayed on the DOM
+    function _loadFoldersTable(data) {
+        while (_foldersTable.children.length > 0) {
+            _foldersTable.children[0].remove()
+        }
+
+        data.forEach(folder => {
+            const folderName = capitalizeString(folder.getName())
+            const li = document.createElement('div')
+            li.setAttribute('data-folder-id', folder.id)
+            li.innerText = folderName
+            li.addEventListener('click', (e) => {
+                Controller.toggleTable({type: 'folder', value: e.target.dataset, title: folderName})
+            })
+            _foldersTable.appendChild(li)
+        })
+
+    }
     // --- Generates the items table and it's data to be displayed on the DOM
     function _loadItemsTable(data, folderName) {
         // - clear the itemsTable
@@ -55,7 +75,7 @@ const Main = (function() {
             data.forEach(item => {
                 const li = document.createElement('div')
                 li.setAttribute('data-item-id', item.id)
-                li.innerText = item.name
+                li.innerText = item.getName()
                 li.addEventListener('click', (e) => {
                     // @TODO: BUILD FUNCTION TO OPEN AN ITEM ON CLICK
                     // Controller.openItem()
@@ -77,6 +97,7 @@ const Main = (function() {
     function getMainContainer() { return _mainContainer }
     function getFoldersTable() { return _foldersTable }
     function getItemsTable() { return _itemsTable }
+    function loadFoldersTable(data) {return _loadFoldersTable(data)}
     function loadItemsTable(data, folderName) { return _loadItemsTable(data, folderName) }
 
     return {
@@ -84,6 +105,7 @@ const Main = (function() {
         getMainContainer: getMainContainer,
         getFoldersTable: getFoldersTable,
         getItemsTable: getItemsTable,
+        loadFoldersTable: loadFoldersTable,
         loadItemsTable: loadItemsTable
     }
 })()

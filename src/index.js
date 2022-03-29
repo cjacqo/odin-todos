@@ -1,8 +1,10 @@
 import _ from 'lodash'
 import './styles.css'
 import Controller from './controller'
+import Database from './data'
 
 const _app = (function() {
+    Database.init()
     Controller.init()
 
     // let _state
