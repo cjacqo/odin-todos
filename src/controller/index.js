@@ -98,9 +98,17 @@ const Controller = (() => {
     }
     // --- Toggle Edit
     const toggleEdit = (isChecked) => {
+        let tableItems = Main.getFoldersTable()
+
         if (isChecked) {
+            for (let item of tableItems.children) {
+                item.classList.toggle('show-edit-options')
+            }
             console.log("DO STUFF DEPENDING ON WHAT IS BEING EDITED")
         } else {
+            for (let item of tableItems.children) {
+                item.classList.toggle('show-edit-options')
+            }
             console.log("TURN OFF EDITING STATE & VIEW")
         }
     }
