@@ -1,6 +1,6 @@
 import Controller from "../../controller"
 import { capitalizeString } from "../../functions"
-import { ListItem } from "../elements"
+import { ListItem, Modal } from "../elements"
 
 const Main = (function() {
     let _mainContainer

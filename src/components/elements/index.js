@@ -62,4 +62,10 @@ const EditCheckBox = () => {
     return checkBox
 }
 
-export {ListItem, EditCheckBox}
+const Modal = () => {
+    const modalContainer = document.createElement('div')
+    modalContainer.classList.add('modal-container', 'hidden')
+    return modalContainer
+}
+
+export {ListItem, EditCheckBox, Modal}

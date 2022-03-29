@@ -1,3 +1,4 @@
+import { AddFolderForm } from "../components/forms"
 import Header from "../components/header/Header"
 import Main from "../components/main/Main"
 import Database from "../data"
@@ -109,16 +110,29 @@ const Controller = (() => {
     const toggleModal = (e) => {
         // !!! TODO !!!
         // COMPLETE THE FUNCTIONS TO HANDLE MODAL TOGGLES
-        console.log(e.currentTarget.value)
+        let isToggled = e.currentTarget.dataset.isToggled
 
         // @@TEST: Test creating a folder and adding it to the database
         const value = e.currentTarget.value
+        const modalContainer = document.querySelector('.modal-container')
 
         switch(value) {
             case 'create-folder':
-                Database.addFolder('Test Folder')
-                return
+                if (isToggled == 'false') {
+                    // - toggle the create folder form
+                    const addFolderForm = AddFolderForm()
+                    modalContainer.appendChild(addFolderForm)
+                    modalContainer.classList.remove('hidden')
+                    return true
+                } else if (isToggled == 'true') {
+                    modalContainer.children[0].remove()
+                    modalContainer.classList.add('hidden')
+                    return false
+                }
             case 'create-item':
+                if (isToggled == 'false') {
+                    
+                }
                 Database.addItem({type: 'note', data: {name: 'Test Note', folderId: 0}})
                 return
         }

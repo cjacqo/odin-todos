@@ -37,14 +37,15 @@ const Footer = (function() {
 
             actionButton.setAttribute('type', 'button')
             actionButton.setAttribute('value', `${_action.name}`)
+            actionButton.setAttribute('data-is-toggled', 'false')
 
             actionIcon.classList.add('fa-solid', `${_action.icon}`, 'yellow')
 
             actionButton.appendChild(actionIcon)
 
             actionButton.addEventListener('click', (e) => {
-                e.stopPropagation()
-                Controller.toggleModal(e)
+                let res = Controller.toggleModal(e)
+                actionButton.setAttribute('data-is-toggled', `${res}`)
             })
 
             actionWrapper.appendChild(actionButton)
