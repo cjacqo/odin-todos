@@ -90,6 +90,8 @@ const Controller = (() => {
     }
     // --- Toggle Item
     const toggleItem = ({ type, value, title }) => {
+        // !!! TODO !!!
+        // COMPLETE THE FUNCTIONS TO OPEN THE EDIT VIEW OF THE SELECTED ITEM
         console.log("OPEN ITEM: " + title)
         console.log("ITEM ID: " + value)
     }
