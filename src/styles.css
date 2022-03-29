@@ -179,6 +179,29 @@ h4, h6 {
     padding: 0.3rem 0;
     justify-content: space-between;
     align-items: center;
+    font-size: 1.25rem;
+    min-height: 40px;
+}
+
+.table-item > .small-flex {
+    width: 50px;
+    flex: 1 0 auto;
+    flex-grow: 1;
+    text-align: center;
+}
+
+.table-item > .fill-item {
+    flex: 1 1 100%;
+    flex-grow: 2;
+    text-align: left;
+}
+
+.table-item :nth-child(1) { order: 1; }
+.table-item :nth-child(2) { order: 3;  color: var(--grey-text); font-size: var(--normal); justify-content: center; align-items: center; gap: 10px;}
+.table-item :nth-child(3) { order: 2; }
+
+.fa-chevron-right {
+    font-size: var(--small) !important;
 }
 
 .edit-icon-container {

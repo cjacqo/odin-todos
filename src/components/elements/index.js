@@ -16,16 +16,29 @@ const ListItem = (dataAttribute, itemData, controllerFunction) => {
     const { elementText } = itemData
 
     const li = document.createElement('div')
-    const icon = document.createElement('i')
-    const textBox = document.createElement('p')
-    const countBox = document.createElement('p')
+    const iconBox = document.createElement('div')
+    const textBox = document.createElement('div')
+    const countBox = document.createElement('div')
+
+    iconBox.classList.add('small-flex')
+    countBox.classList.add('small-flex', 'flex')
+    textBox.classList.add('fill-item')
 
     switch(attributeName) {
         case 'data-folder-id':
+            const icon = document.createElement('i')
+            const text = document.createElement('p')
+            const countText = document.createElement('p')
+            const chevron = document.createElement('i')
             icon.classList.add('fa-solid', 'fa-folder', 'yellow')
+            chevron.classList.add('fa-solid', 'fa-chevron-right')
             let count = Controller.getItemCountInFolder(attributeValue)
-            countBox.innerText = count
-            li.appendChild(icon)
+            countText.innerText = count
+            iconBox.appendChild(icon)
+            textBox.appendChild(text)
+            countBox.appendChild(countText)
+            countBox.appendChild(chevron)
+            li.appendChild(iconBox)
             li.appendChild(countBox)
             break
     }
