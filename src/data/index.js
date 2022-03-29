@@ -35,6 +35,7 @@ const Database = (function() {
     }
 
     function _filterFolder(folderId) {
+        console.log(folderId)
         let [theItemFolder] = _foldersDB.filter(_folder => _folder.getId() === folderId)
         return theItemFolder
     }

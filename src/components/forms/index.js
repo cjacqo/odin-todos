@@ -1,3 +1,5 @@
+import Controller from "../../controller"
+
 const AddFolderForm = () => {
     const formContainer = document.createElement('form')
     const formFieldSet = document.createElement('fieldset')
@@ -23,6 +25,12 @@ const AddFolderForm = () => {
     formLegend.innerText = 'Add Folder'
     inputLabel.innerText = 'Folder Name'
     submitButton.innerText = 'Create'
+
+    submitButton.addEventListener('click', (e) => {
+        e.preventDefault()
+        Controller.handleCreation('folder', textInput.value)
+        Controller.toggleModal(e)
+    })
 
     formControl.appendChild(inputLabel)
     formControl.appendChild(textInput)

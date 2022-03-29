@@ -7,6 +7,7 @@ import PageView from "../view"
 
 const Controller = (() => {
     let _state = { folder: {id: null, name: null}, item: {id: null, name: null} }
+    let _modalOpen = false
     let _prevState = { folder: null, item: null }
     let _view = PageView
 
@@ -22,6 +23,15 @@ const Controller = (() => {
     const getItemsByFolderId = (folderId) => {
         return Database.getItemsByFolderId(folderId)
         // return Items.filter(item => item.folder_id === folderId)
+    }
+    // --- Create items
+    const handleCreation = (itemType, data) => {
+        switch(itemType) {
+            case 'folder':
+                console.log(data)
+                Database.addFolder(data)
+                return
+        }
     }
 
     // --- DOM HANDLERS --- //
@@ -68,6 +78,7 @@ const Controller = (() => {
                 Main.loadFoldersTable(Database.getFolders())
                 return
             case 'item':
+                Main.loadItemsTable(Database.getItemsByFolderId(_state.folder.id))
                 return
         }
     }
@@ -110,31 +121,41 @@ const Controller = (() => {
     const toggleModal = (e) => {
         // !!! TODO !!!
         // COMPLETE THE FUNCTIONS TO HANDLE MODAL TOGGLES
-        let isToggled = e.currentTarget.dataset.isToggled
+        let isOpen = !_modalOpen
+        _modalOpen = isOpen
 
         // @@TEST: Test creating a folder and adding it to the database
-        const value = e.currentTarget.value
+        const value = e.currentTarget.value ? e.currentTarget.value : 'close'
         const modalContainer = document.querySelector('.modal-container')
 
         switch(value) {
             case 'create-folder':
-                if (isToggled == 'false') {
+                if (isOpen) {
                     // - toggle the create folder form
                     const addFolderForm = AddFolderForm()
                     modalContainer.appendChild(addFolderForm)
                     modalContainer.classList.remove('hidden')
                     return true
-                } else if (isToggled == 'true') {
+                } else if (!isOpen) {
                     modalContainer.children[0].remove()
                     modalContainer.classList.add('hidden')
                     return false
                 }
             case 'create-item':
-                if (isToggled == 'false') {
-                    
+                if (!isOpen) {
+
                 }
-                Database.addItem({type: 'note', data: {name: 'Test Note', folderId: 0}})
+                let folderId = 'all'
+                Database.addItem({type: 'note', data: {name: 'Test Note', folderId: folderId}})
+                if (folderId == _state.folder.id) {
+                    updateTable('item')
+                }
                 return
+            case 'close':
+                modalContainer.children[0].remove()
+                modalContainer.classList.add('hidden')
+                return
+
         }
     }
     // --- Toggle Item
@@ -169,6 +190,7 @@ const Controller = (() => {
         init: init,
         getFolders: getFolders,
         getItems: getItems,
+        handleCreation: handleCreation,
         updateTable: updateTable,
         toggleTable: toggleTable,
         toggleModal: toggleModal,
