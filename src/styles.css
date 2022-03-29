@@ -12,6 +12,7 @@
     --x-small: 0.382rem;
     --xx-small: 0.236rem;
     --page-margin: 0 1.15rem;
+    --medium-height: 5rem;
     --small-height: 4.5rem;
     --small-border-radius: 5px;
     /* COLORS */
@@ -106,14 +107,33 @@ main,
 footer {
     margin: var(--page-margin);
     overflow: hidden;
+    position: relative;
+}
+
+#editCheckBox {
+    position: absolute;
+    right: 0;
+    top: 40%;
+    transform: translate(-0, -60%);
 }
 
 header,
 footer {
     left: 0;
     right: 0;
-    min-height: var(--small-height);
     z-index: 2;
+}
+
+header {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-start;
+    min-height: var(--medium-height);
+}
+
+footer {
+    min-height: var(--small-height);
 }
 
 /* @@TEST */
@@ -124,7 +144,7 @@ h4, h6 {
 
 .main-title {
     font-size: 32px;
-    font-weight: 800;
+    font-weight: 600;
 }
 .back-button {
     font-size: 16px;
