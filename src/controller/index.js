@@ -59,12 +59,18 @@ const Controller = (() => {
         visibleTable.classList.toggle('hidden')
         hiddenTable.classList.toggle('hidden')
     }
+    // --- Toggle modal
+    const toggleModal = (e) => {
+        // @TODO: COMPLETE THE FUNCTIONS TO HANDLE MODAL TOGGLES
+        console.log(e.currentTarget.value)
+    }
 
     return {
         init: init,
         getFolders: getFolders,
         getItems: getItems,
-        toggleTable: toggleTable
+        toggleTable: toggleTable,
+        toggleModal: toggleModal
     }
 })(PageView)
 
