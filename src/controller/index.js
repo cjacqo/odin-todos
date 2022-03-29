@@ -117,6 +117,7 @@ const Controller = (() => {
                 Main.loadItemsTable(data, title)
                 visibleTable.classList.remove('hidden')
                 hiddenTable.classList.add('hidden')
+                toggleEdit('force')
                 return
             case 'back-to-folder':
                 _state = {folder: {id: value, name: title }, item: {id: null, name: null}}
@@ -138,7 +139,7 @@ const Controller = (() => {
 
         // @@TEST: Test creating a folder and adding it to the database
         if (e) {
-            value = e.currentTarget.value ? e.currentTarget.value : e.currentTarget.dataset.action ? e.currentTarget.dataset.action : 'close'
+            value = e.currentTarget.value ? e.currentTarget.value : e.currentTarget.dataset.action ? e.currentTarget.dataset.action : e
         } else {
             value = 'close'
         }
@@ -209,7 +210,7 @@ const Controller = (() => {
         let tableItems = document.querySelectorAll('.table-item')
         let countContainers = document.querySelectorAll('.countBox')
 
-        if (isChecked) {
+        if (isChecked === true) {
             overlay.classList.add('overlay')
             // appContainer.appendChild(overlay)
             editContainers.forEach(editContainer => editContainer.classList.remove('hidden'))
@@ -220,6 +221,10 @@ const Controller = (() => {
             toggleModal()
             editContainers.forEach(editContainer => editContainer.classList.add('hidden'))
             countContainers.forEach(editContainer => editContainer.classList.remove('hidden'))
+            if (isChecked === 'force') {
+                const checkBox = document.getElementById('editCheckBox')
+                checkBox.checked = false
+            }
             console.log("TURN OFF EDITING STATE & VIEW")
         }
     }
