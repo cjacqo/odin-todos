@@ -1,12 +1,32 @@
 import _ from 'lodash'
-import printMe from './print'
+import './styles.css'
+import Controller from './controller'
 
-function app() {
-    const appContainer = document.createElement('div')
+const _app = (function() {
+    Controller.init()
 
-    appContainer.innerHTML = 'App Start'
-    // appContainer.innerHTML = _.join(['Hello', 'webpack'], '')
+    // let _state
+    // let _appContainer
+    // let _header
+    // let _main
+    // let _footer
 
-    return appContainer
-}
-document.body.appendChild(app())
+    // // --- Renders the initial layout of the page on first load
+    // //          + creates the main HTML element then appends to body
+    // //          + a list of all the folders on initial load by calling _renderPage()
+    // const _init = (function() {
+    //     Controller.getView()
+    //     _renderPage()
+    // })()
+
+    // // --- Removes elements from appContainer element and creates new elements based
+    // //          on the state
+    // function _renderPage() {
+    //     console.log("Render Page")
+    // }
+
+    // return {
+    // }
+})()
+
+export default _app

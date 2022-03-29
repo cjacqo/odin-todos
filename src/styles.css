@@ -1,0 +1,9 @@
+/* .main-container > button:nth-child(1) {
+    position: absolute;
+    top: 0;
+    transition: top 1000ms ease-in;
+}
+
+.active {
+    top: 500px;
+} */
