@@ -63,16 +63,23 @@ const ListItem = (dataAttribute, itemData, controllerFunction) => {
                 break
         }
     })
-    toggleEditMenuIcon.addEventListener('click', (e) => {
-        e.stopPropagation()
-        Controller.toggleModal(e)
-    })
-    dragEditItemIcon.addEventListener('ondrag', (e) => {
-        console.log("Hi")
-    })
-    editIconsContainer.appendChild(toggleEditMenuIcon)
-    editIconsContainer.appendChild(dragEditItemIcon)
-    li.appendChild(editIconsContainer)
+
+    // - run check of database to make sure that edit buttons are not available for default folders
+    if (Controller.checkCanDeleteFolder(attributeValue)) {
+        toggleEditMenuIcon.addEventListener('click', (e) => {
+            e.stopPropagation()
+            Controller.toggleModal(e)
+        })
+        dragEditItemIcon.addEventListener('ondrag', (e) => {
+            console.log("Hi")
+        })
+        editIconsContainer.appendChild(toggleEditMenuIcon)
+        editIconsContainer.appendChild(dragEditItemIcon)
+        li.appendChild(editIconsContainer)
+    } else {
+        li.classList.add('cant-delete')
+    }
+    
     return li
 }
 

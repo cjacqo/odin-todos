@@ -13,3 +13,7 @@
     top: 100%;
     transition: background-color 300ms ease-in, top 500ms ease-in 400ms;
 }
+
+.cant-delete.active {
+    color: var(--lighter-grey);
+}

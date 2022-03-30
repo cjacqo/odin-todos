@@ -47,6 +47,14 @@ const Controller = (() => {
         })
         return folder
     }
+    // --- Check if folder can be deleted
+    const checkCanDeleteFolder = (folderId) => {
+        const [folder] = getFoldersFromDb().filter(folder => {
+            return folder.getId() === folderId
+        })
+        // const canDelete = folder.getCanDelete()
+        return folder.getCanDelete()
+    }
     // --- Handle form validations before sumbission
     const handleTextInput = (e) => {
         // - change disabled value on submit button if length is greater then 0
@@ -231,6 +239,7 @@ const Controller = (() => {
     const toggleEdit = (isChecked) => {
         const overlay = document.createElement('div')
         const appContainer = document.getElementById('appContainer')
+        let cantDeleteItems = document.querySelectorAll('.cant-delete')
         let editContainers = document.querySelectorAll('.edit-icon-container')
         let tableItems = document.querySelectorAll('.table-item')
         let countContainers = document.querySelectorAll('.countBox')
@@ -240,12 +249,14 @@ const Controller = (() => {
             // appContainer.appendChild(overlay)
             editContainers.forEach(editContainer => editContainer.classList.remove('hidden'))
             countContainers.forEach(editContainer => editContainer.classList.add('hidden'))
+            cantDeleteItems.forEach(cantDeleteItem => cantDeleteItem.classList.add('active'))
             console.log("DO STUFF DEPENDING ON WHAT IS BEING EDITED")
         } else {
             _modalOpen = true
             toggleModal()
             editContainers.forEach(editContainer => editContainer.classList.add('hidden'))
             countContainers.forEach(editContainer => editContainer.classList.remove('hidden'))
+            cantDeleteItems.forEach(cantDeleteItem => cantDeleteItem.classList.remove('active'))
             if (isChecked === 'force') {
                 const checkBox = document.getElementById('editCheckBox')
                 checkBox.checked = false
@@ -262,6 +273,7 @@ const Controller = (() => {
         getItemCountInFolder: getItemCountInFolder,
         handleCreation: handleCreation,
         handleTextInput: handleTextInput,
+        checkCanDeleteFolder: checkCanDeleteFolder,
         updateTable: updateTable,
         toggleTable: toggleTable,
         toggleModal: toggleModal,
