@@ -3,6 +3,7 @@ import Controller from "../../controller"
 import '@fortawesome/fontawesome-free/js/fontawesome'
 import '@fortawesome/fontawesome-free/js/solid'
 import '@fortawesome/fontawesome-free/js/regular'
+import { SmallPopUpMenu } from '../elements'
 
 const Footer = (function() {
     let _footerContainer
@@ -17,16 +18,22 @@ const Footer = (function() {
             icon: 'fa-pen-to-square'
         }
     ]
+    let _popUpMenuContainer
+    let _smallPopUpMenu
 
     // --- Initializes the DOM elements and returns the newly create DOM element
     function _init() {
         // - create the elements for the Footer DOM element
         _footerContainer = document.createElement('footer')
+        _popUpMenuContainer = document.createElement('div')
         _actionsContainer = document.createElement('div')
+        _smallPopUpMenu = SmallPopUpMenu()
         // - set attributes
         _footerContainer.setAttribute('id', 'footerContainer')
+        _popUpMenuContainer.setAttribute('id', 'footerPopUpMenu')
         _actionsContainer.setAttribute('id', 'actionsContainer')
         _footerContainer.classList.add('flex')
+        _popUpMenuContainer.classList.add('hidden')
         _actionsContainer.classList.add('flex')
         // - create buttons and append to the _actionsContainer
         _actions.forEach(_action => {
@@ -46,7 +53,12 @@ const Footer = (function() {
             actionButton.appendChild(actionIcon)
 
             actionButton.addEventListener('click', (e) => {
-                let res = Controller.toggleModal(e)
+                let res
+                if (_action.name === 'create-folder') {
+                    res = Controller.toggleModal(e)
+                } else {
+                    res = Controller.togglePopUp(e)
+                }
                 actionButton.setAttribute('data-is-toggled', `${res}`)
             })
 
@@ -54,6 +66,8 @@ const Footer = (function() {
             _actionsContainer.appendChild(actionWrapper)
         })
         // - append the _actionsContainer to the _footerContainer
+        _popUpMenuContainer.appendChild(_smallPopUpMenu)
+        _footerContainer.appendChild(_popUpMenuContainer)
         _footerContainer.appendChild(_actionsContainer)
         // - return container
         return _footerContainer
@@ -61,10 +75,12 @@ const Footer = (function() {
 
     function init() { return _init() }
     function getFooterContainer() { return _footerContainer }
+    function getSmallPopUpMenu() { return _popUpMenuContainer }
     
     return {
         init: init,
-        getFooterContainer: getFooterContainer
+        getFooterContainer: getFooterContainer,
+        getSmallPopUpMenu: getSmallPopUpMenu
     }
 })()
 

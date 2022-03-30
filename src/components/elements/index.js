@@ -185,4 +185,11 @@ const EditModal = (folderName) => {
     return editModal
 }
 
-export {ListItem, EditCheckBox, SearchBar, Modal, EditModal}
+const SmallPopUpMenu = () => {
+    const container = document.createElement('div')
+    container.classList.add('small-popup-menu-container', 'hidden')
+    container.innerText = 'Small Pop Up Menu'
+    return container
+}
+
+export {ListItem, EditCheckBox, SearchBar, Modal, EditModal, SmallPopUpMenu}

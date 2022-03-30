@@ -1,4 +1,5 @@
 import { EditModal } from "../components/elements"
+import Footer from "../components/footer/Footer"
 import { AddFolderForm } from "../components/forms"
 import Header from "../components/header/Header"
 import Main from "../components/main/Main"
@@ -8,6 +9,8 @@ import PageView from "../view"
 
 const Controller = (() => {
     let _state = { folder: {id: null, name: null}, item: {id: null, name: null} }
+    let _modalState = { currentModal: null, modalOpen: false }
+    let _popUpOpen = false
     let _modalOpen = false
     let _prevState = { folder: null, item: null }
     let _view = PageView
@@ -132,9 +135,12 @@ const Controller = (() => {
         let data
         let visibleTable
         let hiddenTable
-        console.log(action)
+
+        if (_popUpOpen) {
+            togglePopUp()
+        }
+
         const createFolderButton = document.getElementById('create-folderAction')
-        console.log(_state)
         if (_state.folder.name !== null) {
             createFolderButton.classList.toggle('hidden')
             createFolderButton.children[0].removeAttribute('disabled')
@@ -169,13 +175,18 @@ const Controller = (() => {
     }
     // --- Toggle modal
     const toggleModal = (e) => {
+        let value
+        const modalContainer = document.querySelector('.modal-container')
+        if (_popUpOpen) {
+            togglePopUp()
+        }
+
         // !!! TODO !!!
         // COMPLETE THE FUNCTIONS TO HANDLE MODAL TOGGLES
-        console.log("GLOBAL VALUE ~ _modalOpen ~ IS: " + _modalOpen)
+        // console.log("GLOBAL VALUE ~ _modalOpen ~ IS: " + _modalOpen)
         let isOpen = !_modalOpen
         _modalOpen = isOpen
-        console.log("LOCAL VALUE ~ isOpen ~ IS: " + isOpen)
-        let value
+        // console.log("LOCAL VALUE ~ isOpen ~ IS: " + isOpen)
 
         // @@TEST: Test creating a folder and adding it to the database
         if (e) {
@@ -183,7 +194,8 @@ const Controller = (() => {
         } else {
             value = 'close'
         }
-        const modalContainer = document.querySelector('.modal-container')
+        console.log(value)
+        console.log(isOpen)
 
         switch(value) {
             case 'create-folder':
@@ -201,15 +213,12 @@ const Controller = (() => {
                     return false
                 }
             case 'create-item':
-                if (!isOpen) {
-
-                }
-                let folderId = 'all'
-                Database.addItem({type: 'note', data: {name: 'Test Note', folderId: folderId}})
-                Main.loadFoldersTable(Database.getFolders())
-                if (folderId == _state.folder.id) {
-                    updateTable('item')
-                }
+                // let folderId = 'all'
+                // Database.addItem({type: 'note', data: {name: 'Test Note', folderId: folderId}})
+                // Main.loadFoldersTable(Database.getFolders())
+                // if (folderId == _state.folder.id) {
+                //     updateTable('item')
+                // }
                 return
             case 'open-edit-modal':
                 if (isOpen) {
@@ -231,13 +240,23 @@ const Controller = (() => {
 
         }
     }
+    // --- Toggle Popup
+    const togglePopUp = () => {
+        console.log('Hello from togglePopUp')
+        const smallPopUp = Footer.getSmallPopUpMenu()
+        if (!_popUpOpen) {
+            smallPopUp.classList.remove('hidden')
+        } else {
+            smallPopUp.classList.add('hidden')
+        }
+        _popUpOpen = !_popUpOpen
+    }
     // --- Toggle Item
     const toggleItem = ({ type, value, title }) => {
         // - change the header title
         console.log("TITLE: " + title)
         _state.item.name = title
         _state.item.id = value
-        console.log(_state)
         changeHeaderTitle('open-item', _state, 'folder')
         // !!! TODO !!!
         // COMPLETE THE FUNCTIONS TO OPEN THE EDIT VIEW OF THE SELECTED ITEM
@@ -247,6 +266,9 @@ const Controller = (() => {
 
     // --- Toggle Edit
     const toggleEdit = (isChecked) => {
+        if (_popUpOpen) {
+            togglePopUp()
+        }
         const overlay = document.createElement('div')
         const appContainer = document.getElementById('appContainer')
         let cantDeleteItems = document.querySelectorAll('.cant-delete')
@@ -274,7 +296,6 @@ const Controller = (() => {
             console.log("TURN OFF EDITING STATE & VIEW")
         }
     }
-
     
     return {
         init: init,
@@ -287,6 +308,7 @@ const Controller = (() => {
         updateTable: updateTable,
         toggleTable: toggleTable,
         toggleModal: toggleModal,
+        togglePopUp: togglePopUp,
         toggleItem: toggleItem,
         toggleEdit: toggleEdit,
         getFoldersFromDb: getFoldersFromDb

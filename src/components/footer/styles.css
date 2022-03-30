@@ -6,6 +6,7 @@
 #footerContainer > #actionsContainer {
     width: 100%;
     justify-content: space-between;
+    background-color: var(--black);
 }
 
 .footer-action-button-wrapper {}
@@ -20,4 +21,19 @@
 #create-folderAction.hidden {
     opacity: 0;
     user-select: none;
+}
+
+#footerPopUpMenu {
+    position: absolute;
+    opacity: 1;
+    margin: var(--page-margin);
+    right: 0;
+    bottom: var(--small-height);
+    z-index: 0;
+}
+#footerPopUpMenu.hidden {
+    user-select: none;
+    bottom: 0;
+    opacity: 0;
+    z-index: -1;
 }
