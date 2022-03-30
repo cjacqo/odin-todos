@@ -79,16 +79,14 @@ const Controller = (() => {
     const changeHeaderTitle = (action, state, tableAction) => {
         const headerTitle = Header.getHeaderTitle()
         const subHeaderTitle = Header.getSubHeaderTitle()
-        headerTitle.removeEventListener('click', changeHeaderTitle)
-
         switch(action) {
             case 'open-folder':
                 headerTitle.innerText = 'Folders'
                 headerTitle.classList.remove('main-title')
                 headerTitle.classList.add('back-button')
-                headerTitle.addEventListener('click', () => {
-                    toggleTable({type: tableAction, value: state.folder.id, title: state.folder.title})
-                })
+                headerTitle.setAttribute('data-table-action', tableAction)
+                headerTitle.setAttribute('data-value', state.folder.id)
+                headerTitle.setAttribute('data-title', state.folder.name)
                 subHeaderTitle.classList.remove('hidden')
                 subHeaderTitle.classList.add('main-title')
                 subHeaderTitle.innerText = state.folder.name
@@ -96,9 +94,9 @@ const Controller = (() => {
             case 'open-item':
                 headerTitle.innerText = state.folder.name
                 subHeaderTitle.innerText = state.item.name
-                headerTitle.addEventListener('click', () => {
-                    toggleTable({type: tableAction, value: state.folder.id, title: state.folder.name})
-                })
+                headerTitle.setAttribute('data-table-action', tableAction)
+                headerTitle.setAttribute('data-value', state.folder.id)
+                headerTitle.setAttribute('data-title', state.folder.name)
                 return
             case 'default':
                 subHeaderTitle.classList.remove('main-title')
@@ -134,7 +132,13 @@ const Controller = (() => {
         let data
         let visibleTable
         let hiddenTable
+        console.log(action)
         const createFolderButton = document.getElementById('create-folderAction')
+        console.log(_state)
+        if (_state.folder.name !== null) {
+            createFolderButton.classList.toggle('hidden')
+            createFolderButton.children[0].removeAttribute('disabled')
+        }
         switch(type) {
             case 'folder':
                 // - change the header title for opening a folder
@@ -154,14 +158,12 @@ const Controller = (() => {
                 toggleEdit('force')
                 return
             case 'back-to-folder':
-                _state = {folder: {id: value, name: title }, item: {id: null, name: null}}
+                _state = {folder: {id: null, name: null }, item: {id: null, name: null}}
                 changeHeaderTitle('default', _state)
                 visibleTable = Main.getFoldersTable()
                 hiddenTable = Main.getItemsTable()
                 visibleTable.classList.remove('hidden')
                 hiddenTable.classList.add('hidden')
-                createFolderButton.classList.toggle('hidden')
-                createFolderButton.children[0].removeAttribute('disabled')
                 return
         }
     }
@@ -192,7 +194,9 @@ const Controller = (() => {
                     modalContainer.classList.toggle('hidden')
                     return true
                 } else if (!isOpen) {
-                    modalContainer.children[0].remove()
+                    while (modalContainer.children.length > 0) {
+                        modalContainer.children[0].remove()
+                    }
                     modalContainer.classList.toggle('hidden')
                     return false
                 }
@@ -230,6 +234,7 @@ const Controller = (() => {
     // --- Toggle Item
     const toggleItem = ({ type, value, title }) => {
         // - change the header title
+        console.log("TITLE: " + title)
         _state.item.name = title
         _state.item.id = value
         console.log(_state)

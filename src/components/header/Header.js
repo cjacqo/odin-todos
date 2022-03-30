@@ -1,3 +1,4 @@
+import Controller from "../../controller"
 import { EditCheckBox, SearchBar } from "../elements"
 
 const Header = (function() {
@@ -23,6 +24,13 @@ const Header = (function() {
         // - set the title of the page to the default title on page load
         _title = 'Folders'
         _headerTitle.innerText = _title
+
+        _headerTitle.addEventListener('click', (e) => {
+            console.log(e.target.dataset)
+            if (e.target.dataset) {
+                Controller.toggleTable({type: e.target.dataset.tableAction, value: e.target.dataset.value, title: e.target.dataset.title})
+            }
+        })
         // - set the text of the edit check box
         // _editCheckBox.innerText = 'Edit'
         // - append the child elements to the Header container
