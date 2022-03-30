@@ -31,13 +31,36 @@ const Controller = (() => {
     }
     // --- Create items
     const handleCreation = (itemType, data) => {
-        console.log(itemType)
         switch(itemType) {
             case 'folder':
                 Database.addFolder(data)
                 return
             case 'item':
                 console.log("DFSDFSDF")
+        }
+    }
+    // --- Check if exists
+    const checkIfFolderExists = (name) => {
+        const folder = getFoldersFromDb().filter(folder => {
+            const fName = folder.getName()
+            return fName.toLowerCase() === name.toLowerCase() && folder
+        })
+        return folder
+    }
+    // --- Handle form validations before sumbission
+    const handleTextInput = (e) => {
+        // - change disabled value on submit button if length is greater then 0
+        const submitBtn = document.querySelector('.form-submit-button')
+        if (e.target.value.length !== 0) {
+            const folderExists = checkIfFolderExists(e.target.value)
+            if (folderExists.length > 0) {
+                console.log('FOLDER EXISTS ALREADY ERROR TO USER TOGGLED HERE')
+                submitBtn.setAttribute('disabled', true)
+            } else {
+                submitBtn.removeAttribute('disabled')
+            }
+        } else {
+            submitBtn.setAttribute('disabled', true)
         }
     }
 
@@ -133,8 +156,10 @@ const Controller = (() => {
     const toggleModal = (e) => {
         // !!! TODO !!!
         // COMPLETE THE FUNCTIONS TO HANDLE MODAL TOGGLES
+        console.log("GLOBAL VALUE ~ _modalOpen ~ IS: " + _modalOpen)
         let isOpen = !_modalOpen
         _modalOpen = isOpen
+        console.log("LOCAL VALUE ~ isOpen ~ IS: " + isOpen)
         let value
 
         // @@TEST: Test creating a folder and adding it to the database
@@ -236,6 +261,7 @@ const Controller = (() => {
         getItems: getItems,
         getItemCountInFolder: getItemCountInFolder,
         handleCreation: handleCreation,
+        handleTextInput: handleTextInput,
         updateTable: updateTable,
         toggleTable: toggleTable,
         toggleModal: toggleModal,

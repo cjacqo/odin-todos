@@ -29,13 +29,22 @@ const AddFolderForm = () => {
     cancelButton.classList.add('form-button', 'form-cancel-button')
     submitButton.classList.add('form-button', 'form-submit-button')
 
+    formTitle.innerText = 'New Folder'
+    formSubTitle.innerText = 'Enter a name for this folder.'
+
     textInput.setAttribute('autocomplete', 'off')
+    textInput.setAttribute('required', true)
+    textInput.setAttribute('minlength', '1')
+    textInput.setAttribute('maxlength', '20')
     textInput.setAttribute('type', 'text')
     textInput.setAttribute('id', 'folderNameInput')
     textInput.setAttribute('placeholder', 'Name')
+    textInput.setAttribute('name', 'add-form-input')
 
-    formTitle.innerText = 'New Folder'
-    formSubTitle.innerText = 'Enter a name for this folder.'
+    textInput.addEventListener('input', (e) => {
+        Controller.handleTextInput(e)
+    })
+
     cancelButton.innerText = 'Cancel'
     submitButton.innerText = 'Save'
 

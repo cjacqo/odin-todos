@@ -65,6 +65,8 @@ input[type='text']:focus {
 
 .form-submit-button {
     font-weight: 800;
+    color: var(--yellow-2);
+    font-weight: bold;
 }
 .form-submit-button:disabled {
     color: var(--grey-text);
