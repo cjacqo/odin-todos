@@ -26,7 +26,6 @@ const Header = (function() {
         _headerTitle.innerText = _title
 
         _headerTitle.addEventListener('click', (e) => {
-            console.log(e.target.dataset)
             if (e.target.dataset) {
                 Controller.toggleTable({type: e.target.dataset.tableAction, value: e.target.dataset.value, title: e.target.dataset.title})
             }

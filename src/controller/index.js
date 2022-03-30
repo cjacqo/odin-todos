@@ -82,6 +82,9 @@ const Controller = (() => {
     const changeHeaderTitle = (action, state, tableAction) => {
         const headerTitle = Header.getHeaderTitle()
         const subHeaderTitle = Header.getSubHeaderTitle()
+        if (_popUpOpen) {
+            togglePopUp()
+        }
         switch(action) {
             case 'open-folder':
                 headerTitle.innerText = 'Folders'
@@ -180,7 +183,6 @@ const Controller = (() => {
         if (_popUpOpen) {
             togglePopUp()
         }
-
         // !!! TODO !!!
         // COMPLETE THE FUNCTIONS TO HANDLE MODAL TOGGLES
         // console.log("GLOBAL VALUE ~ _modalOpen ~ IS: " + _modalOpen)
@@ -263,7 +265,6 @@ const Controller = (() => {
         console.log("OPEN ITEM: " + title)
         console.log("ITEM ID: " + value)
     }
-
     // --- Toggle Edit
     const toggleEdit = (isChecked) => {
         if (_popUpOpen) {
@@ -296,6 +297,22 @@ const Controller = (() => {
             console.log("TURN OFF EDITING STATE & VIEW")
         }
     }
+    // --- Start Item Creation
+    const startItemCreation = (e) => {
+        const value = e.currentTarget.value
+        togglePopUp()
+        switch (value) {
+            case 'create-todo':
+                console.log("CREATE A TODO")
+                return
+            case 'create-note':
+                console.log("CREATE A NOTE")
+                return
+            case 'create-checklist':
+                console.log("CREATE A CHECKLIST")
+                return
+        }
+    }
     
     return {
         init: init,
@@ -311,6 +328,7 @@ const Controller = (() => {
         togglePopUp: togglePopUp,
         toggleItem: toggleItem,
         toggleEdit: toggleEdit,
+        startItemCreation: startItemCreation,
         getFoldersFromDb: getFoldersFromDb
     }
 })(PageView)

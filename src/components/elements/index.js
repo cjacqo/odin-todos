@@ -186,9 +186,27 @@ const EditModal = (folderName) => {
 }
 
 const SmallPopUpMenu = () => {
+    const buttons = [
+        { action: 'create-todo', name: 'ToDo' },
+        { action: 'create-note', name: 'Note' },
+        { action: 'create-checklist', name: 'Checklist' }
+    ]
     const container = document.createElement('div')
     container.classList.add('small-popup-menu-container', 'hidden')
-    container.innerText = 'Small Pop Up Menu'
+
+    buttons.forEach(button => {
+        const btn = document.createElement('button')
+        btn.setAttribute('value', button.action)
+        btn.setAttribute('type', 'button')
+        btn.innerText = button.name
+
+        btn.addEventListener('click', (e) => {
+            Controller.startItemCreation(e)
+        })
+        
+        container.appendChild(btn)
+    })
+    
     return container
 }
 
