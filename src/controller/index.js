@@ -1,6 +1,6 @@
 import { EditModal } from "../components/elements"
 import Footer from "../components/footer/Footer"
-import { AddFolderForm } from "../components/forms"
+import { AddFolderForm, CreateToDoForm } from "../components/forms"
 import Header from "../components/header/Header"
 import Main from "../components/main/Main"
 import Database from "../data"
@@ -179,25 +179,28 @@ const Controller = (() => {
     // --- Toggle modal
     const toggleModal = (e) => {
         let value
+        let isOpen = !_modalOpen
+        _modalOpen = isOpen
         const modalContainer = document.querySelector('.modal-container')
         if (_popUpOpen) {
             togglePopUp()
         }
         // !!! TODO !!!
-        // COMPLETE THE FUNCTIONS TO HANDLE MODAL TOGGLES
-        // console.log("GLOBAL VALUE ~ _modalOpen ~ IS: " + _modalOpen)
-        let isOpen = !_modalOpen
-        _modalOpen = isOpen
-        // console.log("LOCAL VALUE ~ isOpen ~ IS: " + isOpen)
-
-        // @@TEST: Test creating a folder and adding it to the database
+        
         if (e) {
             value = e.currentTarget.value ? e.currentTarget.value : e.currentTarget.dataset.action ? e.currentTarget.dataset.action : e === 'close' ? 'close' : null
         } else {
             value = 'close'
         }
-        console.log(value)
-        console.log(isOpen)
+
+        if (isOpen) {
+            modalContainer.classList.remove('hidden')
+        } else {
+            while (modalContainer.children.length > 0) {
+                modalContainer.children[0].remove()
+            }
+            modalContainer.classList.add('hidden')
+        }
 
         switch(value) {
             case 'create-folder':
@@ -205,33 +208,18 @@ const Controller = (() => {
                     // - toggle the create folder form
                     const addFolderForm = AddFolderForm()
                     modalContainer.appendChild(addFolderForm)
-                    modalContainer.classList.toggle('hidden')
                     return true
-                } else if (!isOpen) {
-                    while (modalContainer.children.length > 0) {
-                        modalContainer.children[0].remove()
-                    }
-                    modalContainer.classList.toggle('hidden')
-                    return false
                 }
-            case 'create-item':
-                // let folderId = 'all'
-                // Database.addItem({type: 'note', data: {name: 'Test Note', folderId: folderId}})
-                // Main.loadFoldersTable(Database.getFolders())
-                // if (folderId == _state.folder.id) {
-                //     updateTable('item')
-                // }
-                return
+            case 'create-todo':
+                if (isOpen) {
+                    const createToDoForm = CreateToDoForm()
+                    modalContainer.appendChild(createToDoForm)
+                }
             case 'open-edit-modal':
                 if (isOpen) {
                     const editFolderModal = EditModal(e.currentTarget.dataset.tableItemId)
                     modalContainer.appendChild(editFolderModal)
-                } else {
-                    while (modalContainer.children.length > 0) {
-                        modalContainer.children[0].remove()
-                    }
                 }
-                modalContainer.classList.toggle('hidden')
                 return
             case 'close':
                 while (modalContainer.children.length > 0) {
@@ -239,12 +227,10 @@ const Controller = (() => {
                 }
                 modalContainer.classList.add('hidden')
                 return
-
         }
     }
     // --- Toggle Popup
     const togglePopUp = () => {
-        console.log('Hello from togglePopUp')
         const smallPopUp = Footer.getSmallPopUpMenu()
         if (!_popUpOpen) {
             smallPopUp.classList.remove('hidden')
@@ -303,6 +289,7 @@ const Controller = (() => {
         togglePopUp()
         switch (value) {
             case 'create-todo':
+                toggleModal(e)
                 console.log("CREATE A TODO")
                 return
             case 'create-note':
