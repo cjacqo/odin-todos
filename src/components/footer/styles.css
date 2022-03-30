@@ -1,0 +1,18 @@
+#footerContainer {
+    justify-content: center;
+    align-items: center;
+}
+
+#footerContainer > #actionsContainer {
+    width: 100%;
+    justify-content: space-between;
+}
+
+.footer-action-button-wrapper {}
+
+.footer-action-button-wrapper > button {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    font-size: var(--husky);
+}

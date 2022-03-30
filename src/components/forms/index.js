@@ -1,45 +1,72 @@
+import './styles.css'
 import Controller from "../../controller"
 
 const AddFolderForm = () => {
+    const parentContainer = document.createElement('div')
     const formContainer = document.createElement('form')
     const formFieldSet = document.createElement('fieldset')
-    const formLegend = document.createElement('legend')
-    const formControl = document.createElement('div')
-    const inputLabel = document.createElement('label')
+    const formLegend = document.createElement('div')
+    const formTitle = document.createElement('h6')
+    const formSubTitle = document.createElement('p')
+    const formInputControl = document.createElement('div')
     const textInput = document.createElement('input')
+
+    const buttonsContainer = document.createElement('div')
+    const cancelButton = document.createElement('button')
     const submitButton = document.createElement('button')
 
+    parentContainer.classList.add('form-parent')
+    parentContainer.setAttribute('id', 'addFolderFormParent')
     formContainer.setAttribute('id', 'addFolderForm')
     formContainer.classList.add('form-container')
-    formFieldSet.classList.add('form-fieldset')
+    formFieldSet.classList.add('form-fieldset', 'flex', 'col')
     formLegend.classList.add('form-legend')
-    formControl.classList.add('form-control')
-    inputLabel.classList.add('input-label')
+    formTitle.classList.add('form-title')
+    formSubTitle.classList.add('form-sub-title')
+    formInputControl.classList.add('form-control')
     textInput.classList.add('form-input')
-    submitButton.classList.add('form-submit-btn')
+    buttonsContainer.classList.add('form-buttons-container', 'flex')
+    cancelButton.classList.add('form-button', 'form-cancel-button')
+    submitButton.classList.add('form-button', 'form-submit-button')
 
+    textInput.setAttribute('autocomplete', 'off')
     textInput.setAttribute('type', 'text')
     textInput.setAttribute('id', 'folderNameInput')
-    inputLabel.setAttribute('for', 'folderNameInput')
+    textInput.setAttribute('placeholder', 'Name')
 
-    formLegend.innerText = 'Add Folder'
-    inputLabel.innerText = 'Folder Name'
-    submitButton.innerText = 'Create'
+    formTitle.innerText = 'New Folder'
+    formSubTitle.innerText = 'Enter a name for this folder.'
+    cancelButton.innerText = 'Cancel'
+    submitButton.innerText = 'Save'
 
+    cancelButton.setAttribute('type', 'button')
+    cancelButton.setAttribute('value', 'close')
+    cancelButton.addEventListener('click', (e) => {
+        e.preventDefault()
+        Controller.toggleModal(e)
+    })
+    
+    submitButton.setAttribute('type', 'submit')
+    submitButton.setAttribute('disabled', true)
     submitButton.addEventListener('click', (e) => {
         e.preventDefault()
         Controller.handleCreation('folder', textInput.value)
         Controller.toggleModal()
     })
 
-    formControl.appendChild(inputLabel)
-    formControl.appendChild(textInput)
-    formControl.appendChild(submitButton)
-    formLegend.appendChild(formControl)
+    buttonsContainer.appendChild(cancelButton)
+    buttonsContainer.appendChild(submitButton)
+
+    formLegend.appendChild(formTitle)
+    formLegend.appendChild(formSubTitle)
+    
+    formInputControl.appendChild(textInput)
     formFieldSet.appendChild(formLegend)
-    formFieldSet.appendChild(formControl)
+    formFieldSet.appendChild(formInputControl)
     formContainer.appendChild(formFieldSet)
-    return formContainer
+    formContainer.appendChild(buttonsContainer)
+    parentContainer.appendChild(formContainer)
+    return parentContainer
 }
 
 export {AddFolderForm}

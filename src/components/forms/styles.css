@@ -1,0 +1,71 @@
+/* GLOBAL */
+input[type='text'] {
+    background-color: var(--darker-grey-bg);
+    border-radius: var(--small-border-radius);
+    border: 1px solid var(--lighter-grey);
+    margin: 0;
+    padding: var(--x-small) var(--small);
+    caret-color: var(--yellow-2);
+    color: var(--grey-text);
+}
+input[type='text']:focus {
+    outline: none;
+}
+
+/* ADD FOLDER FORM */
+#addFolderFormParent {
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+#addFolderForm {
+    position: absolute;
+    width: 65vw;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--medium-grey);
+    border-radius: var(--small-border-radius);
+}
+
+.form-fieldset {
+    border: none;
+    text-align: center;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    padding: var(--small) 0;
+    border-bottom: 1px solid var(--lighter-grey);
+}
+
+.form-title {
+    font-size: var(--normal);
+}
+
+.form-sub-title {
+    font-size: var(--slightly-smaller)
+}
+
+.form-button {
+    flex: 1 1 0;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    padding: var(--small) 0;
+}
+
+.form-cancel-button {
+    border-right: 1px solid var(--lighter-grey) !important;
+    color: var(--yellow-2);
+    font-weight: bold;
+}
+
+.form-submit-button {
+    font-weight: 800;
+}
+.form-submit-button:disabled {
+    color: var(--grey-text);
+}

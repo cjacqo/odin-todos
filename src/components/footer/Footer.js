@@ -1,3 +1,4 @@
+import './styles.css'
 import Controller from "../../controller"
 import '@fortawesome/fontawesome-free/js/fontawesome'
 import '@fortawesome/fontawesome-free/js/solid'
@@ -25,6 +26,7 @@ const Footer = (function() {
         // - set attributes
         _footerContainer.setAttribute('id', 'footerContainer')
         _actionsContainer.setAttribute('id', 'actionsContainer')
+        _footerContainer.classList.add('flex')
         _actionsContainer.classList.add('flex')
         // - create buttons and append to the _actionsContainer
         _actions.forEach(_action => {

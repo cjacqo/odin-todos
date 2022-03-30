@@ -8,6 +8,7 @@
     --husky: 1.618rem;
     --slightly-bigger: 1.15rem;
     --normal: 1rem;
+    --slightly-smaller: 0.85rem;
     --small: 0.618rem;
     --x-small: 0.382rem;
     --xx-small: 0.236rem;
@@ -19,6 +20,9 @@
     --white: rgb(255, 250, 255);
     --black: rgb(26, 23, 23);
     --grey-bg: rgba(59, 58, 58, 0.932);
+    --darker-grey-bg: rgba(31, 30, 31, 1);
+    --medium-grey: rgb(62, 60, 62);
+    --lighter-grey: rgb(104, 100, 103);
     --grey-text: rgb(224, 224, 224);
     --blue: rgb(34, 116, 165);
     --yellow-1: rgb(246, 174, 45);
@@ -297,16 +301,4 @@ h4, h6 {
 }
 #searchInput:focus {
     outline: none;
-}
-
-.modal-container {
-    position: absolute;
-    top: 0;
-    left: 0;
-    transition: top 500ms ease-in;
-    z-index: 5;
-}
-.modal-container.hidden {
-    position: absolute;
-    top: 100%;
 }

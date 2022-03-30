@@ -1,3 +1,4 @@
+import './styles.css'
 import Controller from "../../controller"
 import '@fortawesome/fontawesome-free/js/fontawesome'
 import '@fortawesome/fontawesome-free/js/solid'
@@ -120,7 +121,7 @@ const SearchBar = () => {
     searchInput.setAttribute('id', 'searchInput')
     microphoneIcon.setAttribute('id', 'microphoneIcon')
 
-    searchInput.setAttribute('type', 'text')
+    searchInput.setAttribute('type', 'search')
     searchInput.setAttribute('name', 'searc-bar-input')
     searchInput.setAttribute('placeholder', 'Search')
 
