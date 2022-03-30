@@ -16,3 +16,8 @@
     outline: none;
     font-size: var(--husky);
 }
+
+#create-folderAction.hidden {
+    opacity: 0;
+    user-select: none;
+}

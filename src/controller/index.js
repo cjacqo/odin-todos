@@ -53,7 +53,7 @@ const Controller = (() => {
             return folder.getId() === folderId
         })
         // const canDelete = folder.getCanDelete()
-        return folder.getCanDelete()
+        return folder ? folder.getCanDelete() : true
     }
     // --- Handle form validations before sumbission
     const handleTextInput = (e) => {
@@ -134,6 +134,7 @@ const Controller = (() => {
         let data
         let visibleTable
         let hiddenTable
+        const createFolderButton = document.getElementById('create-folderAction')
         switch(type) {
             case 'folder':
                 // - change the header title for opening a folder
@@ -148,6 +149,8 @@ const Controller = (() => {
                 Main.loadItemsTable(data, title)
                 visibleTable.classList.remove('hidden')
                 hiddenTable.classList.add('hidden')
+                createFolderButton.classList.toggle('hidden')
+                createFolderButton.children[0].setAttribute('disabled', true)
                 toggleEdit('force')
                 return
             case 'back-to-folder':
@@ -157,6 +160,8 @@ const Controller = (() => {
                 hiddenTable = Main.getItemsTable()
                 visibleTable.classList.remove('hidden')
                 hiddenTable.classList.add('hidden')
+                createFolderButton.classList.toggle('hidden')
+                createFolderButton.children[0].removeAttribute('disabled')
                 return
         }
     }
