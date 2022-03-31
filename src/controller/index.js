@@ -1,6 +1,6 @@
 import { EditModal } from "../components/elements"
 import Footer from "../components/footer/Footer"
-import { AddFolderForm, CreateToDoForm } from "../components/forms"
+import { AddFolderForm, AddFormToModal, CreateToDoForm } from "../components/forms"
 import Header from "../components/header/Header"
 import Main from "../components/main/Main"
 import Database from "../data"
@@ -36,7 +36,8 @@ const Controller = (() => {
     const handleCreation = (itemType, data) => {
         switch(itemType) {
             case 'folder':
-                Database.addFolder(data)
+                const folderName = data[0].value
+                Database.addFolder(folderName)
                 return
             case 'item':
                 console.log("DFSDFSDF")
@@ -185,6 +186,8 @@ const Controller = (() => {
         if (_popUpOpen) {
             togglePopUp()
         }
+
+        // console.log(e.currentTarget.value)
         // !!! TODO !!!
         
         if (e) {
@@ -205,14 +208,79 @@ const Controller = (() => {
         switch(value) {
             case 'create-folder':
                 if (isOpen) {
-                    // - toggle the create folder form
-                    const addFolderForm = AddFolderForm()
+                    const folderForm = {
+                        fieldSets: [
+                            {
+                                id: 0,
+                                questions: [
+                                    {
+                                        required: true,
+                                        minlength: 1,
+                                        maxlength: 20,
+                                        type: 'text',
+                                        placeholder: 'Name',
+                                        id: 'folderName',
+                                        label: false,
+                                        name: 'add-form-input'
+                                    }
+                                ],
+                            }
+                        ],
+                        id: 'addFolderForm',
+                        formInfo: ['New Folder', 'Enter a name for this folder.'],
+                        buttons: [
+                            {
+                                type: 'button',
+                                value: 'close',
+                                text: 'Cancel'
+                            },
+                            {
+                                type: 'submit',
+                                text: 'Save',
+                                creationValue: 'folder'
+                            }
+                        ]
+                    }
+                    const addFolderForm = AddFormToModal(folderForm)
                     modalContainer.appendChild(addFolderForm)
                     return true
                 }
             case 'create-todo':
                 if (isOpen) {
-                    const createToDoForm = CreateToDoForm()
+                    const todoForm = {
+                        fieldSets: [
+                            {
+                                id: 0,
+                                questions: [
+                                    {
+                                        required: true,
+                                        minlength: 1,
+                                        maxlength: 20,
+                                        type: 'text',
+                                        placeholder: 'Name',
+                                        id: 'folderName',
+                                        label: false,
+                                        name: 'add-form-input'
+                                    }
+                                ],
+                            }
+                        ],
+                        id: 'addFolderForm',
+                        formInfo: ['New Folder', 'Enter a name for this folder.'],
+                        buttons: [
+                            {
+                                type: 'button',
+                                value: 'close',
+                                text: 'Cancel'
+                            },
+                            {
+                                type: 'submit',
+                                text: 'Save',
+                                creationValue: 'folder'
+                            }
+                        ]
+                    }
+                    const createToDoForm = AddFormToModal(todoForm)
                     modalContainer.appendChild(createToDoForm)
                 }
             case 'open-edit-modal':
