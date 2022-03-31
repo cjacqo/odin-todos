@@ -226,7 +226,7 @@ const Controller = (() => {
                                 ],
                             }
                         ],
-                        id: 'addFolderForm',
+                        id: 'addFolder',
                         formInfo: ['New Folder', 'Enter a name for this folder.'],
                         buttons: [
                             {
@@ -247,6 +247,8 @@ const Controller = (() => {
                 }
             case 'create-todo':
                 if (isOpen) {
+                    // !!! FINISH
+                    // --- complete filling in the data for a todoForm
                     const todoForm = {
                         fieldSets: [
                             {
@@ -257,16 +259,60 @@ const Controller = (() => {
                                         minlength: 1,
                                         maxlength: 20,
                                         type: 'text',
-                                        placeholder: 'Name',
-                                        id: 'folderName',
+                                        placeholder: 'Title',
+                                        id: 'todoName',
                                         label: false,
-                                        name: 'add-form-input'
+                                        name: 'item-name-input'
+                                    },
+                                    {
+                                        required: false,
+                                        minlength: 1,
+                                        maxlength: 40,
+                                        type: 'textarea',
+                                        placeholder: 'Note',
+                                        id: 'todoNote',
+                                        label: false,
+                                        name: 'item-note'
                                     }
-                                ],
+                                ]
+                            },
+                            {
+                                id: 1,
+                                questions: [
+                                    {
+                                        required: false,
+                                        type: 'date',
+                                        placeholder: 'Date',
+                                        name: 'todo-date'
+                                    },
+                                    {
+                                        required: false,
+                                        type: 'time',
+                                        placeholder: 'Time',
+                                        name: 'todo-time'
+                                    }
+                                ]
+                            },
+                            {
+                                id: 2,
+                                questions: [
+                                    {
+                                        required: false,
+                                        type: 'select',
+                                        name: 'priority-select',
+                                        options: ['none', 'low', 'medium', 'high']
+                                    },
+                                    {
+                                        required: false,
+                                        type: 'select',
+                                        name: 'folder-select',
+                                        options: Database.getFolders()
+                                    }
+                                ]
                             }
                         ],
-                        id: 'addFolderForm',
-                        formInfo: ['New Folder', 'Enter a name for this folder.'],
+                        id: 'addTodo',
+                        formInfo: ['Details'],
                         buttons: [
                             {
                                 type: 'button',
@@ -275,8 +321,8 @@ const Controller = (() => {
                             },
                             {
                                 type: 'submit',
-                                text: 'Save',
-                                creationValue: 'folder'
+                                text: 'Done',
+                                creationValue: 'todo'
                             }
                         ]
                     }
