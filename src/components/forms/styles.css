@@ -1,5 +1,6 @@
 /* GLOBAL */
-input[type='text'] {
+input[type='text'],
+textarea {
     background-color: var(--darker-grey-bg);
     border-radius: var(--small-border-radius);
     border: 1px solid var(--lighter-grey);
@@ -8,27 +9,9 @@ input[type='text'] {
     caret-color: var(--yellow-2);
     color: var(--grey-text);
 }
-input[type='text']:focus {
+input[type='text']:focus,
+textarea:focus {
     outline: none;
-}
-
-/* ADD FOLDER FORM */
-#addFolderFormParent {
-    position: relative;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-}
-
-#addFolderForm {
-    position: absolute;
-    width: 65vw;
-    top: 40%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: var(--medium-grey);
-    border-radius: var(--small-border-radius);
 }
 
 .form-fieldset {
@@ -70,4 +53,28 @@ input[type='text']:focus {
 }
 .form-submit-button:disabled {
     color: var(--grey-text);
+}
+
+/* ADD FOLDER FORM */
+#addFolderFormParent {
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+#addFolderForm {
+    position: absolute;
+    width: 65vw;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--medium-grey);
+    border-radius: var(--small-border-radius);
+}
+
+/* ADD TODO FORM */
+.collapsible-input.hidden {
+    display: none;
 }

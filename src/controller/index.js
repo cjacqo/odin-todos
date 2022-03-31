@@ -269,7 +269,7 @@ const Controller = (() => {
                                         minlength: 1,
                                         maxlength: 40,
                                         type: 'textarea',
-                                        placeholder: 'Note',
+                                        placeholder: 'Notes',
                                         id: 'todoNote',
                                         label: false,
                                         name: 'item-note'
@@ -283,13 +283,15 @@ const Controller = (() => {
                                         required: false,
                                         type: 'date',
                                         placeholder: 'Date',
-                                        name: 'todo-date'
+                                        name: 'todo-date',
+                                        id: 'todoDueDate'
                                     },
                                     {
                                         required: false,
                                         type: 'time',
                                         placeholder: 'Time',
-                                        name: 'todo-time'
+                                        name: 'todo-time',
+                                        id: 'todoDueTime'
                                     }
                                 ]
                             },
@@ -300,13 +302,15 @@ const Controller = (() => {
                                         required: false,
                                         type: 'select',
                                         name: 'priority-select',
-                                        options: ['none', 'low', 'medium', 'high']
+                                        options: ['none', 'low', 'medium', 'high'],
+                                        id: 'todoPrioritySelect'
                                     },
                                     {
                                         required: false,
                                         type: 'select',
                                         name: 'folder-select',
-                                        options: Database.getFolders()
+                                        options: Database.getFolders(),
+                                        id: 'todoFolderSelect'
                                     }
                                 ]
                             }
