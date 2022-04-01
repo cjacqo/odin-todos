@@ -266,6 +266,16 @@ textarea:focus {
     border-radius: 50%;
 }
 
+.date-answer {
+    display: none;
+}
+
+.date-answer.active {
+    display: inline-block;
+    color: var(--blue);
+    font-size: var(--slightly-smaller);
+}
+
 /* --- layout days by week */
 #bottomRow .row-1 {
     grid-row: 2 / 3;

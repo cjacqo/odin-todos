@@ -182,6 +182,7 @@ const AddFormToModal = (formData) => {
 
                         const questionTitleContainer = document.createElement('div')
                         const questionTitle = document.createElement('p')
+                        const questionAnswer = document.createElement('small')
                         
                         checkBoxLabel.setAttribute('for', `${name}Toggle`)
                         checkBoxLabel.classList.add('switch-label')
@@ -192,10 +193,13 @@ const AddFormToModal = (formData) => {
                         
                         questionTitleContainer.classList.add('question-title-container')
                         questionTitle.classList.add('question-title')
+                        questionAnswer.classList.add('date-answer')
+                        questionAnswer.setAttribute('id', `${name}AnswerDisplay`)
 
                         questionTitle.innerText = placeholder
 
                         questionTitleContainer.appendChild(questionTitle)
+                        questionTitleContainer.appendChild(questionAnswer)
                         
                         toggleInputOpen.addEventListener('click', (e) => {
                             const questionId = e.target.getAttribute('id')

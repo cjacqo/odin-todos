@@ -5,6 +5,7 @@ import Header from "../components/header/Header"
 import Main from "../components/main/Main"
 import Database from "../data"
 import { Folders, Items } from "../data/data"
+import { getDayText, getMonthText, getTodaysDate } from "../functions"
 import PageView from "../view"
 
 const Controller = (() => {
@@ -401,20 +402,6 @@ const Controller = (() => {
             console.log("TURN OFF EDITING STATE & VIEW")
         }
     }
-    // --- Toggle Question Visibility
-    const toggleQuestionVisibility = (questionId) => {
-        let questionElement
-        switch(questionId) {
-            case 'todo-dateToggle':
-                questionElement = document.getElementById('todoDueDateInput')
-                questionElement.classList.toggle('hidden')
-                break
-            case 'todo-timeToggle':
-                questionElement = document.getElementById('todoDueTimeInput')
-                questionElement.classList.toggle('hidden')
-                break
-        }
-    }
     // --- Start Item Creation
     const startItemCreation = (e) => {
         const value = e.currentTarget.value
@@ -432,9 +419,88 @@ const Controller = (() => {
                 return
         }
     }
+    // --- Toggle Question Visibility
+    const updateQuestionAnswerDisplay = (element, value, isHidden) => {
+        if (isHidden) {
+            element.classList.remove('active')
+        } else if (!isHidden && !element.classList.contains('active')) {
+            element.classList.add('active')
+        }
+
+        if (typeof value === 'object') {
+            element.innerText = value.string
+        } else {
+            element.innerText = value
+        }
+    }
+    const toggleQuestionVisibility = (questionId) => {
+        let questionElement
+        let answerElement
+        let isHidden
+        switch(questionId) {
+            case 'todo-dateToggle':
+                questionElement = document.getElementById('todoDueDateInput')
+                answerElement = document.getElementById('todo-dateAnswerDisplay')
+                questionElement.classList.toggle('hidden')
+                break
+            case 'todo-timeToggle':
+                questionElement = document.getElementById('todoDueTimeInput')
+                questionElement.classList.toggle('hidden')
+                break
+        }
+        if (questionElement.classList.contains('hidden')) {
+            isHidden = true
+        } else {
+            isHidden = false
+        }
+        updateQuestionAnswerDisplay(answerElement, 'Today', isHidden)
+    }
     // --- Day of Week Selection from DatePicker
-    const handleDayOfWeekSelection = (dayOfWeek) => {
-        console.log(dayOfWeek)
+    const handleDayOfWeekSelection = (dateSelected, elementData) => {
+        const today = new Date()
+        const yesterday = new Date()
+        const tomorrow = new Date()
+        yesterday.setDate(yesterday.getDate() - 1)
+        tomorrow.setDate(yesterday.getDate() + 1)
+        const answerElement = document.getElementById('todo-dateAnswerDisplay')
+
+        const calendarDateElements = document.querySelectorAll('.calendar-day-option')
+
+        calendarDateElements.forEach(calendarDate => {
+            const dateData = calendarDate.dataset.dateOfWeek
+            if (calendarDate.classList.contains('active') && dateData == elementData) {
+                return
+            } else if (calendarDate.classList.contains('active') && dateData !== elementData) {
+                calendarDate.classList.remove('active')
+            } else if (dateData == elementData && !calendarDate.classList.contains('active')){
+                calendarDate.classList.add('active')
+            }
+        })
+
+        let answerValue
+
+        if (dateSelected.toDateString() === today.toDateString()) {
+            answerValue = 'Today'
+        } else if (dateSelected.toDateString() === yesterday.toDateString()) {
+            answerValue = 'Yesterday'
+        } else if (dateSelected.toDateString() === tomorrow.toDateString()) {
+            answerValue = 'Tomorrow'
+        } else {
+            const selectedDayOfWeek = getDayText(dateSelected.getDay())
+            const selectedMonth = getMonthText(dateSelected.getMonth())
+            const selectedDayOfMonth = dateSelected.getDate()
+            const selectedYear = dateSelected.getFullYear()
+            const answerString = `${selectedDayOfWeek}, ${selectedMonth} ${selectedDayOfMonth}, ${selectedYear}`
+            answerValue = {
+                day: selectedDayOfWeek,
+                month: selectedMonth,
+                date: selectedDayOfMonth,
+                year: selectedYear,
+                string: answerString
+            }
+        }
+
+        updateQuestionAnswerDisplay(answerElement, answerValue, false)
     }
 
     

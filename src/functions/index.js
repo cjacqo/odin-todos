@@ -31,6 +31,14 @@ const getDays = () => {
     return days.map(day => day.substring(0, 3).toUpperCase())
 }
 
+const getDayText = (dayIndex) => {
+    return days[dayIndex]
+}
+
+const getMonthText = (monthIndex) => {
+    return months[monthIndex]
+}
+
 const getDaysOfMonth = (monthIndex, year) => {
     const today = getTodaysDate()
     let totalDays = 31
@@ -59,8 +67,12 @@ const getDaysOfMonth = (monthIndex, year) => {
                     container.classList.add('calendar-day-option', `row-${i + 1}`, `col-${theFirst + j}`)
                     container.setAttribute('data-date-of-week', countOfDays)
                     const daySelectionText = document.createElement('p')
+                    const dateSelected = new Date(`${months[monthIndex]} ${countOfDays}, ${year}`)
+
                     container.addEventListener('click', (e) => {
-                        Controller.handleDayOfWeekSelection(e.target.dataset.dateOfWeek)
+                        e.preventDefault()
+                        const data = e.currentTarget.dataset.dateOfWeek
+                        Controller.handleDayOfWeekSelection(dateSelected, data)
                     })
                     daySelectionText.innerText = countOfDays
                     container.appendChild(daySelectionText)
@@ -75,8 +87,11 @@ const getDaysOfMonth = (monthIndex, year) => {
                     container.classList.add('calendar-day-option', `row-${i + 1}`, `col-${j}`, `${countOfDays === today.dayNumber && 'active'}`)
                     container.setAttribute('data-date-of-week', countOfDays)
                     const daySelectionText = document.createElement('p')
+                    const dateSelected = new Date(`${months[monthIndex]} ${countOfDays}, ${year}`)
                     container.addEventListener('click', (e) => {
-                        Controller.handleDayOfWeekSelection(e.target.dataset.dateOfWeek)
+                        e.preventDefault()
+                        const data = e.currentTarget.dataset.dateOfWeek
+                        Controller.handleDayOfWeekSelection(dateSelected, data)
                     })
                     daySelectionText.innerText = countOfDays
                     container.appendChild(daySelectionText)
@@ -96,4 +111,4 @@ const generateDayElement = (theFirstDayIndex) => {
     console.log(theFirstDayIndex)
 }
 
-export {removeSpacesToLowerCase, capitalizeString, handlePageSelection, getTodaysDate, getDays, getDaysOfMonth}
+export {removeSpacesToLowerCase, capitalizeString, handlePageSelection, getTodaysDate, getDays, getDayText, getMonthText, getDaysOfMonth}
