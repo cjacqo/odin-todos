@@ -180,6 +180,7 @@ textarea:focus {
 /* Fieldsets 2 & 3 Padding Styles */
 #addTodofieldSet1 .form-control,
 #addTodofieldSet2 .form-control {
+    flex-wrap: wrap;
     padding: 0 var(--small);
 }
 
@@ -213,9 +214,80 @@ textarea:focus {
     font-size: var(--slightly-bigger);
 }
 
+/* DATE AND TIME PICKER STYLES */
+.date-picker-container {
+    position: relative;
+    width: 100%;
+    max-width: 320px;
+    height: 100%;
+    cursor: pointer;
+    user-select: none;
+    flex: 0 0 100%;
+}
 
+.date-picker-container .calendar-container {
+    top: 100%;
+    left: 0;
+    right: 0;
+}
 
+.calendar-container #bottomRow {
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: 16px repeat(5, 1fr);
+}
 
+.calendar-day {
+    color: var(--grey-line);
+    /* font-size: var(--slightly-smaller); */
+    font-weight: bold;
+}
+
+.calendar-day-container small {
+    font-size: var(--slightly-smaller);
+}
+
+.calendar-day-option {
+    font-size: var(--slightly-bigger);
+}
+
+/* --- layout days by week */
+#bottomRow .row-1 {
+    grid-row: 2 / 3;
+}
+#bottomRow .row-2 {
+    grid-row: 3 / 4;
+}
+#bottomRow .row-3 {
+    grid-row: 4 / 5;
+}
+#bottomRow .row-4 {
+    grid-row: 5 / 6;
+}
+#bottomRow .row-5 {
+    grid-row: 6 / 7;
+}
+/* --- layout days by day */
+#bottomRow .col-0 {
+    grid-column: 1 / 2;
+}
+#bottomRow .col-1 {
+    grid-column: 2 / 3;
+}
+#bottomRow .col-2 {
+    grid-column: 3 / 4;
+}
+#bottomRow .col-3 {
+    grid-column: 4 / 5;
+}
+#bottomRow .col-4 {
+    grid-column: 5 / 6;
+}
+#bottomRow .col-5 {
+    grid-column: 6 / 7;
+}
+#bottomRow .col-6 {
+    grid-column: 7 / 8;
+}
 
 .form-control.flex {
     width: 100%;

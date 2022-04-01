@@ -3,6 +3,7 @@ import '@fortawesome/fontawesome-free/js/fontawesome'
 import '@fortawesome/fontawesome-free/js/solid'
 import '@fortawesome/fontawesome-free/js/regular'
 import Controller from "../../controller"
+import { getDays, getDaysOfMonth, getTodaysDate } from '../../functions'
 
 const Icons = [
     {
@@ -14,6 +15,86 @@ const Icons = [
         className: 'fa-clock'
     }
 ]
+
+const DatePicker = () => {
+    const theDate = getTodaysDate()
+
+    const datePickerContainer = document.createElement('div')
+    const calendarContainer = document.createElement('div')
+    const monthsContainer = document.createElement('div')
+    const daysContainer = document.createElement('div')
+
+    datePickerContainer.classList.add('date-picker-container')
+    calendarContainer.classList.add('calendar-container')
+    // monthsContainer.classList.add('months-container')
+    // daysContainer.classList.add('days-container')
+
+    function createTopRow() {
+        const topRowContainer = document.createElement('div')
+        const monthTitleContainer = document.createElement('div')
+        const monthSelectionArrowsContainer = document.createElement('div')
+        const monthTitleTextElement = document.createElement('p')
+        const prevMonthArrow = document.createElement('div')
+        const nextMonthArrow = document.createElement('div')
+    
+        topRowContainer.classList.add('date-picker-row', 'flex')
+        topRowContainer.setAttribute('id', 'topRow')
+        monthTitleContainer.classList.add('month-title-container')
+        monthSelectionArrowsContainer.classList.add('month-selection-arrows-container', 'flex')
+    
+        monthTitleTextElement.innerText = theDate.monthName
+        prevMonthArrow.innerText = '&lt;'
+        nextMonthArrow.innerText = '&gt;'
+        
+        monthTitleContainer.appendChild(monthTitleTextElement)
+        monthSelectionArrowsContainer.appendChild(prevMonthArrow)
+        monthSelectionArrowsContainer.appendChild(nextMonthArrow)
+        topRowContainer.appendChild(monthTitleContainer)
+        topRowContainer.appendChild(monthSelectionArrowsContainer)
+
+        return topRowContainer
+    }
+
+    function createBottomRow() {
+        const bottomRowContainer = document.createElement('div')
+        bottomRowContainer.classList.add('date-picker-row', 'grid')
+        bottomRowContainer.setAttribute('id', 'bottomRow')
+        const days = getDays()
+        const daysOfMonth = getDaysOfMonth(theDate.monthNumber, theDate.year)
+        days.forEach(day => {
+            const dayContainer = document.createElement('div')
+            const dayText = document.createElement('small')
+
+            dayContainer.classList.add('calendar-day-container')
+            dayContainer.setAttribute('id', day)
+            dayText.classList.add('calendar-day')
+            dayText.innerText = day
+
+            dayContainer.appendChild(dayText)
+            bottomRowContainer.appendChild(dayContainer)
+        })
+        daysOfMonth.forEach(element => {
+            bottomRowContainer.appendChild(element)
+        })
+        return bottomRowContainer
+    }
+
+    const topRow = createTopRow()
+    const bottomRow = createBottomRow()
+
+    // calendarContainer.appendChild(monthsContainer)
+    // calendarContainer.appendChild(daysContainer)
+    calendarContainer.appendChild(topRow)
+    calendarContainer.appendChild(bottomRow)
+    datePickerContainer.appendChild(calendarContainer)
+    return datePickerContainer
+}
+
+const TimePicker = () => {
+    const timePickerContainer = document.createElement('div')
+
+    return timePickerContainer
+}
 
 const AddFormToModal = (formData) => {
     const { fieldSets, id, formInfo, buttons  } = formData
@@ -57,16 +138,9 @@ const AddFormToModal = (formData) => {
                 const formInputControl = document.createElement('div')
                 const formInputLabel = document.createElement('label')
                 const formInputSubLabel = document.createElement('small')
-                const formInput = type === 'select' ? document.createElement('select') : 
-                                  type === 'textarea' ? document.createElement('textarea') :
-                                  document.createElement('input')
+                let formInput
+
                 formInputControl.classList.add('form-control')
-                formInput.classList.add('form-input')
-                formInput.setAttribute('id', `${id}Input`)
-                formInput.setAttribute('name', name)
-                if (type !== 'select' || type !== 'textarea') {
-                    formInput.setAttribute('type', type)
-                }
 
                 // Dependent Toggle Input
                 const toggleInputOpen = document.createElement('input')
@@ -76,6 +150,10 @@ const AddFormToModal = (formData) => {
                 switch(type) {
                     case 'text':
                     case 'textarea':
+                        formInput = type === 'text' ? document.createElement('input') : document.createElement('textarea')
+                        if (type === 'text') {
+                            formInput.setAttribute('type', type)
+                        }
                         formInput.setAttribute('autocomplete', autocomplete ? 'on' : 'off')
                         formInput.setAttribute('required', required ? required : false)
                         formInput.setAttribute('minlength', minlength ? minlength : 1)
@@ -87,10 +165,15 @@ const AddFormToModal = (formData) => {
                         break
                     case 'date':
                     case 'time':
+                        formInput = type === 'date' ? DatePicker() : TimePicker()
+                        formInput.classList.add('collapsible-input', 'hidden')
+
+                        const theDate = getTodaysDate()
+                        console.log(theDate)
+
                         formInputControl.classList.add('flex')
                         toggleInputOpen.classList.add('toggle-input-visibility')
                         toggleInputOpen.setAttribute('id', `${name}Toggle`)
-                        formInput.classList.add('collapsible-input', 'hidden')
 
                         const checkBoxLabel = document.createElement('label')
                         const checkBoxSlider = document.createElement('div')
@@ -120,9 +203,9 @@ const AddFormToModal = (formData) => {
                         })
                         
                         formInputLabel.innerText = placeholder
-                        if (formInput.value.length > 0) {
-                            formInputSubLabel.innerText = formInput.value
-                        }
+                        // if (formInput.value.length > 0) {
+                        //     formInputSubLabel.innerText = formInput.value
+                        // }
 
                         formInput.addEventListener('click', (e) => {
                             console.log("Click handler for date or time picker")
@@ -138,6 +221,7 @@ const AddFormToModal = (formData) => {
                         formInputControl.appendChild(checkBoxLabel)
                         break
                     case 'select':
+                        formInput = document.createElement('select')
                         toggleInputOpen.addEventListener('click', (e) => {
                             console.log("Toggle the selection options open")
                         })
@@ -151,6 +235,10 @@ const AddFormToModal = (formData) => {
                         break
                         
                 }
+
+                formInput.classList.add('form-input')
+                formInput.setAttribute('id', `${id}Input`)
+                formInput.setAttribute('name', name)
 
                 formInputs.push(formInput)
 

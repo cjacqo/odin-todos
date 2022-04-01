@@ -110,6 +110,10 @@ p {
     flex-direction: column;
 }
 
+.grid {
+    display: grid;
+}
+
 .yellow {
     color: var(--yellow-1);
 }
