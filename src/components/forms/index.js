@@ -25,7 +25,7 @@ const DatePicker = () => {
     const daysContainer = document.createElement('div')
 
     datePickerContainer.classList.add('date-picker-container')
-    calendarContainer.classList.add('calendar-container')
+    calendarContainer.classList.add('calendar-container', 'flex', 'col')
     // monthsContainer.classList.add('months-container')
     // daysContainer.classList.add('days-container')
 

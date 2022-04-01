@@ -432,6 +432,10 @@ const Controller = (() => {
                 return
         }
     }
+    // --- Day of Week Selection from DatePicker
+    const handleDayOfWeekSelection = (dayOfWeek) => {
+        console.log(dayOfWeek)
+    }
 
     
     return {
@@ -450,6 +454,7 @@ const Controller = (() => {
         toggleEdit: toggleEdit,
         toggleQuestionVisibility: toggleQuestionVisibility,
         startItemCreation: startItemCreation,
+        handleDayOfWeekSelection: handleDayOfWeekSelection,
         getFoldersFromDb: getFoldersFromDb
     }
 })(PageView)

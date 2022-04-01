@@ -1,3 +1,5 @@
+import Controller from "../controller"
+
 const removeSpacesToLowerCase = (str) => {
     return str.replace(/\s/g, '').toLowerCase()
 }
@@ -30,6 +32,7 @@ const getDays = () => {
 }
 
 const getDaysOfMonth = (monthIndex, year) => {
+    const today = getTodaysDate()
     let totalDays = 31
     if (monthIndex == 1) {
         totalDays = 28
@@ -54,8 +57,14 @@ const getDaysOfMonth = (monthIndex, year) => {
                 if (countOfDays !== 8 - theFirst) {
                     const container = document.createElement('div')
                     container.classList.add('calendar-day-option', `row-${i + 1}`, `col-${theFirst + j}`)
+                    container.setAttribute('data-date-of-week', countOfDays)
+                    const daySelectionText = document.createElement('p')
+                    container.addEventListener('click', (e) => {
+                        Controller.handleDayOfWeekSelection(e.target.dataset.dateOfWeek)
+                    })
+                    daySelectionText.innerText = countOfDays
+                    container.appendChild(daySelectionText)
                     elements.push(container)
-                    container.innerText = countOfDays
                     countOfDays++
                 }
             }
@@ -63,9 +72,15 @@ const getDaysOfMonth = (monthIndex, year) => {
             for (let j = 0; j < 7; j++) {
                 if (countOfDays <= totalDays) {
                     const container = document.createElement('div')
-                    container.classList.add('calendar-day-option', `row-${i + 1}`, `col-${j}`)
+                    container.classList.add('calendar-day-option', `row-${i + 1}`, `col-${j}`, `${countOfDays === today.dayNumber && 'active'}`)
+                    container.setAttribute('data-date-of-week', countOfDays)
+                    const daySelectionText = document.createElement('p')
+                    container.addEventListener('click', (e) => {
+                        Controller.handleDayOfWeekSelection(e.target.dataset.dateOfWeek)
+                    })
+                    daySelectionText.innerText = countOfDays
+                    container.appendChild(daySelectionText)
                     elements.push(container)
-                    container.innerText = countOfDays
                     countOfDays++
                 }
             }

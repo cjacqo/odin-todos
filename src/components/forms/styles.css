@@ -229,16 +229,19 @@ textarea:focus {
     top: 100%;
     left: 0;
     right: 0;
+    justify-content: center;
+    align-items: center;
 }
 
 .calendar-container #bottomRow {
-    grid-template-columns: repeat(7, 1fr);
-    grid-template-rows: 16px repeat(5, 1fr);
+    grid-template-columns: repeat(7, 40px);
+    grid-template-rows: 16px repeat(5, 40px);
+    gap: 5px;
+    text-align: center;
 }
 
 .calendar-day {
     color: var(--grey-line);
-    /* font-size: var(--slightly-smaller); */
     font-weight: bold;
 }
 
@@ -247,7 +250,20 @@ textarea:focus {
 }
 
 .calendar-day-option {
-    font-size: var(--slightly-bigger);
+    font-size: var(--normal);
+    height: 100%;
+    width: 100%;
+    text-align: center;
+    position: relative;
+    aspect-ratio: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.calendar-day-option.active {
+    background-color: var(--blue);
+    border-radius: 50%;
 }
 
 /* --- layout days by week */
