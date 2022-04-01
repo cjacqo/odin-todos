@@ -184,6 +184,9 @@ textarea:focus {
 }
 
 /* Fieldset 2: Date and Time */
+#addTodofieldSet1 .form-control {
+    gap: 10px;
+}
 .input-icon-container {
     display: flex;
     justify-content: center;
@@ -201,6 +204,18 @@ textarea:focus {
     width: var(--slightly-bigger);
     height: var(--slightly-bigger);
 }
+
+.question-title-container {
+    flex: 1 1 auto;
+    text-align: left;
+}
+.question-title {
+    font-size: var(--slightly-bigger);
+}
+
+
+
+
 
 .form-control.flex {
     width: 100%;

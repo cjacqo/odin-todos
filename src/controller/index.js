@@ -401,6 +401,20 @@ const Controller = (() => {
             console.log("TURN OFF EDITING STATE & VIEW")
         }
     }
+    // --- Toggle Question Visibility
+    const toggleQuestionVisibility = (questionId) => {
+        let questionElement
+        switch(questionId) {
+            case 'todo-dateToggle':
+                questionElement = document.getElementById('todoDueDateInput')
+                questionElement.classList.toggle('hidden')
+                break
+            case 'todo-timeToggle':
+                questionElement = document.getElementById('todoDueTimeInput')
+                questionElement.classList.toggle('hidden')
+                break
+        }
+    }
     // --- Start Item Creation
     const startItemCreation = (e) => {
         const value = e.currentTarget.value
@@ -418,6 +432,7 @@ const Controller = (() => {
                 return
         }
     }
+
     
     return {
         init: init,
@@ -433,6 +448,7 @@ const Controller = (() => {
         togglePopUp: togglePopUp,
         toggleItem: toggleItem,
         toggleEdit: toggleEdit,
+        toggleQuestionVisibility: toggleQuestionVisibility,
         startItemCreation: startItemCreation,
         getFoldersFromDb: getFoldersFromDb
     }

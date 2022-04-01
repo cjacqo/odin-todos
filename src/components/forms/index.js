@@ -96,6 +96,9 @@ const AddFormToModal = (formData) => {
                         const checkBoxSlider = document.createElement('div')
                         const iconContainer = document.createElement('div')
                         const icon = document.createElement('i')
+
+                        const questionTitleContainer = document.createElement('div')
+                        const questionTitle = document.createElement('p')
                         
                         checkBoxLabel.setAttribute('for', `${name}Toggle`)
                         checkBoxLabel.classList.add('switch-label')
@@ -104,9 +107,16 @@ const AddFormToModal = (formData) => {
                         iconContainer.setAttribute('id', `${type}IconContainer`)
                         icon.classList.add('fa-solid', type === 'date' ? 'fa-calendar-day' : 'fa-clock')
                         
+                        questionTitleContainer.classList.add('question-title-container')
+                        questionTitle.classList.add('question-title')
+
+                        questionTitle.innerText = placeholder
+
+                        questionTitleContainer.appendChild(questionTitle)
+                        
                         toggleInputOpen.addEventListener('click', (e) => {
-                            e.stopImmediatePropagation()
-                            console.log("CLICKED")
+                            const questionId = e.target.getAttribute('id')
+                            Controller.toggleQuestionVisibility(questionId)
                         })
                         
                         formInputLabel.innerText = placeholder
@@ -124,6 +134,7 @@ const AddFormToModal = (formData) => {
                         checkBoxLabel.appendChild(checkBoxSlider)
 
                         formInputControl.appendChild(iconContainer)
+                        formInputControl.appendChild(questionTitleContainer)
                         formInputControl.appendChild(checkBoxLabel)
                         break
                     case 'select':
