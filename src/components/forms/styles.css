@@ -233,6 +233,28 @@ textarea:focus {
     align-items: center;
 }
 
+#topRow {
+    width: 100%;
+    justify-content: space-between;
+    padding: 0 var(--small);
+    font-size: var(--slightly-bigger);
+}
+
+.month-title-container,
+.month-selection-arrows-container {
+    flex: 1 0 auto;
+}
+
+.month-title-container {
+    text-align: left;
+}
+
+.month-selection-arrows-container {
+    justify-content: flex-end;
+    gap: 20px;
+    color: var(--blue);
+}
+
 .calendar-container #bottomRow {
     grid-template-columns: repeat(7, 40px);
     grid-template-rows: 16px repeat(5, 40px);

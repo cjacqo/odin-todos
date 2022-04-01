@@ -111,4 +111,8 @@ const generateDayElement = (theFirstDayIndex) => {
     console.log(theFirstDayIndex)
 }
 
-export {removeSpacesToLowerCase, capitalizeString, handlePageSelection, getTodaysDate, getDays, getDayText, getMonthText, getDaysOfMonth}
+const changeMonth = (value) => {
+    console.log(value)
+}
+
+export {removeSpacesToLowerCase, capitalizeString, handlePageSelection, getTodaysDate, getDays, getDayText, getMonthText, getDaysOfMonth, changeMonth}

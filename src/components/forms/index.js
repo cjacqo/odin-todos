@@ -3,18 +3,7 @@ import '@fortawesome/fontawesome-free/js/fontawesome'
 import '@fortawesome/fontawesome-free/js/solid'
 import '@fortawesome/fontawesome-free/js/regular'
 import Controller from "../../controller"
-import { getDays, getDaysOfMonth, getTodaysDate } from '../../functions'
-
-const Icons = [
-    {
-        name: 'Calendar',
-        className: 'fa-calendar-days'
-    },
-    {
-        name: 'Clock',
-        className: 'fa-clock'
-    }
-]
+import { changeMonth, getDays, getDaysOfMonth, getTodaysDate } from '../../functions'
 
 const DatePicker = () => {
     const theDate = getTodaysDate()
@@ -34,8 +23,8 @@ const DatePicker = () => {
         const monthTitleContainer = document.createElement('div')
         const monthSelectionArrowsContainer = document.createElement('div')
         const monthTitleTextElement = document.createElement('p')
-        const prevMonthArrow = document.createElement('div')
-        const nextMonthArrow = document.createElement('div')
+        const prevMonthArrow = document.createElement('i')
+        const nextMonthArrow = document.createElement('i')
     
         topRowContainer.classList.add('date-picker-row', 'flex')
         topRowContainer.setAttribute('id', 'topRow')
@@ -43,8 +32,23 @@ const DatePicker = () => {
         monthSelectionArrowsContainer.classList.add('month-selection-arrows-container', 'flex')
     
         monthTitleTextElement.innerText = theDate.monthName
-        prevMonthArrow.innerText = '&lt;'
-        nextMonthArrow.innerText = '&gt;'
+        prevMonthArrow.classList.add('fa-solid', 'fa-chevron-left')
+        nextMonthArrow.classList.add('fa-solid', 'fa-chevron-right')
+
+        prevMonthArrow.addEventListener('click', (e) => {
+            e.preventDefault()
+            e.stopPropagation()
+            e.stopImmediatePropagation()
+            console.log(-1)
+            changeMonth(-1)
+        })
+
+        nextMonthArrow.addEventListener('click', (e) => {
+            e.preventDefault()
+            e.stopPropagation()
+            e.stopImmediatePropagation()
+            changeMonth(1)
+        })
         
         monthTitleContainer.appendChild(monthTitleTextElement)
         monthSelectionArrowsContainer.appendChild(prevMonthArrow)
@@ -82,8 +86,6 @@ const DatePicker = () => {
     const topRow = createTopRow()
     const bottomRow = createBottomRow()
 
-    // calendarContainer.appendChild(monthsContainer)
-    // calendarContainer.appendChild(daysContainer)
     calendarContainer.appendChild(topRow)
     calendarContainer.appendChild(bottomRow)
     datePickerContainer.appendChild(calendarContainer)
@@ -202,6 +204,9 @@ const AddFormToModal = (formData) => {
                         questionTitleContainer.appendChild(questionAnswer)
                         
                         toggleInputOpen.addEventListener('click', (e) => {
+                            e.preventDefault()
+                            e.stopPropagation()
+                            e.stopImmediatePropagation()
                             const questionId = e.target.getAttribute('id')
                             Controller.toggleQuestionVisibility(questionId)
                         })
@@ -211,9 +216,12 @@ const AddFormToModal = (formData) => {
                         //     formInputSubLabel.innerText = formInput.value
                         // }
 
-                        formInput.addEventListener('click', (e) => {
-                            console.log("Click handler for date or time picker")
-                        })
+                        // formInput.addEventListener('click', (e) => {
+                        //     e.preventDefault()
+                        //     e.stopPropagation()
+                        //     e.stopImmediatePropagation()
+                        //     console.log("Click handler for date or time picker")
+                        // })
 
                         iconContainer.appendChild(icon)
 
