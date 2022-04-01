@@ -36,17 +36,11 @@ const DatePicker = () => {
         nextMonthArrow.classList.add('fa-solid', 'fa-chevron-right')
 
         prevMonthArrow.addEventListener('click', (e) => {
-            e.preventDefault()
-            e.stopPropagation()
-            e.stopImmediatePropagation()
-            console.log(-1)
             changeMonth(-1)
         })
 
         nextMonthArrow.addEventListener('click', (e) => {
-            e.preventDefault()
-            e.stopPropagation()
-            e.stopImmediatePropagation()
+            
             changeMonth(1)
         })
         

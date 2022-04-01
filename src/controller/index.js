@@ -460,8 +460,8 @@ const Controller = (() => {
         const today = new Date()
         const yesterday = new Date()
         const tomorrow = new Date()
-        yesterday.setDate(yesterday.getDate() - 1)
-        tomorrow.setDate(yesterday.getDate() + 1)
+        yesterday.setDate(today.getDate() - 1)
+        tomorrow.setDate(today.getDate() + 1)
         const answerElement = document.getElementById('todo-dateAnswerDisplay')
 
         const calendarDateElements = document.querySelectorAll('.calendar-day-option')
@@ -478,6 +478,10 @@ const Controller = (() => {
         })
 
         let answerValue
+
+        console.log(dateSelected.toDateString() === tomorrow.toDateString())
+        console.log(dateSelected)
+        console.log(yesterday.toDateString())
 
         if (dateSelected.toDateString() === today.toDateString()) {
             answerValue = 'Today'
