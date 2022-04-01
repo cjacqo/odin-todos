@@ -61,7 +61,6 @@ textarea:focus {
     --width: 40px;
     --height: calc(var(--width) / 2);
     --border-radius: calc(var(--height) / 2);
-
     cursor: pointer;
 }
 
@@ -74,23 +73,23 @@ textarea:focus {
     width: var(--width);
     height: var(--height);
     border-radius: var(--border-radius);
-    background-color: #DDDDDD;
+    background-color: var(--lighter-grey);
     -webkit-transition: background-color 200ms;
     transition: background-color 200ms;
     user-select: none;
 }
 
 .toggle-input-visibility:checked ~ .slider {
-    background-color: #009578;
+    background-color: var(--green);
 }
 
 .slider::after {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    height: var(--height);
-    width: var(--height);
+    top: 1px;
+    left: 1px;
+    height: calc(var(--height) - 2px);
+    width: calc(var(--height) - 2px);
     background-color: #FFFFFF;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
     border-radius: var(--border-radius);
@@ -178,7 +177,30 @@ textarea:focus {
     resize: none;
 }
 
+/* Fieldsets 2 & 3 Padding Styles */
+#addTodofieldSet1 .form-control,
+#addTodofieldSet2 .form-control {
+    padding: 0 var(--small);
+}
 
+/* Fieldset 2: Date and Time */
+.input-icon-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: var(--normal);
+    height: var(--normal);
+    padding: var(--slightly-bigger);
+    text-align: center;
+    line-height: 100%;
+    border-radius: var(--small-border-radius);
+}
+
+.input-icon-container > svg {
+    line-height: 0;
+    width: var(--slightly-bigger);
+    height: var(--slightly-bigger);
+}
 
 .form-control.flex {
     width: 100%;
