@@ -64,7 +64,7 @@ const getDaysOfMonth = (monthIndex, year) => {
             for (let j = 0; j < 7 - theFirst; j++) {
                 if (countOfDays !== 8 - theFirst) {
                     const container = document.createElement('div')
-                    container.classList.add('calendar-day-option', `row-${i + 1}`, `col-${theFirst + j}`)
+                    container.classList.add('calendar-day-option', `row-${i + 1}`, `col-${theFirst + j}`, `${countOfDays === today.dayNumber && 'active'}`)
                     container.setAttribute('data-date-of-week', countOfDays)
                     const daySelectionText = document.createElement('p')
                     const dateSelected = new Date(`${months[monthIndex]} ${countOfDays}, ${year}`)

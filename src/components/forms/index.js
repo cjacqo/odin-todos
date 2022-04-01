@@ -171,7 +171,6 @@ const AddFormToModal = (formData) => {
                         formInput.classList.add('collapsible-input', 'hidden')
 
                         const theDate = getTodaysDate()
-                        console.log(theDate)
 
                         formInputControl.classList.add('flex')
                         toggleInputOpen.classList.add('toggle-input-visibility')
@@ -204,9 +203,6 @@ const AddFormToModal = (formData) => {
                         questionTitleContainer.appendChild(questionAnswer)
                         
                         toggleInputOpen.addEventListener('click', (e) => {
-                            e.preventDefault()
-                            e.stopPropagation()
-                            e.stopImmediatePropagation()
                             const questionId = e.target.getAttribute('id')
                             Controller.toggleQuestionVisibility(questionId)
                         })
@@ -216,12 +212,9 @@ const AddFormToModal = (formData) => {
                         //     formInputSubLabel.innerText = formInput.value
                         // }
 
-                        // formInput.addEventListener('click', (e) => {
-                        //     e.preventDefault()
-                        //     e.stopPropagation()
-                        //     e.stopImmediatePropagation()
-                        //     console.log("Click handler for date or time picker")
-                        // })
+                        formInput.addEventListener('click', (e) => {
+                            console.log("Click handler for date or time picker")
+                        })
 
                         iconContainer.appendChild(icon)
 
