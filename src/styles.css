@@ -17,19 +17,20 @@
     --small-height: 4.5rem;
     --small-border-radius: 5px;
     /* COLORS */
-    --black: rgb(10, 9, 9);
+    /* --black: rgb(10, 9, 9); */
     --white: rgb(255, 250, 255);
     --black: rgb(26, 23, 23);
     --grey-bg: rgba(59, 58, 58, 0.932);
     --darker-grey-bg: rgba(31, 30, 31, 1);
     --medium-grey: rgb(62, 60, 62);
+    --grey-line: rgb(105, 105, 105);
     --lighter-grey: rgb(104, 100, 103);
     --grey-text: rgb(224, 224, 224);
     --blue: rgb(34, 116, 165);
     --yellow-1: rgb(246, 174, 45);
     --yellow-2: rgb(246, 174, 40);
     --purple: rgb(133, 71, 152);
-    --error-delete: rgb(223, 41, 53);
+    --red: rgb(223, 41, 53);
 }
 
 .main-text,
@@ -44,15 +45,17 @@
 .pinned {
     color: var(--yellow-1);
 }
-.ok-color {
+.ok-color,
+.blue {
     color: var(--blue);
 }
 .locked {
     color: var(--purple);
 }
+.red,
 .error,
 .delete-color-primary {
-    color: var(--error-delete);
+    color: var(--red);
 }
 
 *,

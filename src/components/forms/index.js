@@ -88,16 +88,25 @@ const AddFormToModal = (formData) => {
                     case 'date':
                     case 'time':
                         formInputControl.classList.add('flex')
+                        toggleInputOpen.classList.add('toggle-input-visibility')
+                        toggleInputOpen.setAttribute('id', `${name}Toggle`)
                         formInput.classList.add('collapsible-input', 'hidden')
+
+                        const checkBoxLabel = document.createElement('label')
+                        const checkBoxSlider = document.createElement('div')
                         const iconContainer = document.createElement('div')
                         const icon = document.createElement('i')
+                        
+                        checkBoxLabel.setAttribute('for', `${name}Toggle`)
+                        checkBoxLabel.classList.add('switch-label')
+                        checkBoxSlider.classList.add('slider', 'round')
                         iconContainer.classList.add('input-icon-container')
                         iconContainer.setAttribute('id', `${type}IconContainer`)
                         icon.classList.add('fa-solid', type === 'date' ? 'fa-calendar-day' : 'fa-clock')
-                        iconContainer.appendChild(icon)
                         
                         toggleInputOpen.addEventListener('click', (e) => {
-                            console.log("Toggle the date/time input open")
+                            e.stopImmediatePropagation()
+                            console.log("CLICKED")
                         })
                         
                         formInputLabel.innerText = placeholder
@@ -109,8 +118,13 @@ const AddFormToModal = (formData) => {
                             console.log("Click handler for date or time picker")
                         })
 
+                        iconContainer.appendChild(icon)
+
+                        checkBoxLabel.appendChild(toggleInputOpen)
+                        checkBoxLabel.appendChild(checkBoxSlider)
+
                         formInputControl.appendChild(iconContainer)
-                        formInputControl.appendChild(toggleInputOpen)
+                        formInputControl.appendChild(checkBoxLabel)
                         break
                     case 'select':
                         toggleInputOpen.addEventListener('click', (e) => {
@@ -135,6 +149,13 @@ const AddFormToModal = (formData) => {
                 }
                 formInputControl.appendChild(formInput)
                 formFieldSet.appendChild(formInputControl)
+
+                // Dependent HR
+                if (questions.indexOf(question) !== questions.length - 1) {
+                    const hr = document.createElement('hr')
+                    hr.classList.add('question-hr')
+                    formFieldSet.appendChild(hr)
+                }
             })
         }
 
