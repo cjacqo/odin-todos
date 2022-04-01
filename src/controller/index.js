@@ -433,7 +433,7 @@ const Controller = (() => {
             element.innerText = value
         }
     }
-    const toggleQuestionVisibility = (questionId) => {
+    const toggleQuestionVisibility = (questionId, hiddenInputValue) => {
         let questionElement
         let answerElement
         let isHidden
@@ -453,15 +453,17 @@ const Controller = (() => {
         } else {
             isHidden = false
         }
-        updateQuestionAnswerDisplay(answerElement, 'Today', isHidden)
+        let theInputValue = hiddenInputValue ? hiddenInputValue : 'Today'
+        updateQuestionAnswerDisplay(answerElement, theInputValue, isHidden)
     }
     // --- Day of Week Selection from DatePicker
-    const handleDayOfWeekSelection = (dateSelected, elementData) => {
+    const handleDayOfWeekSelection = (dateSelected, elementData, monthIndex) => {
         const today = new Date()
         const yesterday = new Date()
         const tomorrow = new Date()
         yesterday.setDate(today.getDate() - 1)
         tomorrow.setDate(today.getDate() + 1)
+        const dateInput = document.getElementById('dateHiddenInput')
         const answerElement = document.getElementById('todo-dateAnswerDisplay')
 
         const calendarDateElements = document.querySelectorAll('.calendar-day-option')
@@ -478,10 +480,18 @@ const Controller = (() => {
         })
 
         let answerValue
-
-        console.log(dateSelected.toDateString() === tomorrow.toDateString())
-        console.log(dateSelected)
-        console.log(yesterday.toDateString())
+        const selectedDayOfWeek = getDayText(dateSelected.getDay())
+        const selectedMonth = getMonthText(dateSelected.getMonth())
+        const selectedDayOfMonth = dateSelected.getDate()
+        const selectedYear = dateSelected.getFullYear()
+        const answerString = `${selectedDayOfWeek}, ${selectedMonth} ${selectedDayOfMonth}, ${selectedYear}`
+        let answerObj = {
+            day: selectedDayOfWeek,
+            month: selectedMonth,
+            date: selectedDayOfMonth,
+            year: selectedYear,
+            string: answerString
+        }
 
         if (dateSelected.toDateString() === today.toDateString()) {
             answerValue = 'Today'
@@ -490,21 +500,17 @@ const Controller = (() => {
         } else if (dateSelected.toDateString() === tomorrow.toDateString()) {
             answerValue = 'Tomorrow'
         } else {
-            const selectedDayOfWeek = getDayText(dateSelected.getDay())
-            const selectedMonth = getMonthText(dateSelected.getMonth())
-            const selectedDayOfMonth = dateSelected.getDate()
-            const selectedYear = dateSelected.getFullYear()
-            const answerString = `${selectedDayOfWeek}, ${selectedMonth} ${selectedDayOfMonth}, ${selectedYear}`
-            answerValue = {
-                day: selectedDayOfWeek,
-                month: selectedMonth,
-                date: selectedDayOfMonth,
-                year: selectedYear,
-                string: answerString
-            }
+            answerValue = answerObj
+            answerObj = answerValue
         }
 
+        let monthValue = monthIndex < 10 ? '0' + monthIndex : monthIndex
+        let dayValue = answerObj.date < 10 ? '0' + answerObj.date : answerObj.date
+        dateInput.setAttribute('value', answerObj.year + '-' + monthValue  + '-' + dayValue)
+        console.log(dateInput.value)
+
         updateQuestionAnswerDisplay(answerElement, answerValue, false)
+        return answerObj
     }
 
     

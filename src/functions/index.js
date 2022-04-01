@@ -41,6 +41,7 @@ const getMonthText = (monthIndex) => {
 
 const getDaysOfMonth = (monthIndex, year) => {
     const today = getTodaysDate()
+    let answer
     let totalDays = 31
     if (monthIndex == 1) {
         totalDays = 28
@@ -70,9 +71,12 @@ const getDaysOfMonth = (monthIndex, year) => {
                     const dateSelected = new Date(`${months[monthIndex]} ${countOfDays}, ${year}`)
 
                     container.addEventListener('click', (e) => {
-                        e.preventDefault()
                         const data = e.currentTarget.dataset.dateOfWeek
-                        Controller.handleDayOfWeekSelection(dateSelected, data)
+                        answer = Controller.handleDayOfWeekSelection(dateSelected, data, monthIndex)
+                        // console.log(dateInput)
+                        // dateInput.setAttribute('value', answer.year + '-' + answer.month + '-' + answer.day)
+                        // console.log(dateInput.value)
+                        e.stopPropagation()
                     })
                     daySelectionText.innerText = countOfDays
                     container.appendChild(daySelectionText)
@@ -89,9 +93,9 @@ const getDaysOfMonth = (monthIndex, year) => {
                     const daySelectionText = document.createElement('p')
                     const dateSelected = new Date(`${months[monthIndex]} ${countOfDays}, ${year}`)
                     container.addEventListener('click', (e) => {
-                        e.preventDefault()
                         const data = e.currentTarget.dataset.dateOfWeek
-                        Controller.handleDayOfWeekSelection(dateSelected, data)
+                        answer = Controller.handleDayOfWeekSelection(dateSelected, data, monthIndex)
+                        e.stopPropagation()
                     })
                     daySelectionText.innerText = countOfDays
                     container.appendChild(daySelectionText)

@@ -215,6 +215,9 @@ textarea:focus {
 }
 
 /* DATE AND TIME PICKER STYLES */
+.hidden-input {
+    display: none;
+}
 .date-picker-container {
     position: relative;
     width: 100%;
@@ -239,6 +242,10 @@ textarea:focus {
     padding: 0 var(--small);
     font-size: var(--slightly-bigger);
 }
+
+/* .month-selector {
+    z-index: 6;
+} */
 
 .month-title-container,
 .month-selection-arrows-container {
