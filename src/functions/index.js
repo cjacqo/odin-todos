@@ -52,6 +52,14 @@ const getTomorrowsDate = () => {
     }
     return dateObj
 }
+const getCalendarObj = (monthIndex, year) => {
+    console.log(monthIndex)
+    console.log(year)
+}
+
+const getMonth = (monthIndex) => {
+    return months[monthIndex]
+}
 
 const getDateAnswerAsString = (answerDateObj) => {
     const todaysDate = getTodaysDate()
@@ -81,83 +89,23 @@ const getMonthText = (monthIndex) => {
     return months[monthIndex]
 }
 
-const getDaysOfMonth = (monthIndex, year) => {
-    const today = getTodaysDate()
-    let answer
-    let totalDays = 31
-    if (monthIndex == 1) {
-        totalDays = 28
-    } else if (monthIndex == 3 || monthIndex == 5 || monthIndex == 8 || monthIndex == 10) {
-        totalDays = 30
-    }
-
-    // - find the day of the week for the first of the month
-    const temp = new Date(`${months[monthIndex]} 1, ${year}`)
-    const theFirst = temp.getDay()
-
-    let elements = []
-
-    // --- Loop for number of rows there are in the calendar
-    let countOfDays = 1
-    for (let i = 0; i < 5; i++) {
-        // --- Loop over how many days of the week there are
-        //         + if it is the first row, subtract total number of days by the
-        //           first variable (the index value of the day of first of the month)
-        if (i === 0) {
-            for (let j = 0; j < 7 - theFirst; j++) {
-                if (countOfDays !== 8 - theFirst) {
-                    const container = document.createElement('div')
-                    container.classList.add('calendar-day-option', `row-${i + 1}`, `col-${theFirst + j}`, `${countOfDays === today.dayNumber && 'active'}`)
-                    container.setAttribute('data-date-of-week', countOfDays)
-                    const daySelectionText = document.createElement('p')
-                    const dateSelected = new Date(`${months[monthIndex]} ${countOfDays}, ${year}`)
-
-                    container.addEventListener('click', (e) => {
-                        const data = e.currentTarget.dataset.dateOfWeek
-                        Controller.handleStyleOfDateSelection(data)
-                        answer = Controller.handleDayOfWeekSelection(dateSelected, monthIndex)
-                        e.stopPropagation()
-                    })
-                    daySelectionText.innerText = countOfDays
-                    container.appendChild(daySelectionText)
-                    elements.push(container)
-                    countOfDays++
-                }
-            }
-        } else {// + any other row. Will create 7 elements for the day of that week
-            for (let j = 0; j < 7; j++) {
-                if (countOfDays <= totalDays) {
-                    const container = document.createElement('div')
-                    container.classList.add('calendar-day-option', `row-${i + 1}`, `col-${j}`, `${countOfDays === today.dayNumber && 'active'}`)
-                    container.setAttribute('data-date-of-week', countOfDays)
-                    const daySelectionText = document.createElement('p')
-                    const dateSelected = new Date(`${months[monthIndex]} ${countOfDays}, ${year}`)
-                    container.addEventListener('click', (e) => {
-                        const data = e.currentTarget.dataset.dateOfWeek
-                        Controller.handleStyleOfDateSelection(data)
-                        answer = Controller.handleDayOfWeekSelection(dateSelected, monthIndex)
-                        e.stopPropagation()
-                    })
-                    daySelectionText.innerText = countOfDays
-                    container.appendChild(daySelectionText)
-                    elements.push(container)
-                    countOfDays++
-                }
-            }
-        }
-    }
-    
-    generateDayElement(theFirst)
-
-    return elements
-}
-
 const generateDayElement = (theFirstDayIndex) => {
     console.log(theFirstDayIndex)
 }
 
-const changeMonth = (value) => {
-    console.log(value)
+const changeCalendar = (value, currentMonth, element) => {
+    const monthIndex = months.indexOf(currentMonth)
+    let setMonthIndex = (monthIndex + value)
+
+    if (setMonthIndex == -1) {
+        setMonthIndex = 11
+    }
+    if (setMonthIndex == 12) {
+        setMonthIndex = 0
+    }
+
+    const newMonthText = months[setMonthIndex]
+    element.innerText = newMonthText
 }
 
 const dateValueToString = (theDate) => {
@@ -168,4 +116,4 @@ const dateValueToString = (theDate) => {
     console.log(theDate)
 }
 
-export {removeSpacesToLowerCase, capitalizeString, handlePageSelection, getTodaysDate, getDays, getDayText, getMonthText, getDaysOfMonth, changeMonth, dateValueToString, getDateAnswerAsString}
+export {removeSpacesToLowerCase, capitalizeString, getCalendarObj, handlePageSelection, getTodaysDate, getMonth, getDays, getDayText, getMonthText, changeCalendar, dateValueToString, getDateAnswerAsString, generateDayElement}

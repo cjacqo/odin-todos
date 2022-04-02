@@ -3,7 +3,7 @@ import '@fortawesome/fontawesome-free/js/fontawesome'
 import '@fortawesome/fontawesome-free/js/solid'
 import '@fortawesome/fontawesome-free/js/regular'
 import Controller from "../../controller"
-import DatePicker from './DatePicker.js'
+import {DatePicker} from './DatePicker.js'
 import { changeMonth, getDays, getDaysOfMonth, getTodaysDate } from '../../functions'
 
 const TimePicker = () => {

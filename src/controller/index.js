@@ -1,6 +1,7 @@
 import { EditModal } from "../components/elements"
 import Footer from "../components/footer/Footer"
 import { AddFolderForm, AddFormToModal, CreateToDoForm } from "../components/forms"
+import { CurrentCalendar } from "../components/forms/DatePicker.js"
 import Header from "../components/header/Header"
 import Main from "../components/main/Main"
 import Database from "../data"
@@ -472,6 +473,8 @@ const Controller = (() => {
             isHidden = true
             hiddenInput.removeAttribute('value')
             updateQuestionAnswerDisplay(answerElement, null, isHidden)
+            CurrentCalendar.setCalendarObj(getTodaysDate().monthNumber, getTodaysDate().year)
+            CurrentCalendar.getCalendarView()
         }
         return
     }
