@@ -98,75 +98,30 @@ const CurrentCalendar = (function() {
         return calendarObj
     }
 
-    function _createCalendarView() {
-        let { monthNumber, monthName, year } = _calendarObj
+    function _createDatePicker(needToAppend) {
+        const datePickerContainer = document.createElement('div')
+        const calendarContainer = document.createElement('div')
 
-        const calendarTitleText = document.getElementById('monthAndYearTitle')
-        const calendarContainer = document.querySelector('.calendar-container')
-        const removedContainer = document.getElementById('bottomRow')
+        datePickerContainer.classList.add('date-picker-container')
+        calendarContainer.classList.add('calendar-container', 'flex', 'col')
 
-        if (removedContainer) {
-            removedContainer.remove()
+        const _topRow = _createTopRow()
+        console.log(needToAppend)
+        const _calendarView = _createCalendarView(needToAppend)
+
+        calendarContainer.appendChild(_topRow)
+        calendarContainer.appendChild(_calendarView)
+        datePickerContainer.appendChild(calendarContainer)
+
+        if (needToAppend) {
+            const controlContainer = document.getElementById('todo-dateControl')
+            controlContainer.appendChild(datePickerContainer)
+        } else {
+            return datePickerContainer
         }
-
-        calendarTitleText.innerText = monthName + ' ' + year
-        
-        const bottomRowContainer = document.createElement('div')
-        bottomRowContainer.classList.add('date-picker-row', 'grid')
-        bottomRowContainer.setAttribute('id', 'bottomRow')
-        const days = getDays()
-        const daysOfMonth = createCalendarDays(monthNumber, year)
-        days.forEach(day => {
-            const dayContainer = document.createElement('div')
-            const dayText = document.createElement('small')
-
-            dayContainer.classList.add('calendar-day-container')
-            dayContainer.setAttribute('id', day)
-            dayText.classList.add('calendar-day')
-            dayText.innerText = day
-
-            dayContainer.appendChild(dayText)
-            bottomRowContainer.appendChild(dayContainer)
-        })
-
-        if (bottomRowContainer.children.length > 0) {
-            const dateOptions = document.querySelectorAll('.calendar-day-option')
-            dateOptions.forEach(option => option.remove())
-        }
-
-        daysOfMonth.forEach(element => {
-            bottomRowContainer.appendChild(element)
-        })
-        calendarContainer.appendChild(bottomRowContainer)
     }
 
-    const _init = (function() {
-        _calendarObj = _createCalendarObj()
-    })()
-    
-    function getCalendarObj() {return _calendarObj}
-    function setCalendarObj(monthNumber, year) {
-        _calendarObj = _createCalendarObj(monthNumber, year)
-    }
-    function getCalendarView() {return _createCalendarView()}
-
-    return {
-        getCalendarObj,
-        setCalendarObj,
-        getCalendarView
-    }
-})()
-
-const DatePicker = () => {
-    let currentCalendar = CurrentCalendar.getCalendarObj()
-
-    const datePickerContainer = document.createElement('div')
-    const calendarContainer = document.createElement('div')
-
-    datePickerContainer.classList.add('date-picker-container')
-    calendarContainer.classList.add('calendar-container', 'flex', 'col')
-
-    function createTopRow() {
+    function _createTopRow() {
         const topRowContainer = document.createElement('div')
         const monthTitleContainer = document.createElement('div')
         const monthSelectionArrowsContainer = document.createElement('div')
@@ -182,7 +137,7 @@ const DatePicker = () => {
         monthTitleTextElement.setAttribute('id', 'monthAndYearTitle')
         monthSelectionArrowsContainer.classList.add('month-selection-arrows-container', 'flex')
     
-        monthTitleTextElement.innerText = currentCalendar.monthName + ' ' + currentCalendar.year
+        monthTitleTextElement.innerText = _calendarObj.monthName + ' ' + _calendarObj.year
         prevMonthContainer.classList.add('month-selector-container', 'prev-month-selector-container')
         nextMonthContainer.classList.add('month-selector-container', 'next-month-selector-container')
         prevMonthArrow.classList.add('fa-solid', 'fa-chevron-left', 'month-selector')
@@ -195,28 +150,28 @@ const DatePicker = () => {
 
         prevMonthContainer.addEventListener('click', (e) => {
             e.preventDefault()
-            let { monthNumber, year } = currentCalendar
+            let { monthNumber, monthName, year } = _calendarObj
             monthNumber = monthNumber - 1
             if (monthNumber < 0) {
                 monthNumber = 11
                 year = year - 1
             }
-            currentCalendar = CurrentCalendar.setCalendarObj(monthNumber, year)
-            currentCalendar = CurrentCalendar.getCalendarObj()         
-            CurrentCalendar.getCalendarView()
+            _calendarObj = _createCalendarObj(monthNumber, year)
+            monthTitleTextElement.innerText = _calendarObj.monthName + ' ' + _calendarObj.year
+            _createCalendarView(true)
         })
 
         nextMonthContainer.addEventListener('click', (e) => {
             e.preventDefault()
-            let { monthNumber, year } = currentCalendar
+            let { monthNumber, monthName, year } = _calendarObj
             monthNumber = monthNumber + 1
             if (monthNumber > 11) {
                 monthNumber = 0
                 year = year + 1
             }
-            currentCalendar = CurrentCalendar.setCalendarObj(monthNumber, year)
-            currentCalendar = CurrentCalendar.getCalendarObj()         
-            CurrentCalendar.getCalendarView()
+            _calendarObj = _createCalendarObj(monthNumber, year)
+            monthTitleTextElement.innerText = _calendarObj.monthName + ' ' + _calendarObj.year
+            _createCalendarView(true)
         })
         
         monthTitleContainer.appendChild(monthTitleTextElement)
@@ -228,8 +183,16 @@ const DatePicker = () => {
         return topRowContainer
     }
 
-    function createBottomRow() {
-        let { monthNumber, year } = currentCalendar
+    function _createCalendarView(needToAppend) {
+        let { monthNumber, monthName, year } = _calendarObj
+        console.log(_calendarObj)
+
+        const removedContainer = document.getElementById('bottomRow')
+        const calendarContainer = document.querySelector('.calendar-container')
+
+        if (removedContainer) {
+            removedContainer.remove()
+        }
 
         const bottomRowContainer = document.createElement('div')
         bottomRowContainer.classList.add('date-picker-row', 'grid')
@@ -257,16 +220,30 @@ const DatePicker = () => {
         daysOfMonth.forEach(element => {
             bottomRowContainer.appendChild(element)
         })
-        return bottomRowContainer
+
+        if (calendarContainer && needToAppend) {
+            calendarContainer.appendChild(bottomRowContainer)
+        } else if (!needToAppend) {
+            console.log(bottomRowContainer)
+            return bottomRowContainer
+        }
     }
 
-    const topRow = createTopRow()
-    const bottomRow = createBottomRow(currentCalendar)
+    const _init = (function() {
+        _calendarObj = _createCalendarObj()
+    })()
+    
+    function getCalendarObj() { return _calendarObj }
+    function setCalendarObj(monthNumber, year) {
+        return _calendarObj = _createCalendarObj(monthNumber, year)
+    }
+    function getCalendarView(needToAppend) { return _createDatePicker(needToAppend) }
 
-    calendarContainer.appendChild(topRow)
-    calendarContainer.appendChild(bottomRow)
-    datePickerContainer.appendChild(calendarContainer)
-    return datePickerContainer
-}
+    return {
+        getCalendarObj,
+        setCalendarObj,
+        getCalendarView
+    }
+})()
 
-export {DatePicker, CurrentCalendar}
+export {CurrentCalendar}

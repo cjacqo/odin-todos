@@ -3,7 +3,7 @@ import '@fortawesome/fontawesome-free/js/fontawesome'
 import '@fortawesome/fontawesome-free/js/solid'
 import '@fortawesome/fontawesome-free/js/regular'
 import Controller from "../../controller"
-import {DatePicker} from './DatePicker.js'
+import {CurrentCalendar} from './DatePicker.js'
 import { changeMonth, getDays, getDaysOfMonth, getTodaysDate } from '../../functions'
 
 const TimePicker = () => {
@@ -57,6 +57,7 @@ const AddFormToModal = (formData) => {
                 let formInput
 
                 formInputControl.classList.add('form-control')
+                formInputControl.setAttribute('id', `${name}Control`)
 
                 // Dependent Toggle Input
                 const toggleInputOpen = document.createElement('input')
@@ -83,7 +84,7 @@ const AddFormToModal = (formData) => {
                     case 'time':
                         // - Create the input, and add classes that hide the custom
                         //   input by default
-                        formInput = type === 'date' ? DatePicker() : TimePicker()
+                        formInput = type === 'date' ? CurrentCalendar.getCalendarView(false) : TimePicker()
                         formInput.classList.add('collapsible-input', 'hidden')
 
                         // - Create a hidden input element that will track the value from

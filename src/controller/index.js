@@ -473,8 +473,8 @@ const Controller = (() => {
             isHidden = true
             hiddenInput.removeAttribute('value')
             updateQuestionAnswerDisplay(answerElement, null, isHidden)
-            CurrentCalendar.setCalendarObj(getTodaysDate().monthNumber, getTodaysDate().year)
-            CurrentCalendar.getCalendarView()
+            // CurrentCalendar.setCalendarObj(getTodaysDate().monthNumber, getTodaysDate().year)
+            // CurrentCalendar.getCalendarView(true)
         }
         return
     }
