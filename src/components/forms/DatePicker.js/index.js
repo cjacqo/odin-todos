@@ -106,19 +106,24 @@ const CurrentCalendar = (function() {
         calendarContainer.classList.add('calendar-container', 'flex', 'col')
 
         const _topRow = _createTopRow()
-        console.log(needToAppend)
         const _calendarView = _createCalendarView(needToAppend)
 
-        calendarContainer.appendChild(_topRow)
-        calendarContainer.appendChild(_calendarView)
-        datePickerContainer.appendChild(calendarContainer)
-
         if (needToAppend) {
+            const titleContainer = document.getElementById('monthAndYearTitle')
+            _updateTitle(titleContainer)
             const controlContainer = document.getElementById('todo-dateControl')
             controlContainer.appendChild(datePickerContainer)
         } else {
+            calendarContainer.appendChild(_topRow)
+            calendarContainer.appendChild(_calendarView)
+            datePickerContainer.appendChild(calendarContainer)
             return datePickerContainer
         }
+    }
+
+    function _updateTitle(el) {
+        el.innerText = _calendarObj.monthName + ' ' + _calendarObj.year
+        return 
     }
 
     function _createTopRow() {
@@ -137,7 +142,8 @@ const CurrentCalendar = (function() {
         monthTitleTextElement.setAttribute('id', 'monthAndYearTitle')
         monthSelectionArrowsContainer.classList.add('month-selection-arrows-container', 'flex')
     
-        monthTitleTextElement.innerText = _calendarObj.monthName + ' ' + _calendarObj.year
+        _updateTitle(monthTitleTextElement)
+
         prevMonthContainer.classList.add('month-selector-container', 'prev-month-selector-container')
         nextMonthContainer.classList.add('month-selector-container', 'next-month-selector-container')
         prevMonthArrow.classList.add('fa-solid', 'fa-chevron-left', 'month-selector')
@@ -156,8 +162,8 @@ const CurrentCalendar = (function() {
                 monthNumber = 11
                 year = year - 1
             }
-            _calendarObj = _createCalendarObj(monthNumber, year)
-            monthTitleTextElement.innerText = _calendarObj.monthName + ' ' + _calendarObj.year
+            _calendarObj = setCalendarObj(monthNumber, year)
+            _updateTitle(monthTitleTextElement)
             _createCalendarView(true)
         })
 
@@ -169,8 +175,8 @@ const CurrentCalendar = (function() {
                 monthNumber = 0
                 year = year + 1
             }
-            _calendarObj = _createCalendarObj(monthNumber, year)
-            monthTitleTextElement.innerText = _calendarObj.monthName + ' ' + _calendarObj.year
+            _calendarObj = setCalendarObj(monthNumber, year)
+            _updateTitle(monthTitleTextElement)
             _createCalendarView(true)
         })
         
@@ -185,7 +191,6 @@ const CurrentCalendar = (function() {
 
     function _createCalendarView(needToAppend) {
         let { monthNumber, monthName, year } = _calendarObj
-        console.log(_calendarObj)
 
         const removedContainer = document.getElementById('bottomRow')
         const calendarContainer = document.querySelector('.calendar-container')
@@ -221,10 +226,9 @@ const CurrentCalendar = (function() {
             bottomRowContainer.appendChild(element)
         })
 
-        if (calendarContainer && needToAppend) {
+        if (needToAppend) {
             calendarContainer.appendChild(bottomRowContainer)
         } else if (!needToAppend) {
-            console.log(bottomRowContainer)
             return bottomRowContainer
         }
     }
