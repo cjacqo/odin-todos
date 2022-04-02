@@ -26,6 +26,48 @@ const getTodaysDate = () => {
     } 
     return dateObj
 }
+const getYesterdaysDate = () => {
+    const today = new Date()
+    const yesterday = new Date()
+    yesterday.setDate(today.getDate() - 1)
+    const dateObj = {
+        monthNumber: yesterday.getMonth(),
+        monthName: months[yesterday.getMonth()],
+        dayNumber: yesterday.getDate(),
+        dayName: days[yesterday.getDay()],
+        year: yesterday.getFullYear()
+    }
+    return dateObj
+}
+const getTomorrowsDate = () => {
+    const today = new Date()
+    const tomorrow = new Date()
+    tomorrow.setDate(today.getDate() + 1)
+    const dateObj = {
+        monthNumber: tomorrow.getMonth(),
+        monthName: months[tomorrow.getMonth()],
+        dayNumber: tomorrow.getDate(),
+        dayName: days[tomorrow.getDay()],
+        year: tomorrow.getFullYear()
+    }
+    return dateObj
+}
+
+const getDateAnswerAsString = (answerDateObj) => {
+    const todaysDate = getTodaysDate()
+    const yesterdaysDate = getYesterdaysDate()
+    const tomorrowsDate = getTomorrowsDate()
+    if (todaysDate === answerDateObj) {
+        return 'Today'
+    } else if (yesterdaysDate === answerDateObj) {
+        return 'Yesterday'
+    } else if (tomorrowsDate === answerDateObj) {
+        return 'Tomorrow'
+    } else {
+        console.log('Return date String Here')
+    }
+    console.log(answerDateObj)
+}
 
 const getDays = () => {
     return days.map(day => day.substring(0, 3).toUpperCase())
@@ -72,10 +114,8 @@ const getDaysOfMonth = (monthIndex, year) => {
 
                     container.addEventListener('click', (e) => {
                         const data = e.currentTarget.dataset.dateOfWeek
-                        answer = Controller.handleDayOfWeekSelection(dateSelected, data, monthIndex)
-                        // console.log(dateInput)
-                        // dateInput.setAttribute('value', answer.year + '-' + answer.month + '-' + answer.day)
-                        // console.log(dateInput.value)
+                        Controller.handleStyleOfDateSelection(data)
+                        answer = Controller.handleDayOfWeekSelection(dateSelected, monthIndex)
                         e.stopPropagation()
                     })
                     daySelectionText.innerText = countOfDays
@@ -94,7 +134,8 @@ const getDaysOfMonth = (monthIndex, year) => {
                     const dateSelected = new Date(`${months[monthIndex]} ${countOfDays}, ${year}`)
                     container.addEventListener('click', (e) => {
                         const data = e.currentTarget.dataset.dateOfWeek
-                        answer = Controller.handleDayOfWeekSelection(dateSelected, data, monthIndex)
+                        Controller.handleStyleOfDateSelection(data)
+                        answer = Controller.handleDayOfWeekSelection(dateSelected, monthIndex)
                         e.stopPropagation()
                     })
                     daySelectionText.innerText = countOfDays
@@ -119,4 +160,12 @@ const changeMonth = (value) => {
     console.log(value)
 }
 
-export {removeSpacesToLowerCase, capitalizeString, handlePageSelection, getTodaysDate, getDays, getDayText, getMonthText, getDaysOfMonth, changeMonth}
+const dateValueToString = (theDate) => {
+    const today = new Date()
+    const yesterday = new Date()
+    const tomorrow = new Date()
+    const theDateSelection = new Date(theDate)
+    console.log(theDate)
+}
+
+export {removeSpacesToLowerCase, capitalizeString, handlePageSelection, getTodaysDate, getDays, getDayText, getMonthText, getDaysOfMonth, changeMonth, dateValueToString, getDateAnswerAsString}

@@ -5,7 +5,7 @@ import Header from "../components/header/Header"
 import Main from "../components/main/Main"
 import Database from "../data"
 import { Folders, Items } from "../data/data"
-import { getDayText, getMonthText, getTodaysDate } from "../functions"
+import { dateValueToString, getDateAnswerAsString, getDayText, getMonthText, getTodaysDate } from "../functions"
 import PageView from "../view"
 
 const Controller = (() => {
@@ -421,43 +421,85 @@ const Controller = (() => {
     }
     // --- Toggle Question Visibility
     const updateQuestionAnswerDisplay = (element, value, isHidden) => {
-        if (isHidden) {
+        if (isHidden && !value) {
             element.classList.remove('active')
         } else if (!isHidden && !element.classList.contains('active')) {
             element.classList.add('active')
         }
 
-        if (typeof value === 'object') {
+        if (value) {
             element.innerText = value.string
         } else {
-            element.innerText = value
+            element.innerText = ''
         }
     }
-    const toggleQuestionVisibility = (questionId, hiddenInputValue) => {
+    const toggleQuestionVisibility = (questionId, answerValue, isActive) => {
         let questionElement
         let answerElement
         let isHidden
+        let theValue
+        let hiddenInput
+
         switch(questionId) {
             case 'todo-dateToggle':
                 questionElement = document.getElementById('todoDueDateInput')
                 answerElement = document.getElementById('todo-dateAnswerDisplay')
-                questionElement.classList.toggle('hidden')
+                hiddenInput = document.getElementById('dateHiddenInput')
                 break
             case 'todo-timeToggle':
                 questionElement = document.getElementById('todoDueTimeInput')
                 questionElement.classList.toggle('hidden')
                 break
         }
-        if (questionElement.classList.contains('hidden')) {
-            isHidden = true
-        } else {
+
+        if (isActive) {
+            questionElement.classList.toggle('hidden')
             isHidden = false
+            if (answerValue && typeof answerValue === 'string') {
+                answerValue = reformatDateValue(answerValue)
+            } else {
+                handleStyleOfDateSelection(false, 1)
+            }
+            theValue = getDateAsObj(answerValue)
+            updateQuestionAnswerDisplay(answerElement, theValue, isHidden)
         }
-        let theInputValue = hiddenInputValue ? hiddenInputValue : 'Today'
-        updateQuestionAnswerDisplay(answerElement, theInputValue, isHidden)
+
+        if (!isActive) {
+            if (!questionElement.classList.contains('hidden')) {
+                handleStyleOfDateSelection()
+                questionElement.classList.add('hidden')
+            }
+            isHidden = true
+            hiddenInput.removeAttribute('value')
+            updateQuestionAnswerDisplay(answerElement, null, isHidden)
+        }
+        return
+    }
+    // --- Set the styles of the selected date
+    const handleStyleOfDateSelection = (elementData, x) => {
+        const calendarDateElements = document.querySelectorAll('.calendar-day-option')
+        calendarDateElements.forEach(calendarDate => {
+            const dateData = calendarDate.dataset.dateOfWeek
+            if (elementData) {
+                if (calendarDate.classList.contains('active') && dateData == elementData) {
+                    return
+                } else if (calendarDate.classList.contains('active') && dateData !== elementData) {
+                    calendarDate.classList.remove('active')
+                } else if (dateData == elementData && !calendarDate.classList.contains('active')){
+                    calendarDate.classList.add('active')
+                }
+            } else if (!elementData) {
+                if (calendarDate.dataset.dateOfWeek == x) {
+                    calendarDate.classList.add('active')
+                } else {
+                    calendarDate.classList.remove('active')
+                }
+            }
+        })
+        return
     }
     // --- Day of Week Selection from DatePicker
-    const handleDayOfWeekSelection = (dateSelected, elementData, monthIndex) => {
+    const handleDayOfWeekSelection = (dateSelected, monthIndex) => {
         const today = new Date()
         const yesterday = new Date()
         const tomorrow = new Date()
@@ -466,25 +508,53 @@ const Controller = (() => {
         const dateInput = document.getElementById('dateHiddenInput')
         const answerElement = document.getElementById('todo-dateAnswerDisplay')
 
-        const calendarDateElements = document.querySelectorAll('.calendar-day-option')
+        const theValue = getDateAsObj(dateSelected)
+        monthIndex++
 
-        calendarDateElements.forEach(calendarDate => {
-            const dateData = calendarDate.dataset.dateOfWeek
-            if (calendarDate.classList.contains('active') && dateData == elementData) {
-                return
-            } else if (calendarDate.classList.contains('active') && dateData !== elementData) {
-                calendarDate.classList.remove('active')
-            } else if (dateData == elementData && !calendarDate.classList.contains('active')){
-                calendarDate.classList.add('active')
+        let monthValue = monthIndex < 10 ? '0' + monthIndex : monthIndex
+        let dayValue = theValue.date < 10 ? '0' + theValue.date : theValue.date
+        dateInput.setAttribute('value', theValue.year + '-' + monthValue  + '-' + dayValue)
+
+        updateQuestionAnswerDisplay(answerElement, theValue, false)
+        return theValue
+    }
+    const getDateAsObj = (dateSelected) => {
+        const today = new Date()
+        const yesterday = new Date()
+        const tomorrow = new Date()
+        yesterday.setDate(today.getDate() - 1)
+        tomorrow.setDate(today.getDate() + 1)
+
+        let selectedDayOfWeek
+        let selectedMonth
+        let selectedDayOfMonth
+        let selectedYear
+        let answerString
+        
+        if (dateSelected) {
+            let theValue = typeof dateSelected === 'string' ? new Date(dateSelected) : dateSelected
+            selectedDayOfWeek = getDayText(theValue.getDay())
+            selectedMonth = getMonthText(theValue.getMonth())
+            selectedDayOfMonth = theValue.getDate()
+            selectedYear = theValue.getFullYear()
+
+            if (theValue.toDateString() === today.toDateString()) {
+                answerString = 'Today'
+            } else if (theValue.toDateString() === yesterday.toDateString()) {
+                answerString = 'Yesterday'
+            } else if (theValue.toDateString() === tomorrow.toDateString()) {
+                answerString = 'Tomorrow'
+            } else {
+                answerString = `${selectedDayOfWeek}, ${selectedMonth} ${selectedDayOfMonth}, ${selectedYear}`
             }
-        })
-
-        let answerValue
-        const selectedDayOfWeek = getDayText(dateSelected.getDay())
-        const selectedMonth = getMonthText(dateSelected.getMonth())
-        const selectedDayOfMonth = dateSelected.getDate()
-        const selectedYear = dateSelected.getFullYear()
-        const answerString = `${selectedDayOfWeek}, ${selectedMonth} ${selectedDayOfMonth}, ${selectedYear}`
+        } else if (!dateSelected) {
+            selectedDayOfWeek = getDayText(today.getDay())
+            selectedMonth = getMonthText(today.getMonth())
+            selectedDayOfMonth = today.getDate()
+            selectedYear = today.getFullYear()
+            answerString = `Today`
+        }
+        
         let answerObj = {
             day: selectedDayOfWeek,
             month: selectedMonth,
@@ -493,26 +563,14 @@ const Controller = (() => {
             string: answerString
         }
 
-        if (dateSelected.toDateString() === today.toDateString()) {
-            answerValue = 'Today'
-        } else if (dateSelected.toDateString() === yesterday.toDateString()) {
-            answerValue = 'Yesterday'
-        } else if (dateSelected.toDateString() === tomorrow.toDateString()) {
-            answerValue = 'Tomorrow'
-        } else {
-            answerValue = answerObj
-            answerObj = answerValue
-        }
-
-        let monthValue = monthIndex < 10 ? '0' + monthIndex : monthIndex
-        let dayValue = answerObj.date < 10 ? '0' + answerObj.date : answerObj.date
-        dateInput.setAttribute('value', answerObj.year + '-' + monthValue  + '-' + dayValue)
-        console.log(dateInput.value)
-
-        updateQuestionAnswerDisplay(answerElement, answerValue, false)
         return answerObj
     }
-
+    const reformatDateValue = (dateSelected) => {
+        const year = dateSelected.substring(0, 4)
+        const month = dateSelected.substring(5, 7)
+        const day = dateSelected.substring(8, 10)
+        return month + '-' + day + '-' + year
+    }
     
     return {
         init: init,
@@ -530,6 +588,7 @@ const Controller = (() => {
         toggleEdit: toggleEdit,
         toggleQuestionVisibility: toggleQuestionVisibility,
         startItemCreation: startItemCreation,
+        handleStyleOfDateSelection: handleStyleOfDateSelection,
         handleDayOfWeekSelection: handleDayOfWeekSelection,
         getFoldersFromDb: getFoldersFromDb
     }
