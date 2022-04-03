@@ -112,7 +112,6 @@ const CurrentCalendar = (function() {
             const titleContainer = document.getElementById('monthAndYearTitle')
             _updateTitle(titleContainer)
             const controlContainer = document.getElementById('todo-dateControl')
-            controlContainer.appendChild(datePickerContainer)
         } else {
             calendarContainer.appendChild(_topRow)
             calendarContainer.appendChild(_calendarView)
@@ -242,11 +241,18 @@ const CurrentCalendar = (function() {
         return _calendarObj = _createCalendarObj(monthNumber, year)
     }
     function getCalendarView(needToAppend) { return _createDatePicker(needToAppend) }
+    function init(formControl, iconContainer, hiddenInput, toggleSwitch, titleContainer) {
+        const formInput = document.createElement('div')
+        formInput.classList.add('collapsible-input', 'hidden')
+
+        console.log(formInput)
+    }
 
     return {
         getCalendarObj,
         setCalendarObj,
-        getCalendarView
+        getCalendarView,
+        init
     }
 })()
 

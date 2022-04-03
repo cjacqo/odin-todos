@@ -1,7 +1,8 @@
 import { EditModal } from "../components/elements"
 import Footer from "../components/footer/Footer"
 import { AddFolderForm, AddFormToModal, CreateToDoForm } from "../components/forms"
-import { CurrentCalendar } from "../components/forms/DatePicker.js"
+import { CurrentCalendar } from "../components/forms/DatePicker/index"
+import DateSelector from "../components/forms/inputs/DateSelector"
 import Header from "../components/header/Header"
 import Main from "../components/main/Main"
 import Database from "../data"
@@ -188,9 +189,6 @@ const Controller = (() => {
         if (_popUpOpen) {
             togglePopUp()
         }
-
-        // console.log(e.currentTarget.value)
-        // !!! TODO !!!
         
         if (e) {
             value = e.currentTarget.value ? e.currentTarget.value : e.currentTarget.dataset.action ? e.currentTarget.dataset.action : e === 'close' ? 'close' : null
@@ -282,11 +280,12 @@ const Controller = (() => {
                                 id: 1,
                                 questions: [
                                     {
-                                        required: false,
-                                        type: 'date',
-                                        placeholder: 'Date',
-                                        name: 'todo-date',
-                                        id: 'todoDueDate'
+                                        type: 'date'
+                                        // required: false,
+                                        // type: 'date',
+                                        // placeholder: 'Date',
+                                        // name: 'todo-date',
+                                        // id: 'todoDueDate'
                                     },
                                     {
                                         required: false,

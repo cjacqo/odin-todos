@@ -262,9 +262,10 @@ textarea:focus {
     color: var(--blue);
 }
 
-.calendar-container #bottomRow {
+.date-picker-container #bottomRow {
     grid-template-columns: repeat(7, 40px);
-    grid-template-rows: 16px repeat(5, 40px);
+    column-width: 40px;
+    grid-template-rows: 16px repeat(auto-fill, 40px);
     gap: 5px;
     text-align: center;
 }
@@ -285,6 +286,8 @@ textarea:focus {
     text-align: center;
     position: relative;
     aspect-ratio: 1;
+    break-inside: avoid-column;
+    page-break-inside: avoid;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -293,6 +296,12 @@ textarea:focus {
 .calendar-day-option.active {
     background-color: var(--blue);
     border-radius: 50%;
+}
+.calendar-day-option.active.today {
+    color: #FFFFFF;
+}
+.calendar-day-option.today {
+    color: var(--blue);
 }
 
 .date-answer {
@@ -320,6 +329,9 @@ textarea:focus {
 }
 #bottomRow .row-5 {
     grid-row: 6 / 7;
+}
+#bottomRow .row-6 {
+    grid-row: 7 / 8;
 }
 /* --- layout days by day */
 #bottomRow .col-0 {

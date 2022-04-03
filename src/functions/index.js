@@ -22,7 +22,8 @@ const getTodaysDate = () => {
         monthName: months[theDate.getMonth()],
         dayNumber: theDate.getDate(),
         dayName: days[theDate.getDay()],
-        year: theDate.getFullYear()
+        year: theDate.getFullYear(),
+        theDate: theDate
     } 
     return dateObj
 }
@@ -52,9 +53,16 @@ const getTomorrowsDate = () => {
     }
     return dateObj
 }
-const getCalendarObj = (monthIndex, year) => {
-    console.log(monthIndex)
-    console.log(year)
+const getCalendarObj = (answer) => {
+    const obj = {
+        monthNumber: answer.getMonth(),
+        monthName: months[answer.getMonth()],
+        dayNumber: answer.getDate(),
+        dayName: days[answer.getDay()],
+        year: answer.getFullYear(),
+        theDate: answer
+    }
+    return obj
 }
 
 const getMonth = (monthIndex) => {
