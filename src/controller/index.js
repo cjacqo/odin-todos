@@ -281,40 +281,31 @@ const Controller = (() => {
                                 questions: [
                                     {
                                         type: 'date'
-                                        // required: false,
-                                        // type: 'date',
-                                        // placeholder: 'Date',
-                                        // name: 'todo-date',
-                                        // id: 'todoDueDate'
                                     },
                                     {
-                                        required: false,
-                                        type: 'time',
-                                        placeholder: 'Time',
-                                        name: 'todo-time',
-                                        id: 'todoDueTime'
+                                        type: 'time'
                                     }
                                 ]
                             },
-                            {
-                                id: 2,
-                                questions: [
-                                    {
-                                        required: false,
-                                        type: 'select',
-                                        name: 'priority-select',
-                                        options: ['none', 'low', 'medium', 'high'],
-                                        id: 'todoPrioritySelect'
-                                    },
-                                    {
-                                        required: false,
-                                        type: 'select',
-                                        name: 'folder-select',
-                                        options: Database.getFolders(),
-                                        id: 'todoFolderSelect'
-                                    }
-                                ]
-                            }
+                            // {
+                            //     id: 2,
+                            //     questions: [
+                            //         {
+                            //             required: false,
+                            //             type: 'select',
+                            //             name: 'priority-select',
+                            //             options: ['none', 'low', 'medium', 'high'],
+                            //             id: 'todoPrioritySelect'
+                            //         },
+                            //         {
+                            //             required: false,
+                            //             type: 'select',
+                            //             name: 'folder-select',
+                            //             options: Database.getFolders(),
+                            //             id: 'todoFolderSelect'
+                            //         }
+                            //     ]
+                            // }
                         ],
                         id: 'addTodo',
                         formInfo: ['Details'],

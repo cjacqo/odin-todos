@@ -380,6 +380,8 @@ const DateSelector = (function() {
         _topRow = _createTopRow()
         _bottomRow = _createBottomRow()
 
+        _hiddenInput.setAttribute('type', 'date')
+
         _formInputControl.classList.add('form-control', 'flex')
         _formInputControl.setAttribute('id', 'todo-dateControl')
         _dateSelectorInput.classList.add('date-picker-container', 'collapsible-input', 'hidden')

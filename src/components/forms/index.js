@@ -6,6 +6,7 @@ import Controller from "../../controller"
 import {CurrentCalendar} from './DatePicker'
 import { changeMonth, getDays, getDaysOfMonth, getTodaysDate } from '../../functions'
 import DateSelector from './inputs/DateSelector'
+import TimeSelector from './inputs/TimeSelector'
 
 const TimePicker = () => {
     const timePickerContainer = document.createElement('div')
@@ -53,15 +54,39 @@ const AddFormToModal = (formData) => {
         
         if (questions.length > 0) {
             questions.forEach(question => {
-                const { type } = question
+                const { autocomplete, required, minlength, maxlength, type, id, placeholder, name, label, options } = question
+                let formControl
                 switch(type) {
+                    case 'text':
+                    case 'textarea':
+                        formControl = document.createElement('div')
+                        let formInput = document.createElement(`${type === 'textarea' ? type : 'input'}`)
+                        formControl.classList.add('form-control')
+                        formControl.setAttribute('id', `${name}Control`)
+                        if (type === 'text') {
+                            formInput.setAttribute('type', type)
+                        }
+                        formInput.setAttribute('autocomplete', autocomplete ? 'on' : 'off')
+                        formInput.setAttribute('required', required ? required : false)
+                        formInput.setAttribute('minlength', minlength ? minlength : 1)
+                        formInput.setAttribute('maxlength', maxlength ? maxlength : 20)
+                        formInput.setAttribute('placeholder', placeholder)
+                        formInput.addEventListener('input', (e) => {
+                            Controller.handleTextInput(e)
+                        })
+                        formControl.appendChild(formInput)
+                        break
                     case 'date':
-                        const calendarControl = DateSelector.init()
-                        formFieldSet.appendChild(calendarControl)
+                        formControl = DateSelector.init()
+                        break
+                    case 'time':
+                        formControl = TimeSelector.init()
                         break
                     default:
                         console.log(type)
                 }
+                console.log(formControl)
+                formFieldSet.appendChild(formControl)
             })
         }
         formContainer.appendChild(formFieldSet)
