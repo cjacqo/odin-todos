@@ -69,6 +69,10 @@ const getMonth = (monthIndex) => {
     return months[monthIndex]
 }
 
+const getMonthIndex = (monthName) => {
+    return months.indexOf(monthName)
+}
+
 const getDateAnswerAsString = (answerDateObj) => {
     const todaysDate = getTodaysDate()
     const yesterdaysDate = getYesterdaysDate()
@@ -124,4 +128,4 @@ const dateValueToString = (theDate) => {
     console.log(theDate)
 }
 
-export {removeSpacesToLowerCase, capitalizeString, getCalendarObj, handlePageSelection, getTodaysDate, getMonth, getDays, getDayText, getMonthText, changeCalendar, dateValueToString, getDateAnswerAsString, generateDayElement}
+export {removeSpacesToLowerCase, capitalizeString, getCalendarObj, handlePageSelection, getTodaysDate, getMonth, getDays, getDayText, getMonthText, changeCalendar, dateValueToString, getDateAnswerAsString, generateDayElement, getMonthIndex}
