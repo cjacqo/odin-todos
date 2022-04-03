@@ -22,6 +22,7 @@ const DateSelector = (function() {
     let _bottomRow
     let _hiddenInput
     let _isHidden = true
+    let _toggleIsOn = false
     let _calendarDateElements = []
     const _placeholder = 'Date'
     const _today = getTodaysDate()
@@ -231,7 +232,7 @@ const DateSelector = (function() {
         }
     }
     
-    function _toggleQuestionVisibility(isChecked) {
+    function _toggleQuestionVisibility(isChecked, remainHidden) {
         // HIDE
         if (_isHidden) {
             _dateSelectorInput.classList.add('hidden')
@@ -242,7 +243,12 @@ const DateSelector = (function() {
                 _updateTitle()
                 _hiddenInput.removeAttribute('value')
             }
-        } else { // SHOW
+        } else if (!_isHidden && remainHidden) { // SHOW
+            if (!_hiddenInput.value && isChecked) {
+                _answer = _getDateAsObject()
+                _setHiddenInputValue()
+            }
+        } else {
             _dateSelectorInput.classList.remove('hidden')
             _createBottomRow(true)
             if (!_hiddenInput.value && isChecked) {
@@ -414,16 +420,17 @@ const DateSelector = (function() {
 
         _toggleInput.addEventListener('click', (e) => {
             e.stopImmediatePropagation()
-            const isChecked = e.target.checked
-            _isHidden = !isChecked
-            _toggleQuestionVisibility(isChecked)
+            _toggleIsOn = e.target.checked
+            _isHidden = !_toggleIsOn
+            _toggleQuestionVisibility(_toggleIsOn, false)
         })
 
         _questionTitleContainer.addEventListener('click', (e) => {
             e.stopImmediatePropagation()
-            if (_toggleInput.checked) {
+            console.log(_toggleIsOn)
+            if (_toggleIsOn) {
                 _isHidden = !_isHidden
-                _toggleQuestionVisibility(true)
+                _toggleQuestionVisibility(true, false)
             }
         })
 
@@ -441,11 +448,21 @@ const DateSelector = (function() {
     }
 
     function getInput() { return _formInputControl }
+    function getIsHidden() { return _isHidden }
+    function toggleSelector() { 
+        _toggleInput.checked = true
+        _isHidden = false
+        _toggleIsOn = true
+        console.log("hi")
+        _toggleQuestionVisibility(true, true)
+    }
     function getAnswer() { return _hiddenInput.value }
 
     return {
         init: init,
         getInput: getInput,
+        getIsHidden: getIsHidden,
+        toggleSelector: toggleSelector,
         getAnswer: getAnswer
     }
 })()

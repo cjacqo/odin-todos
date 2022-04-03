@@ -218,7 +218,8 @@ textarea:focus {
 .hidden-input {
     display: none;
 }
-.date-picker-container {
+.date-picker-container,
+.time-picker-container {
     position: relative;
     width: 100%;
     max-width: 320px;
@@ -370,4 +371,85 @@ textarea:focus {
 }
 #timeIconContainer {
     background-color: var(--blue);
+}
+
+/* Time Spinner Styles */
+.spinner-container {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: auto;
+    font-size: 16px;
+}
+
+.spinner {
+    display: grid;
+    grid-template-rows: repeat(12, 1fr);
+    overflow-x: hidden;
+    overflow-y: scroll;
+    max-height: calc(24px * 7);
+    height: calc(24px * 7);
+    position: relative;
+    white-space: nowrap;
+    top: 0;
+    left: 0;
+}
+
+.spinner-element {
+    padding: var(--xx-small);
+    position: relative;
+    height: 100%;
+}
+
+.position-9 {
+    transform: rotateX(60deg);
+    grid-row: 1 / 2;
+}
+.position-10 {
+    transform: rotateX(40deg);
+    grid-row: 2 / 3;
+}
+.position-11 {
+    transform: rotateX(20deg);
+    grid-row: 3 / 4;
+}
+.position-0 {
+    transform: rotateX(0deg);
+    grid-row: 4 / 5;
+}
+.position-1 {
+    transform: rotateX(-20deg);
+    grid-row: 5 / 6;
+}
+.position-2 {
+    transform: rotateX(-40deg);
+    grid-row: 6 / 7;
+}
+.position-3 {
+    transform: rotateX(-60deg);
+    grid-row: 7 / 8;
+}
+.position-4 {
+    grid-row: 8 / 9;
+}
+.position-5 {
+    grid-row: 9 / 10;
+}
+.position-6 {
+    grid-row: 10 / 11;
+}
+.position-7 {
+    grid-row: 11 / 12;
+}
+.position-8 {
+    grid-row: 12 / 13;
+}
+
+.position-4,
+.position-5,
+.position-6,
+.position-7,
+.position-8 {
+    display: none;
 }
