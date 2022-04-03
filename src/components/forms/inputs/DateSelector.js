@@ -47,8 +47,6 @@ const DateSelector = (function() {
 
     function _setAnswer(dateSelected) {
         _answer = _getDateAsObject(dateSelected)
-        console.log(_answer)
-        // _answer = dateSelected
         return _answer
     }
 
@@ -137,13 +135,12 @@ const DateSelector = (function() {
     function _calendarDayElement(row, col, dayNumber, monthNumber, year) {
         const container = document.createElement('div')
         container.classList.add('calendar-day-option', `row-${row + 1}`, `col-${col}`)
-        let dateObj
-        if (_answer) {
+        let dateObj = getTodaysDate()
+        if (_calendarObj) {
             dateObj = _getDateAsObject(_answer)
-        } else {
-            dateObj = getTodaysDate()
         }
-        if (dayNumber === dateObj.dayNumber && monthNumber === dateObj.monthNumber) {
+
+        if (dayNumber === _answer.dayNumber && monthNumber === _answer.monthNumber) {
             container.classList.add('active')
         }
         if (dayNumber === _today.dayNumber && monthNumber === _today.monthNumber) {
@@ -172,6 +169,10 @@ const DateSelector = (function() {
 
         if (!_calendarObj) {
             _createCalendarObj()
+        }
+
+        if (!_answer) {
+            _setAnswer()
         }
 
         if (_calendarDateElements.length > 0) {
@@ -234,12 +235,16 @@ const DateSelector = (function() {
         // HIDE
         if (_isHidden) {
             _dateSelectorInput.classList.add('hidden')
-            if (_hiddenInput.value && isChecked) {
-            } else {
+            if (_hiddenInput.value && !isChecked) {
+                _setAnswer()
+                _createCalendarObj()
+                _createCalendar()
+                _updateTitle()
                 _hiddenInput.removeAttribute('value')
             }
         } else { // SHOW
             _dateSelectorInput.classList.remove('hidden')
+            _createBottomRow(true)
             if (!_hiddenInput.value && isChecked) {
                 _answer = _getDateAsObject()
                 _setHiddenInputValue()
@@ -407,7 +412,6 @@ const DateSelector = (function() {
 
         _toggleInput.addEventListener('click', (e) => {
             e.stopImmediatePropagation()
-            const questionId = e.target.getAttribute('id')
             const isChecked = e.target.checked
             _isHidden = !isChecked
             _toggleQuestionVisibility(isChecked)
@@ -415,7 +419,6 @@ const DateSelector = (function() {
 
         _questionTitleContainer.addEventListener('click', (e) => {
             e.stopImmediatePropagation()
-            const questionId = _toggleInput.getAttribute('id')
             if (_toggleInput.checked) {
                 _isHidden = !_isHidden
                 _toggleQuestionVisibility(true)
