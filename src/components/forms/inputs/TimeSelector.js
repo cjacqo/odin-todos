@@ -286,11 +286,21 @@ const TimeSelector = (function() {
         let position
         let compare = type === 'hours' ? _currentTimeObj.hours : _currentTimeObj.minutes
         let len = type === 'hours' ? 12 : 60
-        for (let i = 0; i < len; i++) {
+        for (let i = 0; i < 12; i++) {
             let time = i
-            if (time === compare) {
-                return time
+            if (type === 'hours') {
+                if (time === compare) {
+                    return time
+                }
+            } else {
+                let min = _minutesArr[i]
+                if (parseInt(min) === compare) {
+                    return time
+                } else if (parseInt(min) <= compare + 5 && parseInt(min) > compare) {
+                    return time
+                }
             }
+            
         }
     }
     
