@@ -283,9 +283,7 @@ const TimeSelector = (function() {
     }
 
     function _findClosestTime(type) {
-        let position
         let compare = type === 'hours' ? _currentTimeObj.hours : _currentTimeObj.minutes
-        let len = type === 'hours' ? 12 : 60
         for (let i = 0; i < 12; i++) {
             let time = i
             if (type === 'hours') {
@@ -300,7 +298,6 @@ const TimeSelector = (function() {
                     return time
                 }
             }
-            
         }
     }
     
@@ -349,7 +346,6 @@ const TimeSelector = (function() {
                 }
                 _handleStyles(_minutesContainer)
                 _minutesContainer.addEventListener('wheel', (e) => {
-                    console.log(e)
                     if (e.wheelDelta < 0) {
                         _handleScrollDown(_minutesContainer)
                     } else {
