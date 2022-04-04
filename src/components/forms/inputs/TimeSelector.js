@@ -258,12 +258,29 @@ const TimeSelector = (function() {
         let top = _hoursContainer.children[0].cloneNode(true)
         _hoursContainer.children[0].remove()
         _hoursContainer.appendChild(top)
+        _handleStyles(_hoursContainer)
     }
 
     function _handleScrollUp() {
         let bottom = _hoursContainer.children[_hoursContainer.children.length - 1].cloneNode(true)
         _hoursContainer.children[_hoursContainer.children.length - 1].remove()
         _hoursContainer.prepend(bottom)
+        _handleStyles(_hoursContainer)
+    }
+
+    function _handleStyles(container) {
+        for (let i = 0; i < container.children.length; i++) {
+            const element = container.children[i]
+            element.removeAttribute('class')
+            element.classList.add('spinner-element')
+            if (i === 3) {
+                element.classList.add('active')
+            } else if (i < 3 || i >= 4 && i < 7) {
+                element.classList.add('toggle')
+            } else {
+                element.classList.add('hidden')
+            }
+        }
     }
 
     function _findClosestTime(type) {
@@ -311,21 +328,6 @@ const TimeSelector = (function() {
                     element.classList.add('spinner-element')
                     let elementText = offset % 12
                     elementText = elementText ? elementText : 12
-                    if (i === 0) {
-                        element.setAttribute('id', 'top')
-                    }
-                    if (i < 3 || i >= 4 && i < 7) {
-                        element.classList.toggle('transform')
-                    }
-                    if (elementText == _currentTimeObj.hours) {
-                        element.classList.toggle('active')
-                    }
-                    if (i >= 7) {
-                        element.classList.toggle('hidden')
-                    }
-                    if (i === 11) {
-                        element.setAttribute('id', 'bottom')
-                    }
                     offset++
                     if (offset > 12) {
                         offset = 1
@@ -333,6 +335,7 @@ const TimeSelector = (function() {
                     element.innerText = elementText
                     _hoursContainer.appendChild(element)
                 }
+                _handleStyles(_hoursContainer)
                 // for (let i = 0; i < 12; i++) {
                 //     let hour = i
                 //     hour = hour % 12
