@@ -212,6 +212,10 @@ const TimeSelector = (function() {
         }
     }
 
+    function _createClockSpinner() {
+        const container = document.createElement('div')
+    }
+
     function init() {
         _getCurrentTime()
         _formInputControl = document.createElement('div')
@@ -274,9 +278,6 @@ const TimeSelector = (function() {
         _createSpinnerElements('ampm')
         _createOrder()
         _displaySpinnerElements()
-
-        // _createOrder()
-        // _displaySpinnerElements()
 
         _toggleInput.addEventListener('click', (e) => {
             e.stopImmediatePropagation()
