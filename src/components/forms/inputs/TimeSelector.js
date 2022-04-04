@@ -292,17 +292,11 @@ const TimeSelector = (function() {
         _hoursContainer.classList.add('carousel')
         _hoursContainer.id = type + 'Carousel'
         let closestTime = _findClosestTime(type)
-        let _scrollPosition = 0
 
         _hoursContainer.addEventListener('wheel', (e) => {
             if (e.wheelDelta < 0) {
-                // SCROLL DOWN
-                _scrollPosition = (_scrollPosition % 12)
-                _scrollPosition++
-                _scrollPosition = _scrollPosition ? _scrollPosition : 12
                 _handleScrollDown()
             } else {
-                // SCROLL UP
                 _handleScrollUp()
             }
         })
