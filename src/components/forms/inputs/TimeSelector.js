@@ -33,8 +33,7 @@ const TimeSelector = (function() {
         _minuteElements: [],
         _ampmElements: []
     }
-    let _hoursScrollPosition
-    let _minutesScrollPosition = 0
+    let _minutesArr = ['00', '05', '10', '15', '20', '25', '30', '35', '40', '45', '50', '55']
 
     // _formInputControl.onload = function() {
     //     let carousel = _Carousel.carousel = document.querySelectorAll('.spinner')
@@ -254,18 +253,18 @@ const TimeSelector = (function() {
         }
     }
 
-    function _handleScrollDown() {
-        let top = _hoursContainer.children[0].cloneNode(true)
-        _hoursContainer.children[0].remove()
-        _hoursContainer.appendChild(top)
-        _handleStyles(_hoursContainer)
+    function _handleScrollDown(container) {
+        let top = container.children[0].cloneNode(true)
+        container.children[0].remove()
+        container.appendChild(top)
+        _handleStyles(container)
     }
 
-    function _handleScrollUp() {
-        let bottom = _hoursContainer.children[_hoursContainer.children.length - 1].cloneNode(true)
-        _hoursContainer.children[_hoursContainer.children.length - 1].remove()
-        _hoursContainer.prepend(bottom)
-        _handleStyles(_hoursContainer)
+    function _handleScrollUp(container) {
+        let bottom = container.children[container.children.length - 1].cloneNode(true)
+        container.children[container.children.length - 1].remove()
+        container.prepend(bottom)
+        _handleStyles(container)
     }
 
     function _handleStyles(container) {
@@ -285,45 +284,28 @@ const TimeSelector = (function() {
 
     function _findClosestTime(type) {
         let position
-        for (let i = 0; i < 12; i++) {
+        let compare = type === 'hours' ? _currentTimeObj.hours : _currentTimeObj.minutes
+        let len = type === 'hours' ? 12 : 60
+        for (let i = 0; i < len; i++) {
             let time = i
-            if (time === _currentTimeObj.hours) {
+            if (time === compare) {
                 return time
             }
-            // console.log(time)
-            // position = _getPosition(time, _currentTimeObj.hours, 12)
-            // if (position === 0) {
-            //     // check the _currentTimeObj.minutes to see if the time is the first
-            //     // half hour or the last half hour
-            //     console.log(i)
-            //     if (_currentTimeObj.minutes > 30) {
-            //         return time++
-            //     }
-            //     return time
-            // }
         }
     }
     
     function _createSpinner(type) {
-        _hoursContainer = document.createElement('div')
-        _hoursContainer.classList.add('carousel')
-        _hoursContainer.id = type + 'Carousel'
+        let container = document.createElement('div')
+        container.classList.add('carousel')
+        container.id = type + 'Carousel'
         let closestTime = _findClosestTime(type)
-
-        _hoursContainer.addEventListener('wheel', (e) => {
-            if (e.wheelDelta < 0) {
-                _handleScrollDown()
-            } else {
-                _handleScrollUp()
-            }
-        })
+        let offset = ((closestTime - 3) % 12)
+        offset = offset ? offset : 12
         
         switch(type) {
             case 'hours':
-                let offset = ((closestTime - 3) % 12)
-                offset = offset ? offset : 12
+                _hoursContainer = container
                 for (let i = 0; i < 12; i++) {
-                    console.log(offset)
                     const element = document.createElement('div')
                     element.classList.add('spinner-element')
                     let elementText = offset % 12
@@ -336,29 +318,35 @@ const TimeSelector = (function() {
                     _hoursContainer.appendChild(element)
                 }
                 _handleStyles(_hoursContainer)
-                // for (let i = 0; i < 12; i++) {
-                //     let hour = i
-                //     hour = hour % 12
-                //     hour = hour ? hour : 12
 
-                //     // const element = document.createElement('div')
-                //     // element.classList.add('spinner-element')
-                //     // let hour = i
-                //     // hour = hour % 12
-                //     // hour = hour ? hour : 12
-                //     // element.setAttribute(`data-hour`, hour)
-                //     // element.innerText = hour
-                //     // let position = _getPosition(hour, _currentTimeObj.hours, 12)
-                //     // element.setAttribute(`data-hour`, hour)
-                //     // element.setAttribute('data-position', position)
-                //     // element.innerText = hour
-                //     // hourElements.push(element)
-                //     // _spinnerElements._hourElements.push(element)
-                //     // _hoursContainer.appendChild(element)
-                // }
+                _hoursContainer.addEventListener('wheel', (e) => {
+                    if (e.wheelDelta < 0) {
+                        _handleScrollDown(_hoursContainer)
+                    } else {
+                        _handleScrollUp(_hoursContainer)
+                    }
+                })
                 return _hoursContainer
             case 'minutes':
-                break
+                _minutesContainer = container
+                for (let i = 0; i < _minutesArr.length; i++) {
+                    const element = document.createElement('div')
+                    element.classList.add('spinner-element')
+                    let elementText = offset % 12
+                    element.innerText = _minutesArr[offset % 12]
+                    offset++
+                    _minutesContainer.appendChild(element)
+                }
+                _handleStyles(_minutesContainer)
+                _minutesContainer.addEventListener('wheel', (e) => {
+                    console.log(e)
+                    if (e.wheelDelta < 0) {
+                        _handleScrollDown(_minutesContainer)
+                    } else {
+                        _handleScrollUp(_minutesContainer)
+                    }
+                })
+                return _minutesContainer
             case 'ampm':
                 break
         }
@@ -366,7 +354,7 @@ const TimeSelector = (function() {
 
     function _createClockSpinner() {
         // let spinnerTypes = ['hours', 'minutes', 'ampm']
-        let spinnerTypes = ['hours']
+        let spinnerTypes = ['hours', 'minutes']
         const container = document.createElement('div')
         container.classList.add('spinner-container')
         container.setAttribute('id', 'clockContainer')
