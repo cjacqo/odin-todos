@@ -254,30 +254,16 @@ const TimeSelector = (function() {
         }
     }
 
-    function _getPosition(elementValue, currentValue) {
-        return elementValue % currentValue
-    }
-
-    function _reorderElements() {
-        for (let i = 0; i < 12; i++) {
-
-        }
-    }
-
-    function _handleScrollDown(sp) {
-        // while (_hoursContainer.children.length > 0) {
-        //     _hoursContainer.children[0].remove()
-        // }
+    function _handleScrollDown() {
         let top = _hoursContainer.children[0].cloneNode(true)
         _hoursContainer.children[0].remove()
         _hoursContainer.appendChild(top)
-        // for (let i = sp; i <= 12; i++) {
-        //     const element = document.createElement('div')
-        //     element.classList.add('spinner-element')
-        //     element.innerText = i
-        //     _hoursContainer.appendChild(element)
-        // }
-        // _reorderElements()
+    }
+
+    function _handleScrollUp() {
+        let bottom = _hoursContainer.children[_hoursContainer.children.length - 1].cloneNode(true)
+        _hoursContainer.children[_hoursContainer.children.length - 1].remove()
+        _hoursContainer.prepend(bottom)
     }
 
     function _findClosestTime(type) {
@@ -314,11 +300,10 @@ const TimeSelector = (function() {
                 _scrollPosition = (_scrollPosition % 12)
                 _scrollPosition++
                 _scrollPosition = _scrollPosition ? _scrollPosition : 12
-                console.log(_scrollPosition)
-                _handleScrollDown(_scrollPosition)
+                _handleScrollDown()
             } else {
                 // SCROLL UP
-
+                _handleScrollUp()
             }
         })
         
