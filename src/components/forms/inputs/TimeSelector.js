@@ -292,9 +292,7 @@ const TimeSelector = (function() {
                 }
             } else {
                 let min = _minutesArr[i]
-                if (parseInt(min) === compare) {
-                    return time
-                } else if (parseInt(min) <= compare + 5 && parseInt(min) > compare) {
+                if (parseInt(min) <= compare + 5 && parseInt(min) > compare) {
                     return time
                 }
             }
