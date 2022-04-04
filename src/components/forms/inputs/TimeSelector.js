@@ -1,6 +1,12 @@
 import DateSelector from "./DateSelector"
 
 const TimeSelector = (function() {
+    let _Carousel = {
+        width: 100,
+        numVisible: 7,
+        duration: 600,
+        padding: 2
+    }
     let _formInputControl
     let _formInputLabel
     let _timeSelectorInput
@@ -27,10 +33,46 @@ const TimeSelector = (function() {
         _minuteElements: [],
         _ampmElements: []
     }
-    let _hoursScrollPosition = 0
+    let _hoursScrollPosition
     let _minutesScrollPosition = 0
 
-    function _getPosition(clockValue, currentValue, type) {
+    // _formInputControl.onload = function() {
+    //     let carousel = _Carousel.carousel = document.querySelectorAll('.spinner')
+    //     let carouselElements = document.querySelectorAll('.spinner-element')
+    //     let numElements = carouselElements.length
+    //     let carouselElementWidth = _Carousel.width
+    //     let aspectRatio = carouselElements[0].width / carouselElements[0].height
+    //     let carouselElementHeight = carouselElementWidth / aspectRatio
+    //     let padding = _Carousel.padding
+    //     let rowHeight = _Carousel.rowHeight = carouselElementHeight + 2 * padding
+    //     carousel.style.width = carouselElementWidth + 'px'
+
+    //     for (let i = 0; i < numElements; ++i) {
+    //         let carouselElement = carouselElements[i]
+    //         let frame = document.createElement('div')
+    //         frame.classList.add('element-fram')
+    //         let aspectRatio = carouselElement.offsetWidth / carouselElement.offsetHeight
+    //         carouselElement.style.width = frame.style.width = carouselElementWidth + 'px'
+    //         carouselElement.style.height = carouselElementHeight + 'px'
+    //         carouselElement.style.paddingTop = padding + 'px'
+    //         carouselElement.style.paddingBottom = padding + 'px'
+    //         frame.style.height = rowHeight + 'px'
+    //         carousel.insertBefore(frame, carouselElement)
+    //         frame.appendChild(carouselElement)
+    //     }
+
+    //     _Carousel.rowHeight = carousel.getElementsByTagName('div')[0].offsetHeight;
+    //     carousel.style.height = _Carousel.numVisible * _Carousel.rowHeight + 'px';
+    //     carousel.style.visibility = 'visible';
+    //     let wrapper = _Carousel.wrapper = document.createElement('div');
+    //     wrapper.id = 'carouselWrapper';
+    //     wrapper.style.width = carousel.offsetWidth + 'px';
+    //     wrapper.style.height = carousel.offsetHeight + 'px';
+    //     carousel.parentNode.insertBefore(wrapper, carousel);
+    //     wrapper.appendChild(carousel);
+    // }
+
+    function _getPositionTest(clockValue, currentValue, type) {
         switch (type) {
             case 'hours':
                 if (clockValue === currentValue) {
@@ -212,8 +254,147 @@ const TimeSelector = (function() {
         }
     }
 
+    function _getPosition(elementValue, currentValue) {
+        return elementValue % currentValue
+    }
+
+    function _reorderElements() {
+        for (let i = 0; i < 12; i++) {
+
+        }
+    }
+
+    function _handleScrollDown(sp) {
+        // while (_hoursContainer.children.length > 0) {
+        //     _hoursContainer.children[0].remove()
+        // }
+        let top = _hoursContainer.children[0].cloneNode(true)
+        _hoursContainer.children[0].remove()
+        _hoursContainer.appendChild(top)
+        // for (let i = sp; i <= 12; i++) {
+        //     const element = document.createElement('div')
+        //     element.classList.add('spinner-element')
+        //     element.innerText = i
+        //     _hoursContainer.appendChild(element)
+        // }
+        // _reorderElements()
+    }
+
+    function _findClosestTime(type) {
+        let position
+        for (let i = 0; i < 12; i++) {
+            let time = i
+            if (time === _currentTimeObj.hours) {
+                return time
+            }
+            // console.log(time)
+            // position = _getPosition(time, _currentTimeObj.hours, 12)
+            // if (position === 0) {
+            //     // check the _currentTimeObj.minutes to see if the time is the first
+            //     // half hour or the last half hour
+            //     console.log(i)
+            //     if (_currentTimeObj.minutes > 30) {
+            //         return time++
+            //     }
+            //     return time
+            // }
+        }
+    }
+    
+    function _createSpinner(type) {
+        _hoursContainer = document.createElement('div')
+        _hoursContainer.classList.add('carousel')
+        _hoursContainer.id = type + 'Carousel'
+        let closestTime = _findClosestTime(type)
+        let _scrollPosition = 0
+
+        _hoursContainer.addEventListener('wheel', (e) => {
+            if (e.wheelDelta < 0) {
+                // SCROLL DOWN
+                _scrollPosition = (_scrollPosition % 12)
+                _scrollPosition++
+                _scrollPosition = _scrollPosition ? _scrollPosition : 12
+                console.log(_scrollPosition)
+                _handleScrollDown(_scrollPosition)
+            } else {
+                // SCROLL UP
+
+            }
+        })
+        
+        switch(type) {
+            case 'hours':
+                let offset = ((closestTime - 3) % 12)
+                offset = offset ? offset : 12
+                for (let i = 0; i < 12; i++) {
+                    console.log(offset)
+                    const element = document.createElement('div')
+                    element.classList.add('spinner-element')
+                    let elementText = offset % 12
+                    elementText = elementText ? elementText : 12
+                    if (i === 0) {
+                        element.setAttribute('id', 'top')
+                    }
+                    if (i < 3 || i >= 4 && i < 7) {
+                        element.classList.toggle('transform')
+                    }
+                    if (elementText == _currentTimeObj.hours) {
+                        element.classList.toggle('active')
+                    }
+                    if (i >= 7) {
+                        element.classList.toggle('hidden')
+                    }
+                    if (i === 11) {
+                        element.setAttribute('id', 'bottom')
+                    }
+                    offset++
+                    if (offset > 12) {
+                        offset = 1
+                    }
+                    element.innerText = elementText
+                    _hoursContainer.appendChild(element)
+                }
+                // for (let i = 0; i < 12; i++) {
+                //     let hour = i
+                //     hour = hour % 12
+                //     hour = hour ? hour : 12
+
+                //     // const element = document.createElement('div')
+                //     // element.classList.add('spinner-element')
+                //     // let hour = i
+                //     // hour = hour % 12
+                //     // hour = hour ? hour : 12
+                //     // element.setAttribute(`data-hour`, hour)
+                //     // element.innerText = hour
+                //     // let position = _getPosition(hour, _currentTimeObj.hours, 12)
+                //     // element.setAttribute(`data-hour`, hour)
+                //     // element.setAttribute('data-position', position)
+                //     // element.innerText = hour
+                //     // hourElements.push(element)
+                //     // _spinnerElements._hourElements.push(element)
+                //     // _hoursContainer.appendChild(element)
+                // }
+                return _hoursContainer
+            case 'minutes':
+                break
+            case 'ampm':
+                break
+        }
+    }
+
     function _createClockSpinner() {
+        // let spinnerTypes = ['hours', 'minutes', 'ampm']
+        let spinnerTypes = ['hours']
         const container = document.createElement('div')
+        container.classList.add('spinner-container')
+        container.setAttribute('id', 'clockContainer')
+        
+        spinnerTypes.forEach(type => {
+            const spinnerTimeContainer = _createSpinner(type)
+            container.appendChild(spinnerTimeContainer)
+        })
+
+        return container
     }
 
     function init() {
@@ -230,10 +411,11 @@ const TimeSelector = (function() {
         _questionTitleContainer = document.createElement('div')
         _questionTitle = document.createElement('p')
         _questionAnswer = document.createElement('small')
-        _clockContainer = document.createElement('div')
-        _hoursContainer = document.createElement('div')
-        _minutesContainer = document.createElement('div')
-        _ampmContainer = document.createElement('div')
+        _clockContainer = _createClockSpinner()
+        // _clockContainer = document.createElement('div')
+        // _hoursContainer = document.createElement('div')
+        // _minutesContainer = document.createElement('div')
+        // _ampmContainer = document.createElement('div')
 
         _hiddenInput.setAttribute('type', 'time')
 
@@ -254,14 +436,14 @@ const TimeSelector = (function() {
         _iconContainer.setAttribute('id', `timeIconContainer`)
         _icon.classList.add('fa-solid', 'fa-clock')
 
-        _clockContainer.classList.add('spinner-container', 'grid')
-        _hoursContainer.classList.add('spinner')
-        _minutesContainer.classList.add('spinner')
-        _ampmContainer.classList.add('spinner')
-        _clockContainer.setAttribute('id', 'clockContainer')
-        _hoursContainer.setAttribute('id', 'hoursContainer')
-        _minutesContainer.setAttribute('id', 'minutesContainer')
-        _ampmContainer.setAttribute('id', 'ampmContainer')
+        // _clockContainer.classList.add('spinner-container', 'grid')
+        // _hoursContainer.classList.add('spinner')
+        // _minutesContainer.classList.add('spinner')
+        // _ampmContainer.classList.add('spinner')
+        // _clockContainer.setAttribute('id', 'clockContainer')
+        // _hoursContainer.setAttribute('id', 'hoursContainer')
+        // _minutesContainer.setAttribute('id', 'minutesContainer')
+        // _ampmContainer.setAttribute('id', 'ampmContainer')
         
         _questionTitleContainer.classList.add('question-title-container')
         _questionTitle.classList.add('question-title')
@@ -273,11 +455,11 @@ const TimeSelector = (function() {
         _questionTitleContainer.appendChild(_questionTitle)
         _questionTitleContainer.appendChild(_questionAnswer)
 
-        _createSpinnerElements('hours')
-        _createSpinnerElements('minutes')
-        _createSpinnerElements('ampm')
-        _createOrder()
-        _displaySpinnerElements()
+        // _createSpinnerElements('hours')
+        // _createSpinnerElements('minutes')
+        // _createSpinnerElements('ampm')
+        // _createOrder()
+        // _displaySpinnerElements()
 
         _toggleInput.addEventListener('click', (e) => {
             e.stopImmediatePropagation()
@@ -307,23 +489,23 @@ const TimeSelector = (function() {
 
         _timeSelectorInput.appendChild(_clockContainer)
 
-        _hoursContainer.addEventListener('scroll', (e) => {
-            let threshold = 173
-            let div = e.currentTarget
-            console.log(div.scrollHeight)
-            if (div.scrollHeight < threshold) {
-                let node = div.firstElementChild
+        // _hoursContainer.addEventListener('scroll', (e) => {
+        //     let threshold = 173
+        //     let div = e.currentTarget
+        //     console.log(div.scrollHeight)
+        //     if (div.scrollHeight < threshold) {
+        //         let node = div.firstElementChild
                 
-                // WORK OUT HOW TO CHANGE CLASS NAMES HERE
+        //         // WORK OUT HOW TO CHANGE CLASS NAMES HERE
                 
-                console.log(node)
-                div.appendChild(node)
-            } else if (div.scrollY < threshold) {
-                let node = div.lastElementChild
-                div.insertBefore(node, div.firstElementChild)
-                div.scrollY = 2
-            }
-        }, false)
+        //         console.log(node)
+        //         div.appendChild(node)
+        //     } else if (div.scrollY < threshold) {
+        //         let node = div.lastElementChild
+        //         div.insertBefore(node, div.firstElementChild)
+        //         div.scrollY = 2
+        //     }
+        // }, false)
         
         _formInputControl.appendChild(_hiddenInput)
         _formInputControl.appendChild(_iconContainer)
