@@ -28,12 +28,6 @@ const TimeSelector = (function() {
     let _hoursContainer
     let _minutesContainer
     let _ampmContainer
-    let _spinnerElements = {
-        _hourElements: [],
-        _minuteElements: [],
-        _ampmElements: []
-    }
-    let _minutesArr = ['00', '05', '10', '15', '20', '25', '30', '35', '40', '45', '50', '55']
 
     function _createOrder() {
         const { hours, minutes, ampm } = _currentTimeObj
@@ -136,9 +130,11 @@ const TimeSelector = (function() {
         }
     }
 
-    function _roundToNearestHour(hours, minutes) {
-        const nearestHour = (hours + Math.round(minutes / 60)) % 12
-        return nearestHour ? nearestHour : 12
+    function _roundToNearestHour() {
+        const tempDate = _today
+        tempDate.setHours(tempDate.getHours() + 1)
+        tempDate.setMinutes(0, 0, 0)
+        return tempDate
     }
 
     function _updateQuestionAnswerDisplay() {
@@ -164,33 +160,44 @@ const TimeSelector = (function() {
                 // CREATE THE DEFAULT ANSWER (CLOSEST TIME WITHIN 5 MINUTES) 
                 // WHEN THE INPUT IS TOGGLED ON
                 _answer = _currentTimeObj
-                console.log(_answer)
                 _hiddenInput.setAttribute('value', _answer.timeValue)
             }
         }
-        console.log(_currentTimeObj)
         _updateQuestionAnswerDisplay()
+    }
+
+    function _formatHours(hours) {
+        hours = hours % 12
+        hours = hours ? hours : 12
+        return hours
+    }
+
+    function _formatMinutes(minutes) {
+        return minutes >= 10 ? minutes : '0' + minutes
+    }
+
+    function _isAmPm(hours) {
+        return hours >= 12 ? 'PM' : 'AM'
     }
 
     function _getCurrentTime() {
         let timeValue = _today.toLocaleTimeString()
         let hours = _today.getHours()
         let minutes = _today.getMinutes()
-        let ampm = hours >= 12 ? 'PM' : 'AM'
-        hours = hours % 12
-        hours = hours ? hours : 12
-        minutes = minutes >= 10 ? minutes : '0' + minutes
+        let ampm = _isAmPm(hours)
+        hours = _formatHours(hours)
+        minutes = _formatMinutes(minutes)
         let timeString = hours + ':' + minutes + ' ' + ampm
-        let roundedHour = _roundToNearestHour(_today.getHours(), _today.getMinutes())
+        let roundedTime = _roundToNearestHour()
+        let roundedHour = _formatHours(roundedTime.getHours() % 12)
+
         return _currentTimeObj = {
             timeValue,
             hours,
             minutes,
             ampm,
             timeString,
-            closest: {
-                hour:roundedHour
-            }
+            roundedHour
         }
     }
 
@@ -222,31 +229,12 @@ const TimeSelector = (function() {
             }
         }
     }
-
-    function _findClosestTime(type) {
-        let compare = type === 'hours' ? _currentTimeObj.hours : _currentTimeObj.minutes
-        for (let i = 0; i < 12; i++) {
-            let time = i
-            if (type === 'hours') {
-                if (time === compare) {
-                    return time
-                }
-            } else {
-                let min = _minutesArr[i]
-                if (parseInt(min) <= compare + 5 && parseInt(min) > compare) {
-                    return time
-                }
-            }
-        }
-    }
     
     function _createSpinner(type) {
         let container = document.createElement('div')
         container.classList.add('carousel')
         container.id = type + 'Carousel'
-        let closestTime = _findClosestTime(type)
-        let offset = ((closestTime - 3) % 12)
-        offset = offset ? offset : 12
+        let nearestHour = (_currentTimeObj.roundedHour - 3) % 12
         
         switch(type) {
             case 'hours':
@@ -254,43 +242,30 @@ const TimeSelector = (function() {
                 for (let i = 0; i < 12; i++) {
                     const element = document.createElement('div')
                     element.classList.add('spinner-element')
-                    let elementText = offset % 12
+                    let elementText = nearestHour % 12
                     elementText = elementText ? elementText : 12
-                    offset++
-                    if (offset > 12) {
-                        offset = 1
+                    nearestHour++
+                    if (nearestHour > 12) {
+                        nearestHour = 1
                     }
                     element.innerText = elementText
                     _hoursContainer.appendChild(element)
                 }
-                _handleStyles(_hoursContainer)
-
-                _hoursContainer.addEventListener('wheel', (e) => {
-                    if (e.wheelDelta < 0) {
-                        _handleScrollDown(_hoursContainer)
-                    } else {
-                        _handleScrollUp(_hoursContainer)
-                    }
-                })
                 return _hoursContainer
             case 'minutes':
                 _minutesContainer = container
-                for (let i = 0; i < _minutesArr.length; i++) {
+                let elementText = 45
+                for (let i = 0; i < 12; i++) {
                     const element = document.createElement('div')
                     element.classList.add('spinner-element')
-                    let elementText = offset % 12
-                    element.innerText = _minutesArr[offset % 12]
-                    offset++
+                    let innerText = _formatMinutes(elementText)
+                    element.innerText = innerText
+                    elementText = elementText + 5
+                    if (elementText > 55) {
+                        elementText = 0
+                    }
                     _minutesContainer.appendChild(element)
                 }
-                _handleStyles(_minutesContainer)
-                _minutesContainer.addEventListener('wheel', (e) => {
-                    if (e.wheelDelta < 0) {
-                        _handleScrollDown(_minutesContainer)
-                    } else {
-                        _handleScrollUp(_minutesContainer)
-                    }
-                })
                 return _minutesContainer
             case 'ampm':
                 break
@@ -306,6 +281,17 @@ const TimeSelector = (function() {
         
         spinnerTypes.forEach(type => {
             const spinnerTimeContainer = _createSpinner(type)
+
+            spinnerTimeContainer.addEventListener('wheel', (e) => {
+                if (e.wheelDelta < 0) {
+                    _handleScrollDown(spinnerTimeContainer)
+                } else {
+                    _handleScrollUp(spinnerTimeContainer)
+                }
+            })
+
+            _handleStyles(spinnerTimeContainer)
+
             container.appendChild(spinnerTimeContainer)
         })
 
@@ -327,10 +313,6 @@ const TimeSelector = (function() {
         _questionTitle = document.createElement('p')
         _questionAnswer = document.createElement('small')
         _clockContainer = _createClockSpinner()
-        // _clockContainer = document.createElement('div')
-        // _hoursContainer = document.createElement('div')
-        // _minutesContainer = document.createElement('div')
-        // _ampmContainer = document.createElement('div')
 
         _hiddenInput.setAttribute('type', 'time')
 
@@ -350,15 +332,6 @@ const TimeSelector = (function() {
         _iconContainer.classList.add('input-icon-container')
         _iconContainer.setAttribute('id', `timeIconContainer`)
         _icon.classList.add('fa-solid', 'fa-clock')
-
-        // _clockContainer.classList.add('spinner-container', 'grid')
-        // _hoursContainer.classList.add('spinner')
-        // _minutesContainer.classList.add('spinner')
-        // _ampmContainer.classList.add('spinner')
-        // _clockContainer.setAttribute('id', 'clockContainer')
-        // _hoursContainer.setAttribute('id', 'hoursContainer')
-        // _minutesContainer.setAttribute('id', 'minutesContainer')
-        // _ampmContainer.setAttribute('id', 'ampmContainer')
         
         _questionTitleContainer.classList.add('question-title-container')
         _questionTitle.classList.add('question-title')
@@ -369,12 +342,6 @@ const TimeSelector = (function() {
 
         _questionTitleContainer.appendChild(_questionTitle)
         _questionTitleContainer.appendChild(_questionAnswer)
-
-        // _createSpinnerElements('hours')
-        // _createSpinnerElements('minutes')
-        // _createSpinnerElements('ampm')
-        // _createOrder()
-        // _displaySpinnerElements()
 
         _toggleInput.addEventListener('click', (e) => {
             e.stopImmediatePropagation()
@@ -403,24 +370,6 @@ const TimeSelector = (function() {
         _checkBoxLabel.appendChild(_checkBoxSlider)
 
         _timeSelectorInput.appendChild(_clockContainer)
-
-        // _hoursContainer.addEventListener('scroll', (e) => {
-        //     let threshold = 173
-        //     let div = e.currentTarget
-        //     console.log(div.scrollHeight)
-        //     if (div.scrollHeight < threshold) {
-        //         let node = div.firstElementChild
-                
-        //         // WORK OUT HOW TO CHANGE CLASS NAMES HERE
-                
-        //         console.log(node)
-        //         div.appendChild(node)
-        //     } else if (div.scrollY < threshold) {
-        //         let node = div.lastElementChild
-        //         div.insertBefore(node, div.firstElementChild)
-        //         div.scrollY = 2
-        //     }
-        // }, false)
         
         _formInputControl.appendChild(_hiddenInput)
         _formInputControl.appendChild(_iconContainer)
