@@ -134,6 +134,7 @@ const TimeSelector = (function() {
         const tempDate = _today
         tempDate.setHours(tempDate.getHours() + 1)
         tempDate.setMinutes(0, 0, 0)
+        console.log(tempDate.getHours())
         return tempDate
     }
 
@@ -150,8 +151,10 @@ const TimeSelector = (function() {
     function _toggleQuestionVisibility(isChecked, remainHidden) {
         if (_isHidden) {
             _timeSelectorInput.classList.add('hidden')
+            _hiddenInput.removeAttribute('value')
             if (_hiddenInput.value && !isChecked) {
                 // RESET THE INPUT TO DEFAULT
+                console.log(_hiddenInput)
             }
         } else {
             _timeSelectorInput.classList.remove('hidden')
@@ -164,6 +167,10 @@ const TimeSelector = (function() {
             }
         }
         _updateQuestionAnswerDisplay()
+    }
+
+    function _moduloFix(hours) {
+        return ((hours % 12) + 12) % 12;
     }
 
     function _formatHours(hours) {
@@ -234,7 +241,7 @@ const TimeSelector = (function() {
         let container = document.createElement('div')
         container.classList.add('carousel')
         container.id = type + 'Carousel'
-        let nearestHour = (_currentTimeObj.roundedHour - 3) % 12
+        let nearestHour = (_currentTimeObj.roundedHour - 3)
         
         switch(type) {
             case 'hours':
@@ -243,6 +250,9 @@ const TimeSelector = (function() {
                     const element = document.createElement('div')
                     element.classList.add('spinner-element')
                     let elementText = nearestHour % 12
+                    if (elementText < 0) {
+                        elementText = _moduloFix(elementText)
+                    }
                     elementText = elementText ? elementText : 12
                     nearestHour++
                     if (nearestHour > 12) {
