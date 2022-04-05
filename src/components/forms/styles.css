@@ -480,6 +480,31 @@ textarea:focus {
     text-align: center;
 }
 
+#ampmCarousel {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    transition: padding 300ms ease-in-out;
+}
+#ampmCarousel.am-active {
+    padding-top: 30px;
+    padding-bottom: 0;
+}
+#ampmCarousel.pm-active {
+    padding-bottom: 30px;
+    padding-top: 0;
+}
+#ampm > .spinner-element {
+    opacity: 1;
+    transition: opacity 300ms ease-in-out;
+}
+#ampmCarousel > .inactive {
+    opacity: 0.7;
+    transform: rotateX(30deg);
+}
+
 .spinner-element {
     font-size: 16px;
     position: relative;
