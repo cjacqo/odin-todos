@@ -74,6 +74,34 @@ const AddFormToModal = (formData) => {
                     case 'time':
                         formControl = TimeSelector.init()
                         break
+                    case 'radio':
+                        formControl = document.createElement('div')
+                        options.forEach(option => {
+                            const radioButton = document.createElement('input')
+                            const radioLabel = document.createElement('label')
+                            radioButton.setAttribute('type', 'radio')
+                            radioButton.setAttribute('id', option)
+                            radioButton.setAttribute('name', name)
+                            radioButton.setAttribute('value', option)
+                            radioLabel.setAttribute('for', option)
+                            radioLabel.innerText = option
+                            formControl.appendChild(radioButton)
+                            formControl.appendChild(radioLabel)
+                        })
+                        break
+                    case 'select':
+                        formControl = document.createElement('div')
+                        const selectContainer = document.createElement('select')
+                        selectContainer.setAttribute('name', name)
+                        console.log(options)
+                        options.forEach(option => {
+                            const selectOption = document.createElement('option')
+                            selectOption.setAttribute('value', option.getName())
+                            selectOption.innerText = option.getName()
+                            selectContainer.appendChild(selectOption)
+                        })
+                        formControl.appendChild(selectContainer)
+                        break
                     default:
                         console.log(type)
                 }

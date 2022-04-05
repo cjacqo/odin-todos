@@ -287,16 +287,25 @@ const Controller = (() => {
                                     }
                                 ]
                             },
-                            // {
-                            //     id: 2,
-                            //     questions: [
-                            //         {
-                            //             required: false,
-                            //             type: 'select',
-                            //             name: 'priority-select',
-                            //             options: ['none', 'low', 'medium', 'high'],
-                            //             id: 'todoPrioritySelect'
-                            //         },
+                            {
+                                id: 2,
+                                questions: [
+                                    {
+                                        required: false,
+                                        type: 'radio',
+                                        name: 'priority-select',
+                                        options: ['none', 'low', 'medium', 'high'],
+                                        id: 'todoPrioritySelect'
+                                    },
+                                    {
+                                        required: false,
+                                        type: 'select',
+                                        name: 'folder-select',
+                                        options: Database.getEditableFolders(),
+                                        id: 'todoFolderSelect'
+                                    }
+                                ]
+                            }
                             //         {
                             //             required: false,
                             //             type: 'select',
