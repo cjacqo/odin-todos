@@ -5,6 +5,7 @@ import '@fortawesome/fontawesome-free/js/regular'
 import Controller from "../../controller"
 import DateSelector from './inputs/DateSelector'
 import TimeSelector from './inputs/TimeSelector'
+import PrioritySelector from './inputs/PrioritySelector'
 
 const AddFormToModal = (formData) => {
     const { fieldSets, id, formInfo, buttons  } = formData
@@ -46,8 +47,14 @@ const AddFormToModal = (formData) => {
         
         if (questions.length > 0) {
             questions.forEach(question => {
-                const { autocomplete, required, minlength, maxlength, type, id, placeholder, name, label, options } = question
+                const { title, autocomplete, required, minlength, maxlength, type, id, placeholder, name, label, options } = question
                 let formControl
+                const inputTitleContainer = document.createElement('div')
+                const inputTitle = document.createElement('p')
+                inputTitleContainer.classList.add('input-title-container')
+                inputTitle.classList.add('input-title')
+                inputTitle.innerText = title
+                inputTitleContainer.appendChild(inputTitle)
                 switch(type) {
                     case 'text':
                     case 'textarea':
@@ -75,22 +82,36 @@ const AddFormToModal = (formData) => {
                         formControl = TimeSelector.init()
                         break
                     case 'radio':
-                        formControl = document.createElement('div')
-                        options.forEach(option => {
-                            const radioButton = document.createElement('input')
-                            const radioLabel = document.createElement('label')
-                            radioButton.setAttribute('type', 'radio')
-                            radioButton.setAttribute('id', option)
-                            radioButton.setAttribute('name', name)
-                            radioButton.setAttribute('value', option)
-                            radioLabel.setAttribute('for', option)
-                            radioLabel.innerText = option
-                            formControl.appendChild(radioButton)
-                            formControl.appendChild(radioLabel)
-                        })
+                        formControl = PrioritySelector.init()
+                        // formControl = document.createElement('div')
+                        // formControl.classList.add('form-control', 'flex')
+                        // formControl.setAttribute('id', id)
+                        // formControl.appendChild(inputTitleContainer)
+                        // const radioContainer = document.createElement('div')
+                        // const radioSelectionContainer = document.createElement('div')
+                        // radioContainer.classList.add('radio-buttons-container')
+                        // options.forEach(option => {
+                        //     const radioButton = document.createElement('input')
+                        //     const radioLabel = document.createElement('label')
+                        //     if (option === 'none') {
+                        //         radioButton.checked = true
+                        //     }
+                        //     radioButton.setAttribute('type', 'radio')
+                        //     radioButton.setAttribute('id', option)
+                        //     radioButton.setAttribute('name', name)
+                        //     radioButton.setAttribute('value', option)
+                        //     radioLabel.setAttribute('for', option)
+                        //     radioLabel.innerText = option
+                        //     radioContainer.appendChild(radioButton)
+                        //     radioContainer.appendChild(radioLabel)
+                        // })
+                        // formControl.appendChild(radioContainer)
                         break
                     case 'select':
                         formControl = document.createElement('div')
+                        formControl.classList.add('form-control', 'flex')
+                        formControl.setAttribute('id', id)
+                        formControl.appendChild(inputTitleContainer)
                         const selectContainer = document.createElement('select')
                         selectContainer.setAttribute('name', name)
                         console.log(options)

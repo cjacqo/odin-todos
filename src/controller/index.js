@@ -295,26 +295,19 @@ const Controller = (() => {
                                         type: 'radio',
                                         name: 'priority-select',
                                         options: ['none', 'low', 'medium', 'high'],
-                                        id: 'todoPrioritySelect'
+                                        id: 'todoPrioritySelect',
+                                        title: 'Priority'
                                     },
                                     {
                                         required: false,
                                         type: 'select',
                                         name: 'folder-select',
                                         options: Database.getEditableFolders(),
-                                        id: 'todoFolderSelect'
+                                        id: 'todoFolderSelect',
+                                        title: 'Add to Folder'
                                     }
                                 ]
                             }
-                            //         {
-                            //             required: false,
-                            //             type: 'select',
-                            //             name: 'folder-select',
-                            //             options: Database.getFolders(),
-                            //             id: 'todoFolderSelect'
-                            //         }
-                            //     ]
-                            // }
                         ],
                         id: 'addTodo',
                         formInfo: ['Details'],
