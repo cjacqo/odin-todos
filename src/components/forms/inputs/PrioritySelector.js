@@ -32,6 +32,10 @@ const PrioritySelector = (function() {
     function _setAnswer(value) {
         _answer = capitalizeString(value)
     }
+
+    function _setAnswerTitle(value) {
+        _answerTitleElement.innerText = _answer
+    }
     
     function _createRadioButtonsContainer() {
         _radioButtonsContainer = document.createElement('div')
@@ -40,6 +44,16 @@ const PrioritySelector = (function() {
             const { radioButton, radioLabel } = _radioButton
             _radioButtonsContainer.appendChild(radioButton)
             _radioButtonsContainer.appendChild(radioLabel)
+        })
+
+        _radioButtonsContainer.addEventListener('click', (e) => {
+            _isHidden = !_isHidden
+            const value = e.target.value
+            if (value) {
+                _setAnswer(e.target.value)
+                _setAnswerTitle(e.target.value)
+            }
+            _toggleVisibility()
         })
     }
     
@@ -84,7 +98,6 @@ const PrioritySelector = (function() {
         _answerTitleContainer.addEventListener('click', (e) => {
             _isHidden = !_isHidden
             _toggleVisibility()
-            console.log("OPEN PRIORITY RADIO BUTTONS CONTAINER")
         })
     }
 
@@ -111,12 +124,14 @@ const PrioritySelector = (function() {
     }
 
     function init() {
-        _createRadioButtons()
-        _createRadioButtonsContainer()
-        _createTitleContainer()
-        _createAnswerTitleContainer()
-        _createFormInputControl()
-        _appendAll()
+        if (!_formInputControl) {
+            _createRadioButtons()
+            _createRadioButtonsContainer()
+            _createTitleContainer()
+            _createAnswerTitleContainer()
+            _createFormInputControl()
+            _appendAll()
+        }
         return _formInputControl
     }
 
