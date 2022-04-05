@@ -2,6 +2,7 @@ import '@fortawesome/fontawesome-free/js/fontawesome'
 import '@fortawesome/fontawesome-free/js/solid'
 import '@fortawesome/fontawesome-free/js/regular'
 import { getDayText, getMonthText, getTodaysDate, getMonth, getDays, getMonthIndex } from "../../../functions"
+import TimeSelector from './TimeSelector'
 
 const DateSelector = (function() {
     let _formInputControl
@@ -22,6 +23,7 @@ const DateSelector = (function() {
     let _bottomRow
     let _hiddenInput
     let _isHidden = true
+    let _timeSelectorIsHidden
     let _toggleIsOn = false
     let _calendarDateElements = []
     const _placeholder = 'Date'
@@ -422,14 +424,23 @@ const DateSelector = (function() {
             e.stopImmediatePropagation()
             _toggleIsOn = e.target.checked
             _isHidden = !_toggleIsOn
+            // check if the time input is hidden
+            _timeSelectorIsHidden = TimeSelector.getIsHidden()
+            if (!_timeSelectorIsHidden && _isHidden) {
+                TimeSelector.turnOff()
+            }
             _toggleQuestionVisibility(_toggleIsOn, false)
         })
 
         _questionTitleContainer.addEventListener('click', (e) => {
             e.stopImmediatePropagation()
-            console.log(_toggleIsOn)
             if (_toggleIsOn) {
                 _isHidden = !_isHidden
+                // check if the time input is hidden
+                _timeSelectorIsHidden = TimeSelector.getIsHidden()
+                if (!_timeSelectorIsHidden && !_isHidden) {
+                    TimeSelector.toggleSelector(_isHidden)
+                }
                 _toggleQuestionVisibility(true, false)
             }
         })
@@ -449,12 +460,11 @@ const DateSelector = (function() {
 
     function getInput() { return _formInputControl }
     function getIsHidden() { return _isHidden }
-    function toggleSelector() { 
+    function toggleSelector(timeInputHidden) { 
         _toggleInput.checked = true
-        _isHidden = false
+        _isHidden = !timeInputHidden
         _toggleIsOn = true
-        console.log("hi")
-        _toggleQuestionVisibility(true, true)
+        _toggleQuestionVisibility(true)
     }
     function getAnswer() { return _hiddenInput.value }
 

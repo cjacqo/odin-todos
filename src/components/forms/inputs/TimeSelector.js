@@ -23,6 +23,7 @@ const TimeSelector = (function() {
     let _currentTimeObj
     let _hiddenInput
     let _dateSelectorIsHidden
+    let _toggleIsOn = false
     let _answer
     let _clockContainer
     let _hoursContainer
@@ -40,6 +41,9 @@ const TimeSelector = (function() {
         if (_isHidden && !_hiddenInput.value) {
             _questionAnswer.classList.remove('active')
             _questionAnswer.innerText = ''
+        } else if (_isHidden && _hiddenInput.value) {
+            _questionAnswer.classList.add('active')
+            _questionAnswer.innerText = _answer.timeString
         } else if (!_isHidden && !_questionAnswer.classList.contains('active')) {
             _questionAnswer.classList.add('active')
             _questionAnswer.innerText = _answer.timeString
@@ -48,15 +52,15 @@ const TimeSelector = (function() {
         }
     }
 
-    function _toggleQuestionVisibility(isChecked, remainHidden) {
+    function _toggleQuestionVisibility(isChecked, hideInput) {
         if (_isHidden) {
             _timeSelectorInput.classList.add('hidden')
-            _hiddenInput.removeAttribute('value')
-            _answer = {}
-            _currentTimeObj = {}
             if (_hiddenInput.value && !isChecked) {
                 // RESET THE INPUT TO DEFAULT
                 _hiddenInput.removeAttribute('value')
+                _hiddenInput.removeAttribute('value')
+                _answer = {}
+                _currentTimeObj = {}
             }
             _updateQuestionAnswerDisplay()
         } else {
@@ -74,11 +78,18 @@ const TimeSelector = (function() {
         return ((hours % 12) + 12) % 12;
     }
 
-    function _formatHours(hours, needZero) {
+    function _formatHours(hours, needZero, ampm) {
         hours = hours % 12
         hours = hours ? hours : 12
-        if (needZero) {
-            return hours >= 10 ? hours : '0' + hours
+        if (needZero && ampm) {
+            if (ampm === 'AM') {
+                hours = hours < 12 ? hours : 0
+                return hours >= 10 ? hours : '0' + hours
+            } else {
+                hours = hours + 12
+                hours = hours < 24 ? hours : 12
+                return hours
+            }
         }
         return hours
     }
@@ -91,11 +102,11 @@ const TimeSelector = (function() {
         return hours + ':' + _formatMinutes(minutes) + ' ' + ampm
     }
 
-    function _timeToValue(hours, minutes, ampm) {
+    function _timeToValue(hours, minutes) {
         const answerAsDate = new Date()
         answerAsDate.setHours(+hours)
         answerAsDate.setMinutes(minutes)
-        return hours + ':' + minutes + ' ' + ampm
+        return hours + ':' + minutes
     }
 
     function _formatAnswerObj(hours, minutes, ampm) {
@@ -104,7 +115,7 @@ const TimeSelector = (function() {
             minutes,
             ampm,
             timeString: _timeToString(hours, minutes, ampm),
-            timeValue: _timeToValue(_formatHours(hours, true), _formatMinutes(minutes), ampm)
+            timeValue: _timeToValue(_formatHours(hours, true, ampm), _formatMinutes(minutes))
         }
     }
 
@@ -368,17 +379,24 @@ const TimeSelector = (function() {
             // check if the date input is hidden
             _dateSelectorIsHidden = DateSelector.getIsHidden()
             if (_dateSelectorIsHidden && !_isHidden) {
-                DateSelector.toggleSelector()
+                DateSelector.toggleSelector(_isHidden)
+            } else if (!_dateSelectorIsHidden && !_isHidden) {
+                DateSelector.toggleSelector(_isHidden)
             }
             
-            _toggleQuestionVisibility(isChecked)
+            _toggleQuestionVisibility(isChecked, !isChecked)
         })
 
         _questionTitleContainer.addEventListener('click', (e) => {
             e.stopImmediatePropagation()
             if (_toggleInput.checked) {
                 _isHidden = !_isHidden
-                // _toggleQuestionVisibility(true)
+                // check if the date input is hidden
+                _dateSelectorIsHidden = DateSelector.getIsHidden()
+                if (!_dateSelectorIsHidden && !_isHidden) {
+                    DateSelector.toggleSelector(_isHidden)
+                }
+                _toggleQuestionVisibility(_toggleInput.checked, false)
             }
         })
         
@@ -395,9 +413,26 @@ const TimeSelector = (function() {
         _formInputControl.appendChild(_timeSelectorInput)
         return _formInputControl
     }
+
+    function getIsHidden() { return _isHidden }
+    function toggleSelector(dateInputIsHidden) { 
+        _toggleInput.checked = true
+        _isHidden = !dateInputIsHidden
+        _toggleIsOn = true
+        _toggleQuestionVisibility(true, false)
+    }
+    function turnOff() {
+        _toggleInput.checked = false
+        _isHidden = true
+        _toggleIsOn = false
+        _toggleQuestionVisibility(false, false)
+    }
     
     return {
-        init: init
+        init: init,
+        getIsHidden: getIsHidden,
+        toggleSelector: toggleSelector,
+        turnOff: turnOff
     }
 })()
 
