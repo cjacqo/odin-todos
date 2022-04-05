@@ -35,56 +35,6 @@ const TimeSelector = (function() {
     }
     let _minutesArr = ['00', '05', '10', '15', '20', '25', '30', '35', '40', '45', '50', '55']
 
-    // _formInputControl.onload = function() {
-    //     let carousel = _Carousel.carousel = document.querySelectorAll('.spinner')
-    //     let carouselElements = document.querySelectorAll('.spinner-element')
-    //     let numElements = carouselElements.length
-    //     let carouselElementWidth = _Carousel.width
-    //     let aspectRatio = carouselElements[0].width / carouselElements[0].height
-    //     let carouselElementHeight = carouselElementWidth / aspectRatio
-    //     let padding = _Carousel.padding
-    //     let rowHeight = _Carousel.rowHeight = carouselElementHeight + 2 * padding
-    //     carousel.style.width = carouselElementWidth + 'px'
-
-    //     for (let i = 0; i < numElements; ++i) {
-    //         let carouselElement = carouselElements[i]
-    //         let frame = document.createElement('div')
-    //         frame.classList.add('element-fram')
-    //         let aspectRatio = carouselElement.offsetWidth / carouselElement.offsetHeight
-    //         carouselElement.style.width = frame.style.width = carouselElementWidth + 'px'
-    //         carouselElement.style.height = carouselElementHeight + 'px'
-    //         carouselElement.style.paddingTop = padding + 'px'
-    //         carouselElement.style.paddingBottom = padding + 'px'
-    //         frame.style.height = rowHeight + 'px'
-    //         carousel.insertBefore(frame, carouselElement)
-    //         frame.appendChild(carouselElement)
-    //     }
-
-    //     _Carousel.rowHeight = carousel.getElementsByTagName('div')[0].offsetHeight;
-    //     carousel.style.height = _Carousel.numVisible * _Carousel.rowHeight + 'px';
-    //     carousel.style.visibility = 'visible';
-    //     let wrapper = _Carousel.wrapper = document.createElement('div');
-    //     wrapper.id = 'carouselWrapper';
-    //     wrapper.style.width = carousel.offsetWidth + 'px';
-    //     wrapper.style.height = carousel.offsetHeight + 'px';
-    //     carousel.parentNode.insertBefore(wrapper, carousel);
-    //     wrapper.appendChild(carousel);
-    // }
-
-    function _getPositionTest(clockValue, currentValue, type) {
-        switch (type) {
-            case 'hours':
-                if (clockValue === currentValue) {
-                    return 0
-                } else if (clockValue)
-                break
-            case 'minutes':
-                break
-            case 'ampm':
-                break
-        }
-    }
-
     function _createOrder() {
         const { hours, minutes, ampm } = _currentTimeObj
         const { _hourElements, _minuteElements, _ampmElements } = _spinnerElements
@@ -124,22 +74,6 @@ const TimeSelector = (function() {
                 el.classList.add(`ampm-position-2`)
             }
         })
-    }
-
-    function _displaySpinnerElements() {
-        const { _hourElements, _minuteElements, _ampmElements } = _spinnerElements
-        _hourElements.forEach(el => {
-            _hoursContainer.appendChild(el)
-        })
-        _minuteElements.forEach(el => {
-            _minutesContainer.appendChild(el)
-        })
-        _ampmElements.forEach(el => {
-            _ampmContainer.appendChild(el)
-        })
-        _clockContainer.appendChild(_hoursContainer)
-        _clockContainer.appendChild(_minutesContainer)
-        _clockContainer.appendChild(_ampmContainer)
     }
 
     function _createSpinnerElements(type) {
@@ -201,8 +135,10 @@ const TimeSelector = (function() {
                 break
         }
     }
-    
-    function _createTimeSpinner() {
+
+    function _roundToNearestHour(hours, minutes) {
+        const nearestHour = (hours + Math.round(minutes / 60)) % 12
+        return nearestHour ? nearestHour : 12
     }
 
     function _updateQuestionAnswerDisplay() {
@@ -211,10 +147,7 @@ const TimeSelector = (function() {
             _questionAnswer.innerText = ''
         } else if (!_isHidden && !_questionAnswer.classList.contains('active')) {
             _questionAnswer.classList.add('active')
-        }
-
-        if (_hiddenInput.value) {
-            _questionAnswer.innerText = _answer.string
+            _questionAnswer.innerText = _answer.timeString
         }
     }
 
@@ -230,9 +163,12 @@ const TimeSelector = (function() {
             if (!_hiddenInput.value && isChecked) {
                 // CREATE THE DEFAULT ANSWER (CLOSEST TIME WITHIN 5 MINUTES) 
                 // WHEN THE INPUT IS TOGGLED ON
-                // _answer = _getTimeAsObject()
+                _answer = _currentTimeObj
+                console.log(_answer)
+                _hiddenInput.setAttribute('value', _answer.timeValue)
             }
         }
+        console.log(_currentTimeObj)
         _updateQuestionAnswerDisplay()
     }
 
@@ -243,13 +179,18 @@ const TimeSelector = (function() {
         let ampm = hours >= 12 ? 'PM' : 'AM'
         hours = hours % 12
         hours = hours ? hours : 12
+        minutes = minutes >= 10 ? minutes : '0' + minutes
         let timeString = hours + ':' + minutes + ' ' + ampm
+        let roundedHour = _roundToNearestHour(_today.getHours(), _today.getMinutes())
         return _currentTimeObj = {
             timeValue,
             hours,
             minutes,
             ampm,
-            timeString
+            timeString,
+            closest: {
+                hour:roundedHour
+            }
         }
     }
 

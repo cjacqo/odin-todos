@@ -305,11 +305,13 @@ textarea:focus {
     color: var(--blue);
 }
 
-.date-answer {
+.date-answer,
+.time-answer {
     display: none;
 }
 
-.date-answer.active {
+.date-answer.active,
+.time-answer.active {
     display: inline-block;
     color: var(--blue);
     font-size: var(--slightly-smaller);
@@ -495,10 +497,10 @@ textarea:focus {
 .spinner-element.toggle:nth-child(2),
 .spinner-element.toggle:nth-child(6) {
     transform: rotateX(40deg);
-    opacity: 0.7;
+    opacity: 0.6;
 }
 .spinner-element.toggle:nth-child(3),
 .spinner-element.toggle:nth-child(5) {
     transform: rotateX(35deg);
-    opacity: 0.9;
+    opacity: 0.7;
 }
