@@ -24,6 +24,7 @@ const DateSelector = (function() {
     let _hiddenInput
     let _isHidden = true
     let _timeSelectorIsHidden
+    let _timeSelectorIsChecked
     let _toggleIsOn = false
     let _calendarDateElements = []
     const _placeholder = 'Date'
@@ -425,8 +426,8 @@ const DateSelector = (function() {
             _toggleIsOn = e.target.checked
             _isHidden = !_toggleIsOn
             // check if the time input is hidden
-            _timeSelectorIsHidden = TimeSelector.getIsHidden()
-            if (!_timeSelectorIsHidden && _isHidden) {
+            _timeSelectorIsChecked = TimeSelector.getIsChecked()
+            if (_timeSelectorIsChecked && _isHidden) {
                 TimeSelector.turnOff()
             }
             _toggleQuestionVisibility(_toggleIsOn, false)

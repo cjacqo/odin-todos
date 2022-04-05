@@ -415,6 +415,7 @@ const TimeSelector = (function() {
     }
 
     function getIsHidden() { return _isHidden }
+    function getIsChecked() { return _toggleInput.checked }
     function toggleSelector(dateInputIsHidden) { 
         _toggleInput.checked = true
         _isHidden = !dateInputIsHidden
@@ -431,6 +432,7 @@ const TimeSelector = (function() {
     return {
         init: init,
         getIsHidden: getIsHidden,
+        getIsChecked: getIsChecked,
         toggleSelector: toggleSelector,
         turnOff: turnOff
     }
