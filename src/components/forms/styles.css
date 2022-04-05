@@ -137,6 +137,7 @@ textarea:focus {
     width: 100%;
     height: 100%;
     background-color: var(--darker-grey-bg);
+    overflow: hidden;
 }
 #addTodoForm {
     display: flex;
