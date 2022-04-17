@@ -60,6 +60,7 @@ const AddFormToModal = (formData) => {
                     case 'textarea':
                         formControl = document.createElement('div')
                         let formInput = document.createElement(`${type === 'textarea' ? type : 'input'}`)
+                        formInputs.push(formInput)
                         formControl.classList.add('form-control')
                         formControl.setAttribute('id', `${name}Control`)
                         if (type === 'text') {
@@ -77,35 +78,15 @@ const AddFormToModal = (formData) => {
                         break
                     case 'date':
                         formControl = DateSelector.init()
+                        formInputs.push(DateSelector.getInput())
                         break
                     case 'time':
                         formControl = TimeSelector.init()
+                        formInputs.push(TimeSelector.getInput())
                         break
                     case 'radio':
                         formControl = PrioritySelector.init()
-                        // formControl = document.createElement('div')
-                        // formControl.classList.add('form-control', 'flex')
-                        // formControl.setAttribute('id', id)
-                        // formControl.appendChild(inputTitleContainer)
-                        // const radioContainer = document.createElement('div')
-                        // const radioSelectionContainer = document.createElement('div')
-                        // radioContainer.classList.add('radio-buttons-container')
-                        // options.forEach(option => {
-                        //     const radioButton = document.createElement('input')
-                        //     const radioLabel = document.createElement('label')
-                        //     if (option === 'none') {
-                        //         radioButton.checked = true
-                        //     }
-                        //     radioButton.setAttribute('type', 'radio')
-                        //     radioButton.setAttribute('id', option)
-                        //     radioButton.setAttribute('name', name)
-                        //     radioButton.setAttribute('value', option)
-                        //     radioLabel.setAttribute('for', option)
-                        //     radioLabel.innerText = option
-                        //     radioContainer.appendChild(radioButton)
-                        //     radioContainer.appendChild(radioLabel)
-                        // })
-                        // formControl.appendChild(radioContainer)
+                        formInputs.push(PrioritySelector.getInput())
                         break
                     case 'select':
                         formControl = document.createElement('div')
@@ -114,13 +95,13 @@ const AddFormToModal = (formData) => {
                         formControl.appendChild(inputTitleContainer)
                         const selectContainer = document.createElement('select')
                         selectContainer.setAttribute('name', name)
-                        console.log(options)
                         options.forEach(option => {
                             const selectOption = document.createElement('option')
                             selectOption.setAttribute('value', option.getName())
                             selectOption.innerText = option.getName()
                             selectContainer.appendChild(selectOption)
                         })
+                        formInputs.push(selectContainer)
                         formControl.appendChild(selectContainer)
                         break
                     default:

@@ -12,9 +12,6 @@ const PrioritySelector = (function() {
     let _answerTitleElement
     let _radioButtonsContainer
     let _radioButtons = []
-    let _toggleInput
-    let _checkBoxLabel
-    let _checkBoxSlider
     let _answer
     let _isHidden = true
 
@@ -135,8 +132,11 @@ const PrioritySelector = (function() {
         return _formInputControl
     }
 
+    function getInput() { return _formInputControl }
+
     return {
-        init: init
+        init: init,
+        getInput: getInput
     }
     
 })()

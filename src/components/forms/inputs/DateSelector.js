@@ -459,7 +459,7 @@ const DateSelector = (function() {
         return _formInputControl
     }
 
-    function getInput() { return _formInputControl }
+    function getInput() { return _hiddenInput }
     function getIsHidden() { return _isHidden }
     function toggleSelector(timeInputHidden) { 
         _toggleInput.checked = true

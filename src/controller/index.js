@@ -42,6 +42,16 @@ const Controller = (() => {
                 const folderName = data[0].value
                 Database.addFolder(folderName)
                 return
+            case 'todo':
+                const name = data[0].value
+                const todoNote = data[1].value
+                const duedate = data[2].value
+                const duetime = data[3].value
+                const priority = data[4].value
+                const dataObj = {name, todoNote, duedate, duetime, priority}
+                Database.addItem({type: 'todo', data: dataObj})
+                updateTable('item')
+                return
             case 'item':
                 console.log("DFSDFSDF")
         }
@@ -123,8 +133,8 @@ const Controller = (() => {
             case 'folder':
                 Main.loadFoldersTable(Database.getFolders())
                 return
-            case 'item':
-                Main.loadItemsTable(Database.getItemsByFolderId(_state.folder.id))
+            case 'todo':
+                Main.loadItemsTable(Database.getItemsByFolderId('todos'))
                 return
         }
     }

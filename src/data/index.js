@@ -40,7 +40,9 @@ const Database = (function() {
     }
 
     function _filterFolder(folderId) {
-        console.log(folderId)
+        _foldersDB.forEach(folder => {
+            console.log(folder.getId())
+        })
         let [theItemFolder] = _foldersDB.filter(_folder => _folder.getId() === folderId)
         return theItemFolder
     }

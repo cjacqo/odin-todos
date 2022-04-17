@@ -29,10 +29,12 @@ const FolderItem = (type, id, data) => {
 
 const ToDoItem = (type, id, data) => {
     const prototype   = DatabaseItem(type, id, data)
-    const getFolder   = () => {return data.folderId}
+    const getNote     = () => {return data.todoNote}
     const getDueDate  = () => {return data.duedate}
+    const getDueTime  = () => {return data.duetime}
     const getPriority = () => {return data.priority}
-    return Object.assign({}, prototype, {getFolder, getDueDate, getPriority})
+    const getFolder   = () => {return data.folderId}
+    return Object.assign({}, prototype, {getNote, getDueDate, getDueTime, getPriority, getFolder})
 }
 
 const NoteItem = (type, id, data) => {
