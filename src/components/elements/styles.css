@@ -17,3 +17,7 @@
 .cant-delete.active {
     color: var(--lighter-grey);
 }
+
+.small-popup-menu-container.hidden {
+    display: none;
+}

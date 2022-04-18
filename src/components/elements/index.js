@@ -12,8 +12,12 @@ import '@fortawesome/fontawesome-free/js/regular'
 //          + item data
 //              ~~ elementText
 //          + controllerFunction: string
-const ListItem = (dataAttribute, itemData, controllerFunction) => {
+const ListItem = (dataAttribute, itemData, controllerFunction, typeAttribute) => {
     const { attributeName, attributeValue } = dataAttribute
+    let attValue
+    if (typeAttribute) {
+        attValue = typeAttribute.attValue
+    }
     const { elementText } = itemData
 
     const li = document.createElement('div')
@@ -57,10 +61,11 @@ const ListItem = (dataAttribute, itemData, controllerFunction) => {
     li.addEventListener('click', (e) => {
         switch(controllerFunction) {
             case 'toggle-table':
+                console.log("TOTOTOT")
                 Controller.toggleTable({type: 'folder', value: attributeValue, title: elementText})
                 break
             case 'toggle-item':
-                Controller.toggleItem({type: 'item', value: attributeValue, title: elementText})
+                Controller.toggleItem({type: 'item', value: attributeValue, title: elementText, itemType: attValue})
                 break
         }
     })
@@ -202,7 +207,7 @@ const SmallPopUpMenu = () => {
         btn.innerText = button.name
 
         btn.addEventListener('click', (e) => {
-            Controller.startItemCreation(e)
+            Controller.controllFormView(e)
         })
         
         container.appendChild(btn)

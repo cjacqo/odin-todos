@@ -54,11 +54,7 @@ const Footer = (function() {
 
             actionButton.addEventListener('click', (e) => {
                 let res
-                if (_action.name === 'create-folder') {
-                    res = Controller.toggleModal(e)
-                } else {
-                    res = Controller.togglePopUp(e)
-                }
+                res = Controller.startItemCreation(e)
                 actionButton.setAttribute('data-is-toggled', `${res}`)
             })
 

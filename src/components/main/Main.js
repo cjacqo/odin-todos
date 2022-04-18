@@ -76,8 +76,9 @@ const Main = (function() {
             data.forEach(item => {
                 const itemName = capitalizeString(item.getName())
                 const dataAttribute = { attributeName: 'data-item-id', attributeValue: item.getId() }
+                const typeAttribute = { attName: 'data-type', attValue: item.getType() }
                 const itemData = { elementText: itemName }
-                const li = ListItem(dataAttribute, itemData, 'toggle-item')
+                const li = ListItem(dataAttribute, itemData, 'toggle-item', typeAttribute)
                 _itemsTable.appendChild(li)
             })
         } else {
@@ -97,6 +98,7 @@ const Main = (function() {
     function init(data) { return _init(data) }
     function getMainContainer() { return _mainContainer }
     function getSearchBar() { return _searchBar }
+    function getTableContainer() { return _tableContainer }
     function getFoldersTable() { return _foldersTable }
     function getItemsTable() { return _itemsTable }
     function loadFoldersTable(data) {return _loadFoldersTable(data)}
@@ -106,6 +108,7 @@ const Main = (function() {
         init: init,
         getMainContainer: getMainContainer,
         getSearchBar: getSearchBar,
+        getTableContainer: getTableContainer,
         getFoldersTable: getFoldersTable,
         getItemsTable: getItemsTable,
         loadFoldersTable: loadFoldersTable,

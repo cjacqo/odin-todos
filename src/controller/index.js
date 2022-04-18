@@ -1,6 +1,8 @@
 import { EditModal } from "../components/elements"
 import Footer from "../components/footer/Footer"
-import { AddFolderForm, AddFormToModal, CreateToDoForm } from "../components/forms"
+// import { AddFolderForm, AddFormToModal, AddNoteFormToModal, CreateToDoForm } from "../components/forms"
+import FormController from "../components/forms/FormController"
+// import FormController from '../components/forms/index'
 import { CurrentCalendar } from "../components/forms/DatePicker/index"
 import DateSelector from "../components/forms/inputs/DateSelector"
 import Header from "../components/header/Header"
@@ -56,7 +58,6 @@ const Controller = (() => {
                 console.log("DFSDFSDF")
         }
         updateFolderCounts()
-        // updateAllFolderCount()
     }
     // --- Update the Table View with accurate count of database items in each folder
     //     after a database item (folder or item) is created
@@ -123,36 +124,39 @@ const Controller = (() => {
     //     is clicked. If it is a folder that is clicked, the
     //     page title will change to the name of the folder
     const changeHeaderTitle = (action, state, tableAction) => {
-        const headerTitle = Header.getHeaderTitle()
-        const subHeaderTitle = Header.getSubHeaderTitle()
         if (_popUpOpen) {
             togglePopUp()
         }
+        const dataTableAction = {name: 'data-table-action', value: tableAction}
+        const dataValue = {name: 'data-value', value: state.folder.id}
+        const dataTitle = {name: 'data-title', value: tableAction}
         switch(action) {
             case 'open-folder':
-                headerTitle.innerText = 'Folders'
-                headerTitle.classList.remove('main-title')
-                headerTitle.classList.add('back-button')
-                headerTitle.setAttribute('data-table-action', tableAction)
-                headerTitle.setAttribute('data-value', state.folder.id)
-                headerTitle.setAttribute('data-title', state.folder.name)
-                subHeaderTitle.classList.remove('hidden')
-                subHeaderTitle.classList.add('main-title')
-                subHeaderTitle.innerText = state.folder.name
+                Header.setTitles({header: 'Folders', subHeader: state.folder.name})
+                Header.handleClasses(0)
+                Header.setHeaderTitleAttributes([dataTableAction, dataValue, dataTitle], true)
                 return
             case 'open-item':
-                headerTitle.innerText = state.folder.name
-                subHeaderTitle.innerText = state.item.name
-                headerTitle.setAttribute('data-table-action', tableAction)
-                headerTitle.setAttribute('data-value', state.folder.id)
-                headerTitle.setAttribute('data-title', state.folder.name)
+                Header.setTitles({header: state.folder.name, subHeader: state.item.name})
+                Header.setHeaderTitleAttributes([dataTableAction, dataValue, dataTitle], true)
                 return
-            case 'default':
-                subHeaderTitle.classList.remove('main-title')
-                subHeaderTitle.classList.add('hidden')
-                headerTitle.classList.remove('back-button')
-                headerTitle.classList.add('main-title')
-                subHeaderTitle.innerText = ''
+            case 'create-note':
+                Header.setTitles({header: 'Folders', subHeader: state.item.name})
+                if (Header.getSubHeaderTitle() instanceof HTMLHeadingElement) {
+                    Header.changeSubTitleToInput(state.item.name)
+                    Header.appendSubTitleAndEditCheckBox()
+                }
+                Header.handleClasses(0)
+                Header.setHeaderTitleAttributes([dataTableAction, dataValue, dataTitle], true)
+                return
+            case 'open-home':
+                Header.setTitles({header: 'Folders', subHeader: ''})
+                if (Header.getSubHeaderTitle() instanceof HTMLInputElement) {
+                    Header.changeSubTitleToText(state.item.name)
+                    Header.appendSubTitleAndEditCheckBox()
+                }
+                Header.handleClasses(1)
+                Header.setHeaderTitleAttributes([dataTableAction, dataValue, dataTitle], false)
                 return
         }
     }
@@ -167,6 +171,21 @@ const Controller = (() => {
                 return
         }
     }
+    // --- Remove the Main Container Children
+    const removeMainContainerChildren = () => {
+        const mainContainer = document.getElementById('mainContainer')
+        console.log(mainContainer)
+        while (mainContainer.children.length > 0) {
+            mainContainer.children[0].remove()
+        }
+        return
+    }
+    // --- Append Form to Main Container
+    const appendToMainContainer = (form) => {
+        const mainContainer = document.getElementById('mainContainer')
+        mainContainer.appendChild(form)
+        return
+    }
     // --- Open Edit Modal
     const toggleEditModal = (folderId) => {
 
@@ -177,7 +196,7 @@ const Controller = (() => {
     //                     type  = 'folder' or 'home'
     //                     value = folder or item name, or if the user goes back
     const toggleTable = (action, id) => {
-        const { type, value, title } = action
+        const { type, value, title, actionName } = action
         let data
         let visibleTable
         let hiddenTable
@@ -196,7 +215,7 @@ const Controller = (() => {
                 // - change the header title for opening a folder
                 _state.folder.name = title
                 _state.folder.id = value
-                changeHeaderTitle('open-folder', _state, 'back-to-folder')
+                changeHeaderTitle('open-folder', _state, 'back-to-folders')
                 visibleTable = Main.getItemsTable()
                 hiddenTable = Main.getFoldersTable()
                 // - get data
@@ -209,13 +228,40 @@ const Controller = (() => {
                 createFolderButton.children[0].setAttribute('disabled', true)
                 toggleEdit('force')
                 return
-            case 'back-to-folder':
+            case 'back-to-folders':
+                removeMainContainerChildren()
                 _state = {folder: {id: null, name: null }, item: {id: null, name: null}}
-                changeHeaderTitle('default', _state)
-                visibleTable = Main.getFoldersTable()
-                hiddenTable = Main.getItemsTable()
+                changeHeaderTitle('open-home', _state)
+                const searchBar = Main.getSearchBar()
+                const tableContainer = Main.getTableContainer()
+                const foldersTable = Main.getFoldersTable()
+                const itemsTable = Main.getItemsTable()
+                visibleTable = foldersTable
+                hiddenTable = itemsTable
                 visibleTable.classList.remove('hidden')
                 hiddenTable.classList.add('hidden')
+                tableContainer.appendChild(foldersTable)
+                tableContainer.appendChild(itemsTable)
+                appendToMainContainer(searchBar)
+                appendToMainContainer(tableContainer)
+                return
+            case 'item':
+                _state.folder.name = title
+                if (value === 'create-note') {
+                    removeMainContainerChildren()
+                    const formControlObj = FormController.createForm('note')
+                    const { form, inputs } = formControlObj
+                    visibleTable = form
+                    if (!title) {
+                        hiddenTable = Main.getFoldersTable()
+                    }
+                    const [subTitleInput] = inputs[0]
+                    _state.item.name = subTitleInput
+                    changeHeaderTitle(value, _state, 'back-to-folders')
+                    visibleTable.classList.remove('hidden')
+                    hiddenTable.classList.add('hidden')
+                    appendToMainContainer(visibleTable)
+                }
                 return
         }
     }
@@ -363,9 +409,57 @@ const Controller = (() => {
                             }
                         ]
                     }
-                    const createToDoForm = AddFormToModal(todoForm)
-                    modalContainer.appendChild(createToDoForm)
+                    const createToDoForm = FormController.createForm('todo')
+                    console.log(createToDoForm)
+                    modalContainer.appendChild(createToDoForm.form)
+                    // const createToDoForm = AddFormToModal(todoForm)
+                    // modalContainer.appendChild(createToDoForm)
                 }
+                return
+            // case 'create-note':
+            //     if (isOpen) {
+            //         // const noteForm = {
+            //         //     fieldSets: [
+            //         //         {
+            //         //             id: 0,
+            //         //             questions: [
+            //         //                 {
+            //         //                     required: true,
+            //         //                     minlength: 1,
+            //         //                     maxlength: 30,
+            //         //                     type: 'text',
+            //         //                     placeholder: '',
+            //         //                     id: 'noteName',
+            //         //                     label: false,
+            //         //                     name: 'item-name-input'
+            //         //                 },
+            //         //                 {
+            //         //                     required: true,
+            //         //                     minlength: 1,
+            //         //                     maxlength: 2000,
+            //         //                     type: 'textarea',
+            //         //                     placeholder: '',
+            //         //                     id: 'noteNote',
+            //         //                     label: false,
+            //         //                     name: 'item-note-input'
+            //         //                 }
+            //         //             ]
+            //         //         }
+            //         //     ],
+            //         //     id: 'addNote',
+            //         //     formInfo: [],
+            //         //     buttons: [
+            //         //         {
+            //         //             type: 'submit',
+            //         //             text: 'Done',
+            //         //             creationValue: 'note'
+            //         //         }
+            //         //     ]
+            //         // }
+            //         toggleTable({type: 'item', value: 'note', title: null})
+            //         const createNoteForm = AddNoteFormToModal()
+            //         modalContainer.appendChild(createNoteForm)
+            //     }
             case 'open-edit-modal':
                 if (isOpen) {
                     const editFolderModal = EditModal(e.currentTarget.dataset.tableItemId)
@@ -381,17 +475,19 @@ const Controller = (() => {
         }
     }
     // --- Toggle Popup
-    const togglePopUp = () => {
+    const togglePopUp = (open) => {
         const smallPopUp = Footer.getSmallPopUpMenu()
-        if (!_popUpOpen) {
+        if (open) {
             smallPopUp.classList.remove('hidden')
+            smallPopUp.children[0].classList.remove('hidden')
         } else {
             smallPopUp.classList.add('hidden')
+            smallPopUp.children[0].classList.add('hidden')
         }
         _popUpOpen = !_popUpOpen
     }
     // --- Toggle Item
-    const toggleItem = ({ type, value, title }) => {
+    const toggleItem = ({ type, value, title, itemType }) => {
         // - change the header title
         console.log("TITLE: " + title)
         _state.item.name = title
@@ -401,6 +497,7 @@ const Controller = (() => {
         // COMPLETE THE FUNCTIONS TO OPEN THE EDIT VIEW OF THE SELECTED ITEM
         console.log("OPEN ITEM: " + title)
         console.log("ITEM ID: " + value)
+        console.log("ITEM TYPE: " + itemType)
     }
     // --- Toggle Edit
     const toggleEdit = (isChecked) => {
@@ -437,14 +534,25 @@ const Controller = (() => {
     // --- Start Item Creation
     const startItemCreation = (e) => {
         const value = e.currentTarget.value
-        togglePopUp()
+        switch (value) {
+            case 'create-folder':
+                toggleModal(e)
+                return
+            case 'create-item':
+                togglePopUp(true)
+                return
+        }
+    }
+    // --- Controll What Form gets Appended and How
+    const controllFormView = (e) => {
+        const value = e.currentTarget.value
         switch (value) {
             case 'create-todo':
+                togglePopUp()
                 toggleModal(e)
-                console.log("CREATE A TODO")
                 return
             case 'create-note':
-                console.log("CREATE A NOTE")
+                toggleTable({type: 'item', value: 'create-note', title: null})
                 return
             case 'create-checklist':
                 console.log("CREATE A CHECKLIST")
@@ -623,6 +731,7 @@ const Controller = (() => {
         toggleEdit: toggleEdit,
         toggleQuestionVisibility: toggleQuestionVisibility,
         startItemCreation: startItemCreation,
+        controllFormView: controllFormView,
         handleStyleOfDateSelection: handleStyleOfDateSelection,
         handleDayOfWeekSelection: handleDayOfWeekSelection,
         getFoldersFromDb: getFoldersFromDb

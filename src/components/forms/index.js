@@ -6,6 +6,42 @@ import Controller from "../../controller"
 import DateSelector from './inputs/DateSelector'
 import TimeSelector from './inputs/TimeSelector'
 import PrioritySelector from './inputs/PrioritySelector'
+import FormInputControl from './inputs'
+import TextInput from './inputs/TextInput'
+import { Forms } from '../../data/data'
+
+const CreateFormContainer = (id) => {
+    const parentContainer = document.createElement('div')
+    const formContainer = document.createElement('form')
+    const formLegend = document.createElement('div')
+    const formTitle = document.createElement('h6')
+    const formSubTitle = document.createElement('p')
+    const buttonsContainer = document.createElement('div')
+
+    parentContainer.setAttribute('id', `${id}Parent`)
+    formContainer.setAttribute('id', `${id}Form`)
+    parentContainer.classList.add('form-parent')
+    formContainer.classList.add('form-container')
+    formLegend.classList.add('form-legend')
+    formTitle.classList.add('form-title')
+    formSubTitle.classList.add('form-sub-title')
+    buttonsContainer.classList.add('form-buttons-container', 'flex')
+
+    return {parentContainer, formContainer, formLegend, formTitle, formSubTitle, buttonsContainer}
+}
+
+const CreateFieldSet = (id, fieldSetId) => {
+    const formFieldSet = document.createElement('fieldset')
+    formFieldSet.classList.add('form-fieldset', 'flex', 'col')
+    formFieldSet.setAttribute('id', `${id}fieldSet${fieldSetId}`)
+    return formFieldSet
+}
+
+const AppendChildToParent = (parent, child) => {
+    console.log(parent)
+    parent.appendChild(child)
+    return
+}
 
 const AddFormToModal = (formData) => {
     const { fieldSets, id, formInfo, buttons  } = formData
@@ -146,4 +182,34 @@ const AddFormToModal = (formData) => {
     return parentContainer
 }
 
-export {AddFormToModal}
+const AddNoteFormToModal = () => {
+    const questions = [ 
+        {
+            type: 'text', 
+            attributes: [
+                {name: 'minlength', value: 3}, {name: 'maxlength', value: 30}, {name: 'placeholder', value: null}
+            ]
+        }, 
+        {
+            type: 'textarea', 
+            attributes: [
+                {name: 'minlength', value: 1}, {name: 'maxlength', value: null}, {name: 'placeholder', value: null}
+            ]
+        } 
+    ]
+    const formContainerElements = CreateFormContainer('addNoteForm')
+    const formFieldSet = CreateFieldSet('addNote', 0)
+    const noteNameInputControl = FormInputControl.createFormControl('note-name', questions[0])
+    const noteNoteInputControl = FormInputControl.createFormControl('note-note', questions[1])
+    const noteNameInput = TextInput.init({type: 'text', attributes: questions[0].attributes})
+    const noteNoteInput = TextInput.init({type: 'textarea', attributes: questions[1].attributes})
+    console.log(noteNameInput)
+    console.log(noteNoteInput)
+    // AppendChildToParent(formFieldSet, noteFormInputControl)
+    // AppendChildToParent(formContainerElements, formFieldSet)
+
+    let formInputs = []
+    console.log(formContainer)
+}
+
+// export {AddFormToModal, AddNoteFormToModal}
