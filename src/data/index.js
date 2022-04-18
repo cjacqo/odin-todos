@@ -14,7 +14,7 @@ const Database = (function() {
     let _folderCounter = _uuid()
     let _itemsCounter = _uuid()
     let _defaultFolders = ['all', 'todos', 'notes', 'checklists']
-    let _testFolder = ['Test Folder']
+    // let _testFolder = ['Test Folder']
     let _db
     let _foldersDB = []
     let _itemsDB = []
@@ -24,10 +24,10 @@ const Database = (function() {
             const folderObj = FolderItem('folder', _folder, {name: _folder, items: [], canDelete: false})
             _foldersDB.push(folderObj)
         })
-        _testFolder.forEach(_folder => {
-            const folderObj = FolderItem('folder', _folder, {name: _folder, items: [], canDelete: true})
-            _foldersDB.push(folderObj)
-        })
+        // _testFolder.forEach(_folder => {
+        //     const folderObj = FolderItem('folder', _folder, {name: _folder, items: [], canDelete: true})
+        //     _foldersDB.push(folderObj)
+        // })
         return
     })
 
@@ -97,6 +97,7 @@ const Database = (function() {
 
 
     function getFolders() { return _foldersDB }
+    function getFolderItemCountById(folderId) {return _filterFolder(folderId) }
     function getEditableFolders() {
         return _foldersDB.filter(folder => {
             console.log(folder.getCanDelete())
@@ -114,6 +115,7 @@ const Database = (function() {
         addFolder: addFolder,
         addItem: addItem,
         getFolders: getFolders,
+        getFolderItemCountById: getFolderItemCountById,
         getEditableFolders: getEditableFolders,
         getItemsByFolderId: getItemsByFolderId
     }

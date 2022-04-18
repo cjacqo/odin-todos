@@ -90,6 +90,10 @@ const Main = (function() {
         return
     }
 
+    function _updateCountOfFolderItems() {
+        
+    }
+
     function init(data) { return _init(data) }
     function getMainContainer() { return _mainContainer }
     function getSearchBar() { return _searchBar }

@@ -37,24 +37,53 @@ const Controller = (() => {
     }
     // --- Create items
     const handleCreation = (itemType, data) => {
+        let dataObj
         switch(itemType) {
             case 'folder':
                 const folderName = data[0].value
                 Database.addFolder(folderName)
-                return
+                break
             case 'todo':
                 const name = data[0].value
                 const todoNote = data[1].value
                 const duedate = data[2].value
                 const duetime = data[3].value
                 const priority = data[4].value
-                const dataObj = {name, todoNote, duedate, duetime, priority}
+                dataObj = {name, todoNote, duedate, duetime, priority}
                 Database.addItem({type: 'todo', data: dataObj})
-                updateTable('item')
-                return
+                break
             case 'item':
                 console.log("DFSDFSDF")
         }
+        updateFolderCounts()
+        // updateAllFolderCount()
+    }
+    // --- Update the Table View with accurate count of database items in each folder
+    //     after a database item (folder or item) is created
+    const updateFolderCounts = () => {
+        let countElements = document.querySelectorAll('.countBox')
+        let boxes = []
+        let textBox
+        countElements.forEach(countBox => {
+            const obj = {textBox: countBox.children[0], boxId: countBox.id}
+            boxes.push(obj) 
+        })
+        const folders = Database.getFolders()
+        const folderIds = folders.map(folder => {
+            const obj = {compareId: folder.getId() + 'CountBox', id: folder.getId()}
+            return obj
+        })
+        folderIds.forEach(folder => {
+            const { id, compareId } = folder
+            boxes.forEach(box => {
+                if (box.boxId === compareId) {
+                    textBox = box.textBox
+                    const count = Database.getFolderItemCountById(id)
+                    textBox.innerText = count.getItemCount()
+                }
+                return
+            })
+        })
     }
     // --- Check if exists
     const checkIfFolderExists = (name) => {
@@ -134,7 +163,7 @@ const Controller = (() => {
                 Main.loadFoldersTable(Database.getFolders())
                 return
             case 'todo':
-                Main.loadItemsTable(Database.getItemsByFolderId('todos'))
+                // Main.loadItemsTable(Database.getItemsByFolderId('todos'))
                 return
         }
     }

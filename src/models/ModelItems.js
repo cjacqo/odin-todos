@@ -20,11 +20,13 @@ const DatabaseItem = (type, id, data) => {
 const FolderItem = (type, id, data) => {
     let _items         = []
     const prototype    = DatabaseItem(type, id, data)
+    const getId        = () => {return id}
     const getItems     = () => {return _items}
+    const getItemCount = () => {return _items.length}
     const setItems     = (data) => {_items.push(data.items)}
     const getPinned    = () => {return data.items.filter(item => item.pinned)}
     const getCanDelete = () => {return data.canDelete}
-    return Object.assign({}, prototype, {getItems, setItems, getPinned, getCanDelete})
+    return Object.assign({}, prototype, {getId, getItems, getItemCount, setItems, getPinned, getCanDelete})
 }
 
 const ToDoItem = (type, id, data) => {

@@ -34,6 +34,7 @@ const ListItem = (dataAttribute, itemData, controllerFunction) => {
             icon.classList.add('fa-solid', 'fa-folder', 'yellow')
             chevron.classList.add('fa-solid', 'fa-chevron-right')
             countBox.classList.add('countBox')
+            countBox.setAttribute('id', `${attributeValue}CountBox`)
             let count = Controller.getItemCountInFolder(attributeValue)
             countText.innerText = count
             iconBox.appendChild(icon)
