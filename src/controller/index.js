@@ -293,41 +293,10 @@ const Controller = (() => {
         switch(value) {
             case 'create-folder':
                 if (isOpen) {
-                    const folderForm = {
-                        fieldSets: [
-                            {
-                                id: 0,
-                                questions: [
-                                    {
-                                        required: true,
-                                        minlength: 1,
-                                        maxlength: 20,
-                                        type: 'text',
-                                        placeholder: 'Name',
-                                        id: 'folderName',
-                                        label: false,
-                                        name: 'add-form-input'
-                                    }
-                                ],
-                            }
-                        ],
-                        id: 'addFolder',
-                        formInfo: ['New Folder', 'Enter a name for this folder.'],
-                        buttons: [
-                            {
-                                type: 'button',
-                                value: 'close',
-                                text: 'Cancel'
-                            },
-                            {
-                                type: 'submit',
-                                text: 'Save',
-                                creationValue: 'folder'
-                            }
-                        ]
-                    }
-                    const addFolderForm = AddFormToModal(folderForm)
-                    modalContainer.appendChild(addFolderForm)
+                    const createFolderForm = FormController.createForm('folder')
+                    modalContainer.appendChild(createFolderForm.parentContainer)
+                    // const addFolderForm = AddFormToModal(folderForm)
+                    // modalContainer.appendChild(addFolderForm)
                     return true
                 }
             case 'create-todo':
@@ -410,8 +379,7 @@ const Controller = (() => {
                         ]
                     }
                     const createToDoForm = FormController.createForm('todo')
-                    console.log(createToDoForm)
-                    modalContainer.appendChild(createToDoForm.form)
+                    modalContainer.appendChild(createToDoForm.parentContainer)
                     // const createToDoForm = AddFormToModal(todoForm)
                     // modalContainer.appendChild(createToDoForm)
                 }

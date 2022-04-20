@@ -54,6 +54,7 @@ const Footer = (function() {
 
             actionButton.addEventListener('click', (e) => {
                 let res
+                console.log("HIII")
                 res = Controller.startItemCreation(e)
                 actionButton.setAttribute('data-is-toggled', `${res}`)
             })

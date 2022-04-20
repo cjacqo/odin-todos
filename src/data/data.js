@@ -48,8 +48,48 @@ const Items = [
 
 const Forms = [
     {
+        formId: 'folder',
+        formName: 'Folder',
+        formContainerName: 'addFolder',
+        formInfo: ['New Folder', 'Enter a name for this folder.'],
+        fieldSets: [
+            {
+                id: 0,
+                questions: [
+                    {
+                        inputType: 'text',
+                        attributes: [
+                            { name: 'required', value: true },
+                            { name: 'minlength', value: 1 },
+                            { name: 'maxlength', value: 20 },
+                            { name: 'type', value: 'text' },
+                            { name: 'placeholder', value: 'Name' },
+                            { name: 'id', value: 'folderName' },
+                            { name: 'name', value: 'add-form-input' }
+                        ],
+                        options: null,
+                        title: null
+                    }
+                ],
+            }
+        ],
+        buttons: [
+            {
+                type: 'button',
+                value: 'close',
+                text: 'Cancel'
+            },
+            {
+                type: 'submit',
+                text: 'Save',
+                creationValue: 'folder'
+            }
+        ]
+    },
+    {
         formId: 'todo',
         formName: 'Todo',
+        formContainerName: 'addTodo',
         formInfo: ['Details'],
         fieldSets: [
             {
@@ -126,7 +166,6 @@ const Forms = [
                 ]
             }
         ],
-        formInfo: ['Details'],
         buttons: [
             {
                 type: 'button',
@@ -143,6 +182,7 @@ const Forms = [
     {
         formId: 'note',
         formName: 'Note',
+        formContainerName: 'addNote',
         fieldSets: [
             {
                 id: 0,
