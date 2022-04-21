@@ -70,6 +70,8 @@ const Main = (function() {
             _foldersTable.children[0].remove()
         }
 
+        console.log(data)
+
         data.forEach(folder => {
             const folderName = capitalizeString(folder.getName())
             const dataAttribute = { attributeName: 'data-folder-id', attributeValue: folder.getId() }
@@ -114,17 +116,6 @@ const Main = (function() {
 
         _mainContainer.appendChild(_noteFormTable)
 
-        // if (data) {
-        //     data.forEach(value => {
-        //         // const folderName = capitalizeString(folder.getName())
-        //         // const dataAttribute = { attributeName: 'data-folder-id', attributeValue: folder.getId() }
-        //         // const folderData = { elementText: folderName }
-        //         // const li = ListItem(dataAttribute, folderData, 'toggle-folder')
-        //         // _foldersTable.appendChild(li)
-        //     })
-        // } else {
-            
-        // }
         return _mainContainer
     }
 

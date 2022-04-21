@@ -3,6 +3,7 @@ import Controller from "../../controller"
 import '@fortawesome/fontawesome-free/js/fontawesome'
 import '@fortawesome/fontawesome-free/js/solid'
 import '@fortawesome/fontawesome-free/js/regular'
+import PageView from '../../view'
 
 // --- Returns a div
 // --- Params
@@ -212,7 +213,8 @@ const SmallPopUpMenu = () => {
         btn.innerText = button.name
 
         btn.addEventListener('click', (e) => {
-            Controller.controlFormView(e)
+            PageView.controlFormView(e.currentTarget.value)
+            // Controller.controlFormView(e)
         })
         
         container.appendChild(btn)

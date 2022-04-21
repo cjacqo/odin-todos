@@ -8,8 +8,10 @@ import Controller from '../../controller'
 import FolderSelector from './inputs/FolderSelector'
 import Database from '../../data'
 import Main from '../main/Main'
+import PageView from '../../view'
 
 const FormController = (function() {
+    let _formType
  
     function _getFormMetaData(_formId) {
         const data = Forms.find((form) => {
@@ -36,11 +38,9 @@ const FormController = (function() {
         switch(_formType) {
             case 'folder':
                 Database.addFolder(formData[0].value)
-                Controller.updateTable('folder')
                 break
             default:
                 Database.addItem({type: _formType, data: formValues})
-                Controller.updateTable('item')
                 break
         }
         return
@@ -147,14 +147,16 @@ const FormController = (function() {
                 btn.addEventListener('click', (e) => {
                     e.preventDefault()
                     _handleFormSubmission(`${creationValue}`, _formInputs)
-                    Controller.handleCreation(`${creationValue}`, _formInputs)
-                    Controller.toggleModal()
+                    Controller.updateTable(`${creationValue}`)
+                    PageView.handleViewAfterFormSubmission(creationValue)
+                    // Controller.loadPageView(`create-${creationValue}`)
                 })
             } else {
                 btn.setAttribute('value', value)
                 btn.classList.add('form-button', 'form-cancel-button')
                     btn.addEventListener('click', (e) => {
                     e.preventDefault()
+                    PageView.handleViewAfterCancel()
                     Controller.toggleModal(e)
                 })
             }
@@ -170,6 +172,8 @@ const FormController = (function() {
         const formContainerElements = _getFormContainer(formContainerName)
         const { parentContainer, formContainer, formLegend, formTitle, formSubTitle, buttonsContainer } = formContainerElements
 
+        _formType = formId
+        
         // -- check if the formData has formInfo
         //    + used to set a legend if it exists
         if (formInfo) {

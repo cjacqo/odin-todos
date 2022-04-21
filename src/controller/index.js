@@ -39,8 +39,8 @@ const Controller = (() => {
     }
     // --- Get the type of the item by the states itemId value
     const getStateItemTypeByItemId = () => {
-        const _item = Database.getItemTypeById(_state.folder.id, _state.item.id)
-        return _item
+        const _itemType = Database.getItemTypeById(_state.folder.id, _state.item.id)
+        return _itemType
     }
     // --- Create items
     const handleCreation = (itemType, data) => {
@@ -187,17 +187,8 @@ const Controller = (() => {
         }
     }
     // --- Update the tables when new data is added
-    const updateTable = (tableType, folderId) => {
-        switch(tableType) {
-            case 'folder':
-                Main.loadFoldersTable(Database.getFolders())
-                return
-            case 'item':
-                if (_state.folder.id !== null) {
-                    Main.loadItemsTable(Database.getItemsByFolderId(_state.folder.id))
-                }
-                return
-        }
+    const updateTable = (tableType) => {
+        return PageView.loadTable(tableType, _state.folder.id)
     }
     const updateDatabaseForTableViews = () => {
         Main.loadFoldersTable(Database.getFolders())
@@ -216,6 +207,12 @@ const Controller = (() => {
     const appendToMainContainer = (form) => {
         const mainContainer = document.getElementById('mainContainer')
         mainContainer.appendChild(form)
+        return
+    }
+    // --- Act as Middleman for PageView Loading
+    const loadPageView = (value) => {
+        // PageView.handleViewAfterFormSubmission(value)
+        // PageView.updateTableElements(_state)
         return
     }
     // --- Open Edit Modal
@@ -308,11 +305,13 @@ const Controller = (() => {
         console.log("ITEM TYPE: " + itemType)
     }
     // --- Toggle modal
-    const toggleModal = (e) => {
+    const toggleModal = (e, type) => {
         let value
         let isOpen = !_modalOpen
         _modalOpen = isOpen
         const modalContainer = document.querySelector('.modal-container')
+        PageView.toggleModalVisibilityClasses()
+        PageView.toggleSmallPopUpMenuVisibilityClasses(_popUpOpen)
         if (_popUpOpen) {
             togglePopUp()
         }
@@ -323,14 +322,14 @@ const Controller = (() => {
             value = 'close'
         }
 
-        if (isOpen) {
-            modalContainer.classList.remove('hidden')
-        } else {
-            while (modalContainer.children.length > 0) {
-                modalContainer.children[0].remove()
-            }
-            modalContainer.classList.add('hidden')
-        }
+        // if (isOpen) {
+        //     modalContainer.classList.remove('hidden')
+        // } else {
+        //     while (modalContainer.children.length > 0) {
+        //         modalContainer.children[0].remove()
+        //     }
+        //     modalContainer.classList.add('hidden')
+        // }
 
         switch(value) {
             case 'create-folder':
@@ -361,14 +360,14 @@ const Controller = (() => {
     }
     // --- Toggle Popup
     const togglePopUp = (open) => {
-        const smallPopUp = Footer.getSmallPopUpMenu()
-        if (open) {
-            smallPopUp.classList.remove('hidden')
-            smallPopUp.children[0].classList.remove('hidden')
-        } else {
-            smallPopUp.classList.add('hidden')
-            smallPopUp.children[0].classList.add('hidden')
-        }
+        // const smallPopUp = Footer.getSmallPopUpMenu()
+        // if (open) {
+        //     smallPopUp.classList.remove('hidden')
+        //     smallPopUp.children[0].classList.remove('hidden')
+        // } else {
+        //     smallPopUp.classList.add('hidden')
+        //     smallPopUp.children[0].classList.add('hidden')
+        // }
         _popUpOpen = !_popUpOpen
     }
     // --- Toggle Edit
@@ -405,32 +404,40 @@ const Controller = (() => {
     }
     // --- Start Item Creation
     const startItemCreation = (e) => {
-        const value = e.currentTarget.value
+        let value = e.currentTarget.value
+        if (e) {
+            value = e.currentTarget.value ? e.currentTarget.value : e.currentTarget.dataset.action ? e.currentTarget.dataset.action : e === 'close' ? 'close' : null
+        } else {
+            value = 'close'
+        }
         switch (value) {
             case 'create-folder':
-                toggleModal(e)
+                PageView.controlFormView(value)
+                // PageView.toggleModalVisibilityClasses(e)
+                // toggleModal(e)
                 return
             case 'create-item':
-                togglePopUp(true)
+                PageView.toggleSmallPopUpMenuVisibilityClasses()
                 return
         }
     }
     // --- Controll What Form gets Appended and How
     const controlFormView = (e) => {
         const value = e.currentTarget.value
-        switch (value) {
-            case 'create-todo':
-                togglePopUp()
-                toggleModal(e)
-                return
-            case 'create-note':
-                _changeTableView({type: 'note', value: 'create-note', title: null})
-                // toggleTable({type: 'item', value: 'create-note', title: null})
-                return
-            case 'create-checklist':
-                console.log("CREATE A CHECKLIST")
-                return
-        }
+        PageView.controlFormView(value)
+        // switch (value) {
+        //     case 'create-todo':
+        //         PageView.toggleSmallPopUpMenuVisibilityClasses(true)
+
+        //         toggleModal(e)
+        //         return
+        //     case 'create-note':
+        //         _changeTableView({type: 'note', value: 'create-note', title: null})
+        //         return
+        //     case 'create-checklist':
+        //         console.log("CREATE A CHECKLIST")
+        //         return
+        // }
     }
     // --- Change the View of the Table
     const _changeTableView = (_action) => {
@@ -442,6 +449,7 @@ const Controller = (() => {
         let visibleTable
         let hiddenTable
         let hiddenFormTable = NOTEFORMTABLE
+        console.log(_action)
 
         function toggleVisibleTableClasses() {
             visibleTable.classList.remove('hidden')
@@ -480,9 +488,13 @@ const Controller = (() => {
                 toggleEdit('force')
                 return
             case 'open-item':
-                const itemType = getStateItemTypeByItemId()
                 // DETERMINE THE TYPE OF ITEM TO DECIDE WHAT VIEW TO OPEN
-                console.log(itemType)
+                visibleTable = FOLDERSTABLE
+                hiddenTable = ITEMSTABLE
+                const theItem = Database.getItem('id', _state.item.id)
+                // _changeTableView({type: theItem.getType(), value})
+                // PageView.loadItemViewFromItemType(itemType, _state.item.id)
+                toggleNoteFormVisibility()
                 return
             case 'back-to-folders':
                 visibleTable = FOLDERSTABLE
@@ -508,6 +520,7 @@ const Controller = (() => {
                 _changeTableView({type: 'folder', value: 'open-folder'})
                 break
             case 'toggle-item':
+                console.log("START CONTROL TABLE VIEW")
                 _updateState(controllerFunction, itemId)
                 _changeTableView({type: 'item', value: 'open-item'})
                 break
@@ -516,6 +529,7 @@ const Controller = (() => {
                 if (tableAction === 'back-to-folders') {
                     _updateState(tableAction, false)
                     _updateState('item', false)
+                    const itemType = getStateItemTypeByItemId()
                     _changeTableView({type: 'folder', value: tableAction})
                 } else if (tableAction === 'back-to-folder-items') {
                     _updateState('folder', _state.folder.id)
@@ -730,6 +744,7 @@ const Controller = (() => {
     
     return {
         init: init,
+        loadPageView: loadPageView,
         getFolders: getFolders,
         getItems: getItems,
         getItemCountInFolder: getItemCountInFolder,

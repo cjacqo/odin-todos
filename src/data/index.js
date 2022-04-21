@@ -176,7 +176,6 @@ const Database = (function() {
     }
 
     function getItemsByFolderId(folderId) {
-        console.log(folderId)
         let theItemFolder = _filterFolder(folderId)
         return theItemFolder.getItems()
     }
