@@ -60,6 +60,16 @@ const Database = (function() {
     }
 
     // --- ITEMS
+    // ~ Getter Functions ~
+    //      + By ID
+    //      + By Name
+    function _getItemById(itemId) {
+        return _itemsDB.find(_item => _item.getId() == itemId)
+    }
+    function _getItemByName(itemName) {
+        return _itemsDB.find(_item => _item.getName() === itemName)
+    }
+
     function _addItemToFolderById(folderName, item) {
         console.log(item.getName())
         let theItemFolder = _getFolderByName(folderName)
@@ -184,6 +194,14 @@ const Database = (function() {
                 return _getFolderById(searchValue)
         }
     }
+    function getItem(searchAttribute, searchValue) {
+        switch(searchAttribute) {
+            case 'name':
+                return _getItemByName(searchValue)
+            case 'id':
+                return _getItemById(searchValue)
+        }
+    }
 
     function getItemNameById(folderId, itemId) {
         let theItems = getItemsByFolderId(folderId)
@@ -205,6 +223,7 @@ const Database = (function() {
         init: init,
         getFolder: getFolder,
         addFolder: addFolder,
+        getItem: getItem,
         addItem: addItem,
         getFolders: getFolders,
         getFolderNameById: getFolderNameById,

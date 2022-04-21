@@ -187,7 +187,6 @@ h4, h6 {
     flex: 1;
     position: relative;
     background-color: var(--grey-bg);
-    margin-top: var(--large);
 }
 
 #tableContainer > * {
@@ -211,7 +210,8 @@ h4, h6 {
     transition: right 500ms ease-in-out;
 }
 
-#tableContainer > #itemsTable.hidden {
+#itemsTable.hidden,
+#noteFormTable.hidden {
     right: -100%;
 }
 
@@ -296,6 +296,7 @@ h4, h6 {
     border-radius: var(--small-border-radius);
     justify-content: center;
     align-items: center;
+    margin-bottom: var(--large);
 }
 .search-bar-container > .small-item {
     flex-grow: 1;

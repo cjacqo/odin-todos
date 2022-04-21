@@ -148,7 +148,6 @@ const Controller = (() => {
         const dataValue = {name: 'data-value', value: state.folder.id}
         const dataTitle = {name: 'data-title', value: tableAction}
 
-        console.log(action)
         switch(action) {
             case 'open-folder':
             case 'back-to-folder-items':
@@ -161,11 +160,18 @@ const Controller = (() => {
                 Header.setHeaderTitleAttributes([dataTableAction, dataValue, dataTitle], true)
                 return
             case 'create-note':
-                Header.setTitles({header: 'Folders', subHeader: state.item.name})
-                if (Header.getSubHeaderTitle() instanceof HTMLHeadingElement) {
-                    Header.changeSubTitleToInput(state.item.name)
-                    Header.appendSubTitleAndEditCheckBox()
-                }
+                // Header.setTitles({header: 'Folders', subHeader: state.item.name})
+                // if (Header.getSubHeaderTitle() instanceof HTMLHeadingElement) {
+                //     Header.appendSubTitleAndEditCheckBox('input', state.item.name)
+                // }
+                const noteData = Database.getItem(_state.item.id)
+                console.log(noteData)
+                PageView.loadAddNoteForm()
+                // const headerElement = Header.getHeaderContainer(false)
+                // console.log(headerElement)
+                // const appContainer = document.getElementById('appContainer')
+                // appContainer.children[0].remove()
+                // appContainer.children[0].appendChild(Header.init('secondary'))
                 Header.handleClasses(0)
                 Header.setHeaderTitleAttributes([dataTableAction, dataValue, dataTitle], true)
                 return
@@ -331,17 +337,12 @@ const Controller = (() => {
                 if (isOpen) {
                     const createFolderForm = FormController.createForm('folder')
                     modalContainer.appendChild(createFolderForm.parentContainer)
-                    // const addFolderForm = AddFormToModal(folderForm)
-                    // modalContainer.appendChild(addFolderForm)
                     return true
                 }
             case 'create-todo':
                 if (isOpen) {
-                    console.log(_state)
                     const createToDoForm = FormController.createForm('todo')
                     modalContainer.appendChild(createToDoForm.parentContainer)
-                    // const createToDoForm = AddFormToModal(todoForm)
-                    // modalContainer.appendChild(createToDoForm)
                 }
                 return
             case 'open-edit-modal':
@@ -423,7 +424,8 @@ const Controller = (() => {
                 toggleModal(e)
                 return
             case 'create-note':
-                toggleTable({type: 'item', value: 'create-note', title: null})
+                _changeTableView({type: 'note', value: 'create-note', title: null})
+                // toggleTable({type: 'item', value: 'create-note', title: null})
                 return
             case 'create-checklist':
                 console.log("CREATE A CHECKLIST")
@@ -435,19 +437,28 @@ const Controller = (() => {
         const { type, value, title } = _action
         const FOLDERSTABLE = Main.getFoldersTable()
         const ITEMSTABLE = Main.getItemsTable()
+        const NOTEFORMTABLE = Main.getNoteFormTable()
         let data
         let visibleTable
         let hiddenTable
+        let hiddenFormTable = NOTEFORMTABLE
 
         function toggleVisibleTableClasses() {
             visibleTable.classList.remove('hidden')
             hiddenTable.classList.add('hidden')
+            hiddenFormTable.classList.add('hidden')
+            return
+        }
+
+        function toggleNoteFormVisibility() {
+            visibleTable.classList.remove('hidden')
+            hiddenFormTable.classList.add('hidden')
+            Main.toggleSearchBar(true)
             return
         }
 
         function loadItemsTableData() {
             data = getItemsByFolderId(_state.folder.id)
-            console.log(_state.folder.id)
             Main.loadItemsTable(data, _state.folder.id)
             return
         }
@@ -478,8 +489,14 @@ const Controller = (() => {
                 hiddenTable = ITEMSTABLE
                 toggleVisibleTableClasses()
                 return
+            case 'create-note':
+                visibleTable = NOTEFORMTABLE
+                hiddenTable = ITEMSTABLE
+                hiddenFormTable = FOLDERSTABLE
+                console.log("HSFDSDF")
+                toggleNoteFormVisibility()
+                return
         }
-        console.log(_state)
         return
     }
     // --- Control The View of the Table When a Table List Item is Clicked

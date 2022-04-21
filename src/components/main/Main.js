@@ -1,6 +1,6 @@
-import Controller from "../../controller"
 import { capitalizeString } from "../../functions"
 import { ListItem, Modal, SearchBar } from "../elements"
+import FormController from "../forms/FormController"
 
 const Main = (function() {
     let _mainContainer
@@ -8,6 +8,13 @@ const Main = (function() {
     let _tableContainer
     let _foldersTable
     let _itemsTable
+    let _noteFormTable
+
+    function _appendFormToTable() {
+        const form = FormController.createForm('note')
+        _noteFormTable.appendChild(form.parentContainer)
+        return
+    }
 
     // --- Initializes the DOM elements and returns the newly create DOM element
     function _init(data) {
@@ -17,31 +24,40 @@ const Main = (function() {
         _tableContainer = document.createElement('div')
         _foldersTable = document.createElement('div')
         _itemsTable = document.createElement('div')
+        _noteFormTable = document.createElement('div')
         // - set id's of each DOM element
         _mainContainer.setAttribute('id', 'mainContainer')
         _tableContainer.setAttribute('id', 'tableContainer')
         _foldersTable.setAttribute('id', 'foldersTable')
         _itemsTable.setAttribute('id', 'itemsTable')
-        _tableContainer.classList.add('table-container', 'flex', 'col')
-        _foldersTable.classList.add('folders-table', 'flex', 'col')
-        _itemsTable.classList.add('items-table', 'flex', 'col')
+        _noteFormTable.setAttribute('id', 'noteFormTable')
+        _tableContainer.classList.add('table', 'table-container', 'flex', 'col')
+        _foldersTable.classList.add('table', 'folders-table', 'flex', 'col')
+        _itemsTable.classList.add('table', 'items-table', 'flex', 'col')
+        _noteFormTable.classList.add('table', 'notes-form-table', 'flex', 'col')
 
+        _appendFormToTable()
+        
         // - take the data being passed by the Controller where the function chain started
-        data.forEach(folder => {
-            const folderName = capitalizeString(folder.getName())
-            const dataAttribute = { attributeName: 'data-folder-id', attributeValue: folder.getId() }
-            const folderData = { elementText: folderName }
-            const li = ListItem(dataAttribute, folderData, 'toggle-folder')
-            _foldersTable.appendChild(li)
-        })
+        if (data) {
+            data.forEach(folder => {
+                const folderName = capitalizeString(folder.getName())
+                const dataAttribute = { attributeName: 'data-folder-id', attributeValue: folder.getId() }
+                const folderData = { elementText: folderName }
+                const li = ListItem(dataAttribute, folderData, 'toggle-folder')
+                _foldersTable.appendChild(li)
+            })
+        }
 
         // - DEFAULT CLASS NAME: add a class of hidden to the _itemsTable DOM element
         //   to ensure that it is not visible on the screen on initial load
         _itemsTable.classList.add('hidden')
+        _noteFormTable.classList.add('hidden')
 
         // - append the elements
         _tableContainer.appendChild(_foldersTable)
         _tableContainer.appendChild(_itemsTable)
+        _tableContainer.appendChild(_noteFormTable)
         _mainContainer.appendChild(_searchBar)
         _mainContainer.appendChild(_tableContainer)
         // - return container
@@ -90,9 +106,33 @@ const Main = (function() {
         }
         return
     }
+    // --- Generates the notes form table
+    function _loadNoteFormTable(data) {
+        while (_mainContainer.children.length > 0) {
+            _mainContainer.children[0].remove()
+        }
 
-    function _updateCountOfFolderItems() {
-        
+        _mainContainer.appendChild(_noteFormTable)
+
+        // if (data) {
+        //     data.forEach(value => {
+        //         // const folderName = capitalizeString(folder.getName())
+        //         // const dataAttribute = { attributeName: 'data-folder-id', attributeValue: folder.getId() }
+        //         // const folderData = { elementText: folderName }
+        //         // const li = ListItem(dataAttribute, folderData, 'toggle-folder')
+        //         // _foldersTable.appendChild(li)
+        //     })
+        // } else {
+            
+        // }
+        return _mainContainer
+    }
+
+    function _toggleSearchBar(hide) {
+        if (hide) {
+            _searchBar.style.display = 'none'
+        }
+        return    
     }
 
     function init(data) { return _init(data) }
@@ -101,8 +141,11 @@ const Main = (function() {
     function getTableContainer() { return _tableContainer }
     function getFoldersTable() { return _foldersTable }
     function getItemsTable() { return _itemsTable }
+    function getNoteFormTable() { return _noteFormTable }
     function loadFoldersTable(data) {return _loadFoldersTable(data)}
     function loadItemsTable(data, folderName) { return _loadItemsTable(data, folderName) }
+    function loadNoteFormTable(data) { return _loadNoteFormTable(data) }
+    function toggleSearchBar(hide) { return _toggleSearchBar(hide) }
 
     return {
         init: init,
@@ -111,8 +154,11 @@ const Main = (function() {
         getTableContainer: getTableContainer,
         getFoldersTable: getFoldersTable,
         getItemsTable: getItemsTable,
+        getNoteFormTable: getNoteFormTable,
         loadFoldersTable: loadFoldersTable,
-        loadItemsTable: loadItemsTable
+        loadItemsTable: loadItemsTable,
+        loadNoteFormTable: loadNoteFormTable,
+        toggleSearchBar: toggleSearchBar
     }
 })()
 
