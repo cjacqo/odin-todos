@@ -40,7 +40,7 @@ const FormController = (function() {
                 break
             default:
                 Database.addItem({type: _formType, data: formValues})
-                // Update the View of the Last Table that was Visible
+                Controller.updateTable('item')
                 break
         }
         return

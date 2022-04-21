@@ -187,8 +187,9 @@ const Controller = (() => {
                 Main.loadFoldersTable(Database.getFolders())
                 return
             case 'item':
-                // loadItemsTableData()
-                // Main.loadItemsTable(Database.getItemsByFolderId(`${folderId}s`))
+                if (_state.folder.id !== null) {
+                    Main.loadItemsTable(Database.getItemsByFolderId(_state.folder.id))
+                }
                 return
         }
     }
@@ -336,83 +337,7 @@ const Controller = (() => {
                 }
             case 'create-todo':
                 if (isOpen) {
-                    // !!! FINISH
-                    // --- complete filling in the data for a todoForm
-                    const todoForm = {
-                        fieldSets: [
-                            {
-                                id: 0,
-                                questions: [
-                                    {
-                                        required: true,
-                                        minlength: 1,
-                                        maxlength: 20,
-                                        type: 'text',
-                                        placeholder: 'Title',
-                                        id: 'todoName',
-                                        label: false,
-                                        name: 'item-name-input'
-                                    },
-                                    {
-                                        required: false,
-                                        minlength: 1,
-                                        maxlength: 40,
-                                        type: 'textarea',
-                                        placeholder: 'Notes',
-                                        id: 'todoNote',
-                                        label: false,
-                                        name: 'item-note'
-                                    }
-                                ]
-                            },
-                            {
-                                id: 1,
-                                questions: [
-                                    {
-                                        type: 'date'
-                                    },
-                                    {
-                                        type: 'time'
-                                    }
-                                ]
-                            },
-                            {
-                                id: 2,
-                                questions: [
-                                    {
-                                        required: false,
-                                        type: 'radio',
-                                        name: 'priority-select',
-                                        options: ['none', 'low', 'medium', 'high'],
-                                        id: 'todoPrioritySelect',
-                                        title: 'Priority'
-                                    },
-                                    {
-                                        required: false,
-                                        type: 'select',
-                                        name: 'folder-select',
-                                        options: Database.getEditableFolders(),
-                                        id: 'todoFolderSelect',
-                                        title: 'Add to Folder'
-                                    }
-                                ]
-                            }
-                        ],
-                        id: 'addTodo',
-                        formInfo: ['Details'],
-                        buttons: [
-                            {
-                                type: 'button',
-                                value: 'close',
-                                text: 'Cancel'
-                            },
-                            {
-                                type: 'submit',
-                                text: 'Done',
-                                creationValue: 'todo'
-                            }
-                        ]
-                    }
+                    console.log(_state)
                     const createToDoForm = FormController.createForm('todo')
                     modalContainer.appendChild(createToDoForm.parentContainer)
                     // const createToDoForm = AddFormToModal(todoForm)
