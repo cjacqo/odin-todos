@@ -24,6 +24,7 @@ const Header = (function() {
         // - set the title of the page to the default title on page load
         _title = 'Folders'
         _headerTitle.innerText = _title
+        return
     }
 
     function _handleForwardClasses() {
@@ -39,6 +40,7 @@ const Header = (function() {
         _subHeaderTitle.classList.add('hidden')
         _headerTitle.classList.remove('back-button')
         _headerTitle.classList.add('main-title')
+        return
     }
 
     function _removeSubTitleAndEditCheckBox() {
@@ -69,6 +71,7 @@ const Header = (function() {
         const { header, subHeader } = titles
         _headerTitle.innerText = header
         _subHeaderTitle.innerText = subHeader
+        return
     }
 
     // --- Initializes the DOM elements and returns the newly create DOM element
@@ -85,9 +88,9 @@ const Header = (function() {
         }
 
         _headerTitle.addEventListener('click', (e) => {
-            console.log(e.target.dataset)
             if (e.target.dataset) {
-                Controller.toggleTable({type: e.target.dataset.tableAction, value: e.target.dataset.value, title: e.target.dataset.title})
+                Controller.controlTableView('back', e)
+                // Controller.toggleTable({type: e.target.dataset.tableAction, value: e.target.dataset.value, title: e.target.dataset.title})
             }
         })
         

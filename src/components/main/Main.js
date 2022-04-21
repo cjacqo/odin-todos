@@ -31,7 +31,7 @@ const Main = (function() {
             const folderName = capitalizeString(folder.getName())
             const dataAttribute = { attributeName: 'data-folder-id', attributeValue: folder.getId() }
             const folderData = { elementText: folderName }
-            const li = ListItem(dataAttribute, folderData, 'toggle-table')
+            const li = ListItem(dataAttribute, folderData, 'toggle-folder')
             _foldersTable.appendChild(li)
         })
 
@@ -58,7 +58,7 @@ const Main = (function() {
             const folderName = capitalizeString(folder.getName())
             const dataAttribute = { attributeName: 'data-folder-id', attributeValue: folder.getId() }
             const folderData = { elementText: folderName }
-            const li = ListItem(dataAttribute, folderData, 'toggle-table')
+            const li = ListItem(dataAttribute, folderData, 'toggle-folder')
             _foldersTable.appendChild(li)
         })
         return

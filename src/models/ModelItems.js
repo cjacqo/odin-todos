@@ -2,16 +2,16 @@ const DatabaseItem = (type, id, data) => {
     const getType = () => {return type}
     const getId   = () => {return id}
     const getName = () => {return data.name}
-    const createObj = (type) => {
+    const createObj = (type, id, data) => {
         switch(type) {
             case 'folder':
-                return FolderItem(type, data)
+                return FolderItem(type, id, data)
             case 'todo':
-                return ToDoItem(type, data)
+                return ToDoItem(type, id, data)
             case 'note':
-                return NoteItem(type, data)
+                return NoteItem(type, id, data)
             case 'checklist':
-                return CheckList(type, data)
+                return CheckList(type, id, data)
         }
     }
     return {getType, getId, getName, createObj}
@@ -57,4 +57,4 @@ const CheckListItem = (type, id, data) => {
     return Object.assign({}, prototype, {getFolder, getItems, getQuantity, getComplete})
 }
 
-export { FolderItem, ToDoItem, NoteItem, CheckListItem }
+export { FolderItem, ToDoItem, NoteItem, CheckListItem, DatabaseItem }

@@ -196,7 +196,9 @@ const Forms = [
                             { name: 'maxlength', value: 30 },
                             { name: 'id', value: 'noteTitle' },
                             { name: 'name', value: 'note-title-input' }
-                        ]
+                        ],
+                        options: null,
+                        title: null
                     }
                 ]
             },
@@ -211,9 +213,18 @@ const Forms = [
                             { name: 'placeholder', value: null },
                             { name: 'id', value: 'noteNote' },
                             { name: 'name', value: 'note-note-input' }
-                        ]
+                        ],
+                        options: null,
+                        title: null
                     }
                 ]
+            }
+        ],
+        buttons: [
+            {
+                type: 'button',
+                value: 'close',
+                text: 'Done'
             }
         ]
     }

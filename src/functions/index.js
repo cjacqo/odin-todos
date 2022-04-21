@@ -1,5 +1,3 @@
-import Controller from "../controller"
-
 const removeSpacesToLowerCase = (str) => {
     return str.replace(/\s/g, '').toLowerCase()
 }

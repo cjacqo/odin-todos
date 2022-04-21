@@ -58,17 +58,22 @@ const ListItem = (dataAttribute, itemData, controllerFunction, typeAttribute) =>
     editIconsContainer.classList.add('edit-icon-container', 'hidden', 'flex')
     const toggleEditMenuIcon = EditIcon({iconClass: 'fa-ellipsis', tableItemId: attributeValue, actionType: 'open-edit-modal', isYellow: true})
     const dragEditItemIcon = EditIcon({iconClass: 'fa-bars', tableItemId: attributeValue, actionType: 'drag-table-item'})
+
     li.addEventListener('click', (e) => {
-        switch(controllerFunction) {
-            case 'toggle-table':
-                console.log("TOTOTOT")
-                Controller.toggleTable({type: 'folder', value: attributeValue, title: elementText})
-                break
-            case 'toggle-item':
-                Controller.toggleItem({type: 'item', value: attributeValue, title: elementText, itemType: attValue})
-                break
-        }
+        Controller.controlTableView(controllerFunction, e)
     })
+    
+    // li.addEventListener('click', (e) => {
+    //     switch(controllerFunction) {
+    //         case 'toggle-table':
+    //             console.log("TOTOTOT")
+    //             Controller.toggleTable({type: 'folder', value: attributeValue, title: elementText})
+    //             break
+    //         case 'toggle-item':
+    //             Controller.toggleItem({type: 'item', value: attributeValue, title: elementText, itemType: attValue})
+    //             break
+    //     }
+    // })
 
     // - run check of database to make sure that edit buttons are not available for default folders
     if (Controller.checkCanDeleteFolder(attributeValue)) {
@@ -207,7 +212,7 @@ const SmallPopUpMenu = () => {
         btn.innerText = button.name
 
         btn.addEventListener('click', (e) => {
-            Controller.controllFormView(e)
+            Controller.controlFormView(e)
         })
         
         container.appendChild(btn)

@@ -6,6 +6,8 @@ import TimeSelector from "./inputs/TimeSelector"
 import PrioritySelector from "./inputs/PrioritySelector"
 import Controller from '../../controller'
 import FolderSelector from './inputs/FolderSelector'
+import Database from '../../data'
+import Main from '../main/Main'
 
 const FormController = (function() {
  
@@ -14,6 +16,32 @@ const FormController = (function() {
             return form.formId === _formId
         })
         return data
+    }
+
+    function _handleFormSubmission(_formType, _inputs) {
+        let formData = []
+        let formValues = []
+        _inputs.forEach(_input => {
+            const inputObj = {}
+            inputObj.id = _input.id
+            inputObj.value = _input.value
+            formData.push(inputObj)
+        })
+        _inputs.forEach(_input => {
+            const key = _input.id
+            const value = _input.value
+            const arrItem = [key, value]
+            formValues.push(arrItem)
+        })
+        switch(_formType) {
+            case 'folder':
+                Database.addFolder(formData[0].value)
+                break
+            default:
+                Database.addItem({type: _formType, data: formValues})
+                break
+        }
+        return
     }
 
     function _appendChildToParent(parent, child) {
@@ -116,6 +144,7 @@ const FormController = (function() {
                 btn.setAttribute('disabled', true)
                 btn.addEventListener('click', (e) => {
                     e.preventDefault()
+                    _handleFormSubmission(`${creationValue}`, _formInputs)
                     Controller.handleCreation(`${creationValue}`, _formInputs)
                     Controller.toggleModal()
                 })

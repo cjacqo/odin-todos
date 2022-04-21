@@ -9,7 +9,7 @@ import Header from "../components/header/Header"
 import Main from "../components/main/Main"
 import Database from "../data"
 import { Folders, Items } from "../data/data"
-import { dateValueToString, getDateAnswerAsString, getDayText, getMonthText, getTodaysDate } from "../functions"
+import { capitalizeString, dateValueToString, getDateAnswerAsString, getDayText, getMonthText, getTodaysDate } from "../functions"
 import PageView from "../view"
 
 const Controller = (() => {
@@ -37,23 +37,31 @@ const Controller = (() => {
         let _items = Database.getItemsByFolderId(folderId)
         return _items.length
     }
+    // --- Get the type of the item by the states itemId value
+    const getStateItemTypeByItemId = () => {
+        const _item = Database.getItemTypeById(_state.folder.id, _state.item.id)
+        return _item
+    }
     // --- Create items
     const handleCreation = (itemType, data) => {
         let dataObj
         switch(itemType) {
-            case 'folder':
-                const folderName = data[0].value
-                Database.addFolder(folderName)
-                break
-            case 'todo':
-                const name = data[0].value
-                const todoNote = data[1].value
-                const duedate = data[2].value
-                const duetime = data[3].value
-                const priority = data[4].value
-                dataObj = {name, todoNote, duedate, duetime, priority}
-                Database.addItem({type: 'todo', data: dataObj})
-                break
+            // case 'folder':
+            //     const folderName = data[0].value
+            //     Database.addFolder(folderName)
+            //     break
+            // case 'todo':
+            //     const name = data[0].value
+            //     const todoNote = data[1].value
+            //     const duedate = data[2].value
+            //     const duetime = data[3].value
+            //     const priority = data[4].value
+            //     const folder = data[5].value
+            //     const test = Database.getFolder('name', folder)
+            //     console.log(test)
+            //     dataObj = {name, todoNote, duedate, duetime, priority}
+            //     Database.addItem({type: 'todo', data: dataObj})
+            //     break
             case 'item':
                 console.log("DFSDFSDF")
         }
@@ -107,16 +115,25 @@ const Controller = (() => {
         // - change disabled value on submit button if length is greater then 0
         const submitBtn = document.querySelector('.form-submit-button')
         if (e.target.value.length !== 0) {
-            const folderExists = checkIfFolderExists(e.target.value)
-            if (folderExists.length > 0) {
-                console.log('FOLDER EXISTS ALREADY ERROR TO USER TOGGLED HERE')
-                submitBtn.setAttribute('disabled', true)
-            } else {
-                submitBtn.removeAttribute('disabled')
-            }
+            // const folderExists = checkIfFolderExists(e.target.value)
+            submitBtn.removeAttribute('disabled')
+
+            // if (folderExists.length > 0) {
+            //     console.log('FOLDER EXISTS ALREADY ERROR TO USER TOGGLED HERE')
+            //     submitBtn.setAttribute('disabled', true)
+            // } else {
+            //     submitBtn.removeAttribute('disabled')
+            // }
         } else {
             submitBtn.setAttribute('disabled', true)
         }
+    }
+
+    function loadItemsTableData() {
+        // const data = getItemsByFolderId(_state.folder.id)
+        // Main.loadItemsTable(data, title)
+        console.log("SDFSDFS")
+        return
     }
 
     // --- DOM HANDLERS --- //
@@ -130,8 +147,11 @@ const Controller = (() => {
         const dataTableAction = {name: 'data-table-action', value: tableAction}
         const dataValue = {name: 'data-value', value: state.folder.id}
         const dataTitle = {name: 'data-title', value: tableAction}
+
+        console.log(action)
         switch(action) {
             case 'open-folder':
+            case 'back-to-folder-items':
                 Header.setTitles({header: 'Folders', subHeader: state.folder.name})
                 Header.handleClasses(0)
                 Header.setHeaderTitleAttributes([dataTableAction, dataValue, dataTitle], true)
@@ -149,7 +169,7 @@ const Controller = (() => {
                 Header.handleClasses(0)
                 Header.setHeaderTitleAttributes([dataTableAction, dataValue, dataTitle], true)
                 return
-            case 'open-home':
+            case 'back-to-folders':
                 Header.setTitles({header: 'Folders', subHeader: ''})
                 if (Header.getSubHeaderTitle() instanceof HTMLInputElement) {
                     Header.changeSubTitleToText(state.item.name)
@@ -161,15 +181,20 @@ const Controller = (() => {
         }
     }
     // --- Update the tables when new data is added
-    const updateTable = (tableType) => {
+    const updateTable = (tableType, folderId) => {
         switch(tableType) {
             case 'folder':
-                Main.loadFoldersTable(Database.getFolders())
+                // Main.loadFoldersTable(Database.getFolders())
                 return
-            case 'todo':
-                // Main.loadItemsTable(Database.getItemsByFolderId('todos'))
+            case 'item':
+                // loadItemsTableData()
+                // Main.loadItemsTable(Database.getItemsByFolderId(`${folderId}s`))
                 return
         }
+    }
+    const updateDatabaseForTableViews = () => {
+        Main.loadFoldersTable(Database.getFolders())
+        Main.loadItemsTable(Database.getItems())
     }
     // --- Remove the Main Container Children
     const removeMainContainerChildren = () => {
@@ -196,7 +221,7 @@ const Controller = (() => {
     //                     type  = 'folder' or 'home'
     //                     value = folder or item name, or if the user goes back
     const toggleTable = (action, id) => {
-        const { type, value, title, actionName } = action
+        const { type, value, title } = action
         let data
         let visibleTable
         let hiddenTable
@@ -205,11 +230,8 @@ const Controller = (() => {
             togglePopUp()
         }
 
-        const createFolderButton = document.getElementById('create-folderAction')
-        if (_state.folder.name !== null) {
-            createFolderButton.classList.toggle('hidden')
-            createFolderButton.children[0].removeAttribute('disabled')
-        }
+        _handleCreateFolderButtonVisibility(type)
+
         switch(type) {
             case 'folder':
                 // - change the header title for opening a folder
@@ -224,8 +246,8 @@ const Controller = (() => {
                 Main.loadItemsTable(data, title)
                 visibleTable.classList.remove('hidden')
                 hiddenTable.classList.add('hidden')
-                createFolderButton.classList.toggle('hidden')
-                createFolderButton.children[0].setAttribute('disabled', true)
+                // createFolderButton.classList.toggle('hidden')
+                // createFolderButton.children[0].setAttribute('disabled', true)
                 toggleEdit('force')
                 return
             case 'back-to-folders':
@@ -264,6 +286,19 @@ const Controller = (() => {
                 }
                 return
         }
+    }
+    // --- Toggle Item
+    const toggleItem = ({ type, value, title, itemType }) => {
+        // - change the header title
+        console.log("TITLE: " + title)
+        _state.item.name = title
+        _state.item.id = value
+        changeHeaderTitle('open-item', _state, 'folder')
+        // !!! TODO !!!
+        // COMPLETE THE FUNCTIONS TO OPEN THE EDIT VIEW OF THE SELECTED ITEM
+        console.log("OPEN ITEM: " + title)
+        console.log("ITEM ID: " + value)
+        console.log("ITEM TYPE: " + itemType)
     }
     // --- Toggle modal
     const toggleModal = (e) => {
@@ -384,50 +419,6 @@ const Controller = (() => {
                     // modalContainer.appendChild(createToDoForm)
                 }
                 return
-            // case 'create-note':
-            //     if (isOpen) {
-            //         // const noteForm = {
-            //         //     fieldSets: [
-            //         //         {
-            //         //             id: 0,
-            //         //             questions: [
-            //         //                 {
-            //         //                     required: true,
-            //         //                     minlength: 1,
-            //         //                     maxlength: 30,
-            //         //                     type: 'text',
-            //         //                     placeholder: '',
-            //         //                     id: 'noteName',
-            //         //                     label: false,
-            //         //                     name: 'item-name-input'
-            //         //                 },
-            //         //                 {
-            //         //                     required: true,
-            //         //                     minlength: 1,
-            //         //                     maxlength: 2000,
-            //         //                     type: 'textarea',
-            //         //                     placeholder: '',
-            //         //                     id: 'noteNote',
-            //         //                     label: false,
-            //         //                     name: 'item-note-input'
-            //         //                 }
-            //         //             ]
-            //         //         }
-            //         //     ],
-            //         //     id: 'addNote',
-            //         //     formInfo: [],
-            //         //     buttons: [
-            //         //         {
-            //         //             type: 'submit',
-            //         //             text: 'Done',
-            //         //             creationValue: 'note'
-            //         //         }
-            //         //     ]
-            //         // }
-            //         toggleTable({type: 'item', value: 'note', title: null})
-            //         const createNoteForm = AddNoteFormToModal()
-            //         modalContainer.appendChild(createNoteForm)
-            //     }
             case 'open-edit-modal':
                 if (isOpen) {
                     const editFolderModal = EditModal(e.currentTarget.dataset.tableItemId)
@@ -453,19 +444,6 @@ const Controller = (() => {
             smallPopUp.children[0].classList.add('hidden')
         }
         _popUpOpen = !_popUpOpen
-    }
-    // --- Toggle Item
-    const toggleItem = ({ type, value, title, itemType }) => {
-        // - change the header title
-        console.log("TITLE: " + title)
-        _state.item.name = title
-        _state.item.id = value
-        changeHeaderTitle('open-item', _state, 'folder')
-        // !!! TODO !!!
-        // COMPLETE THE FUNCTIONS TO OPEN THE EDIT VIEW OF THE SELECTED ITEM
-        console.log("OPEN ITEM: " + title)
-        console.log("ITEM ID: " + value)
-        console.log("ITEM TYPE: " + itemType)
     }
     // --- Toggle Edit
     const toggleEdit = (isChecked) => {
@@ -512,7 +490,7 @@ const Controller = (() => {
         }
     }
     // --- Controll What Form gets Appended and How
-    const controllFormView = (e) => {
+    const controlFormView = (e) => {
         const value = e.currentTarget.value
         switch (value) {
             case 'create-todo':
@@ -526,6 +504,131 @@ const Controller = (() => {
                 console.log("CREATE A CHECKLIST")
                 return
         }
+    }
+    // --- Change the View of the Table
+    const _changeTableView = (_action) => {
+        const { type, value, title } = _action
+        const FOLDERSTABLE = Main.getFoldersTable()
+        const ITEMSTABLE = Main.getItemsTable()
+        let data
+        let visibleTable
+        let hiddenTable
+
+        function toggleVisibleTableClasses() {
+            visibleTable.classList.remove('hidden')
+            hiddenTable.classList.add('hidden')
+            return
+        }
+
+        function loadItemsTableData() {
+            data = getItemsByFolderId(_state.folder.id)
+            console.log(_state.folder.id)
+            Main.loadItemsTable(data, _state.folder.id)
+            return
+        }
+
+        if (_popUpOpen) {
+            togglePopUp()
+        }
+
+        _handleCreateFolderButtonVisibility(type)
+        changeHeaderTitle(value, _state, _getSecondaryAction(value))
+
+        switch (value) {
+            case 'open-folder':
+            case 'back-to-folder-items':
+                visibleTable = ITEMSTABLE
+                hiddenTable = FOLDERSTABLE
+                loadItemsTableData()
+                toggleVisibleTableClasses()
+                toggleEdit('force')
+                return
+            case 'open-item':
+                const itemType = getStateItemTypeByItemId()
+                // DETERMINE THE TYPE OF ITEM TO DECIDE WHAT VIEW TO OPEN
+                console.log(itemType)
+                return
+            case 'back-to-folders':
+                visibleTable = FOLDERSTABLE
+                hiddenTable = ITEMSTABLE
+                toggleVisibleTableClasses()
+                return
+        }
+        console.log(_state)
+        return
+    }
+    // --- Control The View of the Table When a Table List Item is Clicked
+    const controlTableView = (controllerFunction, e) => {
+        const { folderId, itemId } = e.currentTarget.dataset
+        switch (controllerFunction) {
+            case 'toggle-folder':
+                _updateState(controllerFunction, folderId)
+                _changeTableView({type: 'folder', value: 'open-folder'})
+                break
+            case 'toggle-item':
+                _updateState(controllerFunction, itemId)
+                _changeTableView({type: 'item', value: 'open-item'})
+                break
+            case 'back':
+                const { tableAction } = e.currentTarget.dataset
+                if (tableAction === 'back-to-folders') {
+                    _updateState(tableAction, false)
+                    _updateState('item', false)
+                    _changeTableView({type: 'folder', value: tableAction})
+                } else if (tableAction === 'back-to-folder-items') {
+                    _updateState('folder', _state.folder.id)
+                    _updateState('item', false)
+                    _changeTableView({type: 'item', value: 'open-folder'})
+                }
+                break
+        }
+        return
+    }
+    // --- Handle State Update
+    const _updateState = (stateType, stateValue) => {
+        if (stateType.includes('folder')) {
+            if (stateValue) {
+                _state.folder.name = capitalizeString(Database.getFolderNameById(stateValue))
+                _state.folder.id = stateValue
+            } else {
+                _state.folder.name = null
+                _state.folder.id = null
+            }
+        }
+        if (stateType.includes('item')) {
+            if (stateValue) {
+                _state.item.name = capitalizeString(Database.getItemNameById(_state.folder.id, stateValue))
+                _state.item.id = stateValue
+            } else {
+                _state.item.name = null
+                _state.item.id = null
+            }
+        }
+        return
+    }
+    // --- Handle State Reset
+    const _resetState = (stateType) => {
+        if (stateType.includes('folders')) {
+            _state.folder.name = null
+            _state.folder.id = null
+            return
+        }
+    }
+    // --- Get Secondary Action
+    const _getSecondaryAction = (previousAction) => {
+        return previousAction === 'open-folder' ? 'back-to-folders' : previousAction === 'open-item' ? 'back-to-folder-items' : ''
+    }
+    // --- Handle Visibility of CREATE FOLDER button
+    const _handleCreateFolderButtonVisibility = () => {
+        const createFolderButton = document.getElementById('create-folderAction')
+        if (_state.folder.name !== null) {
+            createFolderButton.classList.add('hidden')
+            createFolderButton.children[0].setAttribute('disabled', true)
+        } else {
+            createFolderButton.classList.remove('hidden')
+            createFolderButton.children[0].removeAttribute('disabled')
+        }
+        return
     }
     // --- Toggle Question Visibility
     const updateQuestionAnswerDisplay = (element, value, isHidden) => {
@@ -699,7 +802,8 @@ const Controller = (() => {
         toggleEdit: toggleEdit,
         toggleQuestionVisibility: toggleQuestionVisibility,
         startItemCreation: startItemCreation,
-        controllFormView: controllFormView,
+        controlFormView: controlFormView,
+        controlTableView: controlTableView,
         handleStyleOfDateSelection: handleStyleOfDateSelection,
         handleDayOfWeekSelection: handleDayOfWeekSelection,
         getFoldersFromDb: getFoldersFromDb
