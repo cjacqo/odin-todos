@@ -36,9 +36,11 @@ const FormController = (function() {
         switch(_formType) {
             case 'folder':
                 Database.addFolder(formData[0].value)
+                Controller.updateTable('folder')
                 break
             default:
                 Database.addItem({type: _formType, data: formValues})
+                // Update the View of the Last Table that was Visible
                 break
         }
         return

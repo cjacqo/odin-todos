@@ -184,7 +184,7 @@ const Controller = (() => {
     const updateTable = (tableType, folderId) => {
         switch(tableType) {
             case 'folder':
-                // Main.loadFoldersTable(Database.getFolders())
+                Main.loadFoldersTable(Database.getFolders())
                 return
             case 'item':
                 // loadItemsTableData()

@@ -20,7 +20,14 @@ const Database = (function() {
 
     const init = (function() {
         _defaultFolders.forEach(_folder => {
+            // const folderObj = DatabaseItem()
+            // console.log(folderObj)
+            // folderObj.createObj('folder', _folder)
+
             const folderObj = FolderItem('folder', _folder, {name: _folder, items: [], canDelete: false})
+            // folderObj.createDataObj(_folder)
+            // folderObj.createObj('folder', _folder, {name: _folder, items: [], canDelete: false})
+            // const folderObj = FolderItem('folder', _folder, {name: _folder, items: [], canDelete: false})
             _foldersDB.push(folderObj)
         })
         return
@@ -44,7 +51,6 @@ const Database = (function() {
     function addFolder(folderName) {
         const folderObj = FolderItem('folder', _folderCounter(), {name: folderName, items: [], canDelete: true})
         _foldersDB.push(folderObj)
-        Controller.updateTable('folder')
         return
     }
 
@@ -55,6 +61,7 @@ const Database = (function() {
 
     // --- ITEMS
     function _addItemToFolderById(folderName, item) {
+        console.log(item.getName())
         let theItemFolder = _getFolderByName(folderName)
         theItemFolder.setItems({items: item})
         return
@@ -70,11 +77,9 @@ const Database = (function() {
         return
     }
     function _addItemToFolders(item, data, defaultFormName) {
-        data.forEach(_data => {
-            if (data[data.length - 1] !== 'none') {
-                _addItemToFolderById(value)
-            }
-        })
+        if (item.getFolder() !== 'none') {
+            _addItemToFolderById(item.getFolder(), item)
+        }
         _addItemToAllFolder(item)
         _addItemToDefaultFolder(defaultFormName, item)
         return
@@ -82,21 +87,75 @@ const Database = (function() {
 
     function addItem(item) {
         const { type, data } = item
-        const dataObj = Object.fromEntries(data)
-        console.log(dataObj)
-        let itemObj = DatabaseItem()
-        console.log(data)
-        itemObj.createObj(type, _itemsCounter(), data)
-        // --- Add item to it's default folder, and add each item to All folder
-        _addItemToFolders(itemObj, data, `${type}s`)
-        _itemsDB.push(itemObj)
+        const theItemModel = _createItemModelByType(type, data)
+        // --- Update the Database and 
+        //     Add item to it's folders
+        _itemsDB.push(theItemModel)
+        _addItemToFolders(theItemModel, data, `${type}s`)
         return
+    }
+
+    function _createItemModelByType(type, data) {
+        const dataObj = _createDataObjForModel(type, data)
+        switch (type) {
+            case 'todo':
+                return ToDoItem(type, _itemsCounter(), dataObj)
+            case 'note':
+                return NoteItem(type, _itemsCounter(), dataObj)
+            case 'checklist':
+                return CheckListItem(type, _itemsCounter(), dataObj)
+        }
+    }
+
+    function _createDataObjForModel(type, data) {
+        let dataObj = {}
+        switch (type) {
+            case 'todo':
+                data.forEach(_dataItem => {
+                    const key = _dataItem[0]
+                    const value = _dataItem[1]
+                    if (key.includes('Name')) {
+                        dataObj.name = value
+                    }
+                    if (key.includes('Note')) {
+                        dataObj.todoNote = value
+                    }
+                    if (key.includes('date')) {
+                        dataObj.duedate = value
+                    }
+                    if (key.includes('time')) {
+                        dataObj.duetime = value
+                    }
+                    if (key.includes('priority')) {
+                        dataObj.priority = value
+                    }
+                    if (key.includes('Folder')) {
+                        dataObj.folderId = value
+                    }
+                })
+                break
+            case 'note':
+                data.forEach(_dataItem => {
+                    const key = _dataItem[0]
+                    const value = _dataItem[1]
+                    if (key.includes('Name')) {
+                        dataObj.name = value
+                    }
+                    if (key.includes('Note')) {
+                        dataObj.noteNote = value
+                    }
+                    if (key.includes('Folder')) {
+                        dataObj.folderId = value
+                    }
+                })
+                break
+        }
+        return dataObj
     }
 
     function _getItemFromFolderById(items, itemId) {
         return items.find(item => item.getId() == itemId)
     }
-
 
     function getFolders() { return _foldersDB }
     function getFolderItemCountById(folderId) {return _filterFolder(folderId) }
