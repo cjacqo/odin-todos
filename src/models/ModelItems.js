@@ -1,26 +1,8 @@
 const DatabaseItem = (type, id, data) => {
-    let dataObj = {}
     const getType       = () => {return type}
     const getId         = () => {return id}
     const getName       = () => {return data.name}
-    const getDataObj    = (type, data) => {
-        createDataObj(data)
-        return dataObj
-    }
-    const createObj = (type, id, data) => {
-        switch(type) {
-            case 'folder':
-                return FolderItem(type, id, data)
-            case 'todo':
-                console.log(data)
-                return ToDoItem(type, id, data)
-            case 'note':
-                return NoteItem(type, id, data)
-            case 'checklist':
-                return CheckList(type, id, data)
-        }
-    }
-    return {getType, getId, getName, createObj, getDataObj}
+    return {getType, getId, getName}
 }
 
 const FolderItem = (type, id, data) => {
