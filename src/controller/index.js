@@ -1,4 +1,4 @@
-import { EditModal } from "../components/elements"
+import { EditPopUp } from "../components/elements"
 import Footer from "../components/footer/Footer"
 // import { AddFolderForm, AddFormToModal, AddNoteFormToModal, CreateToDoForm } from "../components/forms"
 import FormController from "../components/forms/FormController"

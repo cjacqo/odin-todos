@@ -14,7 +14,7 @@ const StateControl = (() => {
     let _item = { id: null, name: null, data: null }
     let _form = { toggledOpen: false, name: null, canSubmit: false }
     let _tableState = { tableValue: 'home', folder: null, item: null }
-    let _editItemState = { window: 'modal', item: null }
+    let _editItemState = { window: null, item: null }
 
     function _getFirstStringParam(str) { return str.substring(0, str.indexOf('-')) }
     function _getSecondStringParam(str) { return str.split('-').pop() }
@@ -89,13 +89,6 @@ const StateControl = (() => {
     function _setFormState(name) {
         _form.name = name
         _form.toggledOpen = _state.formOpen
-        return
-    }
-    function _setEditState() {
-        if (_state.formOpen) {
-            _state.formOpen = false
-        }
-        _state.editOpen = !_state.editOpen
         return
     }
     function _setModalState() {
@@ -347,7 +340,7 @@ const StateControl = (() => {
         _state.editOpen = checked
         return
     }
-    function setEditItem(type, id) {
+    function setEditItem(type, id, windowType) {
         let data
         switch(type) {
             case 'home':
@@ -358,6 +351,7 @@ const StateControl = (() => {
                 break
         }
         _editItemState.item = data
+        _editItemState.window = windowType
         return
     }
     function resetTableState() {

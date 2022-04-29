@@ -161,7 +161,7 @@ const Forms = [
                             { name: 'name', value: 'folder-select' },
                             { name: 'id', value: 'todoFolderSelect' },
                         ],
-                        options: Database.getEditableFolders(),
+                        options: 'options',
                         title: 'Add to Folder'
                     }
                 ]

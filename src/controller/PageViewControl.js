@@ -1,4 +1,4 @@
-import { Modal } from "../components/elements"
+import { Modal, EditModal } from "../components/elements"
 import Footer from "../components/footer/Footer"
 import FormController from "../components/forms/FormController"
 import Header from "../components/header/Header"
@@ -12,9 +12,6 @@ const PageViewControl = (() => {
     let _main
     let _footer
     let _modal
-    let _formComponent
-    let _foldersTable
-    let _itemsTable
 
     // --- Initializes the DOM elements of the app and appends to the DOM
     const init = () => {
@@ -39,6 +36,20 @@ const PageViewControl = (() => {
     // - Manipulate DOM Functions
     function _getFirstStringParam(str) { return str.substring(0, str.indexOf('-')) }
     function _getSecondStringParam(str) { return str.split('-').pop() }
+    function _changeModalClassName() {
+        const formOpen = StateControl.getFormOpen()
+        const { editOpen } = StateControl.getWindowState()
+        _modal.removeAttribute('class')
+        _modal.classList.add('modal-container')
+
+        if (formOpen && !editOpen) {
+            return _modal.classList.add('form-modal')
+        } else if (!formOpen && editOpen) {
+            return _modal.classList.add('edit-modal')
+        } else if (!formOpen && !editOpen) {
+            return
+        }
+    }
     function _changeModalComponent(component) {
         if (_modal.children.length > 0) {
             _modal.children[0].remove()
@@ -83,8 +94,11 @@ const PageViewControl = (() => {
         return formElement
     }
     function _getEditElement() {
-        console.log("GET EDIT COMPONENT")
-        return
+        const { item } = StateControl.getEditItemState()
+        const component = {
+            parentContainer: EditModal(item.getName())
+        }
+        return component
     }
     function _openElement(what, value) {
         console.log(what, value)
@@ -159,21 +173,33 @@ const PageViewControl = (() => {
     }
     function _toggleEditCheckBox(editOpen) { return document.getElementById('editCheckBox').checked = editOpen }
     function _handleEditView(editOpen) {
-        _toggleEditCheckBox(editOpen)
         const { tableValue } = StateControl.getTableState()
-        const { item } = StateControl.getEditItemState()
+        const { window, item } = StateControl.getEditItemState()
 
-        switch(tableValue) {
-            case 'home':
-                if (!item) {
-                    _handleEditIconsOnTableItem()
-                } else {
-                    console.log("OPEN THE ITEM THAT IS BEING EDITED")
-                }
-                break
-            case 'folder':
-                console.log("OPEN THE EDIT MODAL FOR THE CURRENT OPEN FOLDER")
-                break
+        _toggleEditCheckBox(editOpen)
+        _handleEditIconsOnTableItem()
+        console.log(window)
+
+        if (editOpen) {
+            switch(window) {
+                case 'modal':
+                    _handleDisplayModal(true)
+                    break
+            }
+            // switch(tableValue) {
+            //     case 'home':
+            //         if (!item) {
+            //         } else {
+            //             console.log("OPEN THE ITEM THAT IS BEING EDITED")
+            //             if (window === 'modal') {
+            //                 _handleDisplayModal(true)
+            //             }
+            //         }
+            //         break
+            //     case 'folder':
+            //         console.log("OPEN THE EDIT MODAL FOR THE CURRENT OPEN FOLDER")
+            //         break
+            // }
         }
         return
     }
@@ -183,6 +209,7 @@ const PageViewControl = (() => {
             const element = isFormOpen ? _getFormElement() : _getEditElement()
             _changeModalComponent(element)
         }
+        _changeModalClassName()
         _toggleVisibilityClasses(_modal, modalOpen)
         return
     }
@@ -279,6 +306,12 @@ const PageViewControl = (() => {
         }
         return
     }
+    function setEditView() {
+        const { editOpen } = StateControl.getWindowState()
+        _handleEditView(editOpen)
+        console.log(StateControl.getActiveStateProperty())
+        return
+    }
 
     return {
         init: init,
@@ -286,7 +319,8 @@ const PageViewControl = (() => {
         handleChangeModalView: handleChangeModalView,
         handleChangeView: handleChangeView,
         handleLoadTables: handleLoadTables,
-        setWindowView: setWindowView
+        setWindowView: setWindowView,
+        setEditView: setEditView
     }
 
 })()

@@ -3,7 +3,6 @@ import Controller from "../../controller"
 import '@fortawesome/fontawesome-free/js/fontawesome'
 import '@fortawesome/fontawesome-free/js/solid'
 import '@fortawesome/fontawesome-free/js/regular'
-import PageView from '../../view'
 import PageViewControl from '../../controller/PageViewControl'
 import StateControl from '../../controller/StateControl'
 import Database from '../../data'
@@ -103,14 +102,21 @@ const EditIcon = (editObj) => {
         editIconContainer.classList.add('edit-icon-wrapper')
         editIcon.classList.add('fa-solid', `${iconClass}`, `${isYellow && 'yellow'}`)
     
-        console.log(actionType)
-        
         editIconContainer.addEventListener('click', (e) => {
             e.stopPropagation()
             e.stopImmediatePropagation()
             const { tableValue } = StateControl.getTableState()
-            console.log(tableValue)
-            StateControl.setEditItem(tableValue, tableItemId, action)
+            const windowType = actionType === 'open-edit-modal' ? 'modal' : 'popup'
+            StateControl.setEditItem(tableValue, tableItemId, windowType)
+            switch(actionType) {
+                case 'open-edit-modal':
+                    StateControl.setModalState(true)
+                    PageViewControl.setEditView()
+                    break
+                case 'drag-table-item':
+                    console.log("DRAG ITEM CLICKED")
+                    break
+            }
         })
     
         editIconContainer.appendChild(editIcon)
@@ -130,8 +136,10 @@ const EditCheckBox = () => {
     return checkBox
 }
 
-const EditWindow = (data) => {
-    
+const EditPopUp = (data) => {
+    const editOptionsContainer = document.createElement('div')
+    editOptionsContainer.classList.add('edit-options-container')
+
 }
 
 const SearchBar = () => {
@@ -188,28 +196,38 @@ const EditModal = (folderName) => {
     ]
     
     const editModal = document.createElement('div')
+    const editModalWrapper = document.createElement('div')
     const titleContainer = document.createElement('div')
-    const optionsListContainer = document.createElement('div')
     const titleText = document.createElement('p')
+    const optionsListContainer = document.createElement('div')
     const optionsListWrapper = document.createElement('ul')
-    const optionsListItemContainer = document.createElement('li')
-    const optionTitleBox = document.createElement('span')
-    const optionIconBox = document.createElement('span')
-    const optionText = document.createElement('p')
+    
+    editModal.classList.add('edit-options-window-container', 'flex')
+    editModalWrapper.classList.add('edit-options-window-wrapper')
+    titleContainer.classList.add('edit-options-title-container')
+    titleText.classList.add('edit-options-window-title')
+    optionsListContainer.classList.add('edit-options-list-container')
+    optionsListWrapper.classList.add('edit-options-list-wrapper')
+    
 
     titleText.innerText = folderName
     titleContainer.appendChild(titleText)
-    options.forEach(option => {
-        optionText.innerText = option
+    options.map(option => {
+        const optionsListItem = document.createElement('li')
+        const optionTitleBox = document.createElement('span')
+        const optionText = document.createElement('p')
+        const optionIconBox = document.createElement('span')
+        optionsListItem.classList.add('edit-options-list-item-container')
+        optionText.innerText = option.name
         optionTitleBox.appendChild(optionText)
-        optionsListItemContainer.appendChild(optionTitleBox)
-        optionsListWrapper.appendChild(optionsListItemContainer)
+        optionsListItem.appendChild(optionTitleBox)
+        optionsListWrapper.appendChild(optionsListItem)
     })
-
     optionsListContainer.appendChild(optionsListWrapper)
 
-    editModal.appendChild(titleContainer)
-    editModal.appendChild(optionsListContainer)
+    editModalWrapper.appendChild(titleContainer)
+    editModalWrapper.appendChild(optionsListContainer)
+    editModal.appendChild(editModalWrapper)
 
     return editModal
 }
@@ -243,4 +261,4 @@ const SmallPopUpMenu = () => {
     return container
 }
 
-export {ListItem, EditCheckBox, SearchBar, Modal, EditModal, SmallPopUpMenu}
+export {ListItem, EditCheckBox, SearchBar, Modal, EditPopUp, EditModal, SmallPopUpMenu}
