@@ -76,11 +76,12 @@ const Forms = [
         buttons: [
             {
                 type: 'button',
-                value: 'close',
+                value: 'toggle-modal',
                 text: 'Cancel'
             },
             {
                 type: 'submit',
+                value: 'toggle-modal',
                 text: 'Save',
                 creationValue: 'folder'
             }
@@ -174,6 +175,7 @@ const Forms = [
             },
             {
                 type: 'submit',
+                value: 'toggle-modal',
                 text: 'Done',
                 creationValue: 'todo'
             }

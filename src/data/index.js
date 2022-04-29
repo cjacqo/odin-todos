@@ -20,14 +20,7 @@ const Database = (function() {
 
     const init = (function() {
         _defaultFolders.forEach(_folder => {
-            // const folderObj = DatabaseItem()
-            // console.log(folderObj)
-            // folderObj.createObj('folder', _folder)
-
-            const folderObj = FolderItem('folder', _folder, {name: _folder, items: [], canDelete: false})
-            // folderObj.createDataObj(_folder)
-            // folderObj.createObj('folder', _folder, {name: _folder, items: [], canDelete: false})
-            // const folderObj = FolderItem('folder', _folder, {name: _folder, items: [], canDelete: false})
+            const folderObj = FolderItem('folder', _folder, {name: _folder, items: [], canEdit: false, canDelete: false})
             _foldersDB.push(folderObj)
         })
         return
@@ -64,14 +57,14 @@ const Database = (function() {
     //      + By ID
     //      + By Name
     function _getItemById(itemId) {
-        return _itemsDB.find(_item => _item.getId() == itemId)
+        const item = _itemsDB.find(_item => _item.getId() == itemId)
+        return item
     }
     function _getItemByName(itemName) {
         return _itemsDB.find(_item => _item.getName() === itemName)
     }
 
     function _addItemToFolderById(folderName, item) {
-        console.log(item.getName())
         let theItemFolder = _getFolderByName(folderName)
         theItemFolder.setItems({items: item})
         return
@@ -86,7 +79,7 @@ const Database = (function() {
         defaultFolder.setItems({items: item})
         return
     }
-    function _addItemToFolders(item, data, defaultFormName) {
+    function _addItemToFolders(item, defaultFormName) {
         if (item.getFolder() !== 'none') {
             _addItemToFolderById(item.getFolder(), item)
         }
@@ -101,7 +94,7 @@ const Database = (function() {
         // --- Update the Database and 
         //     Add item to it's folders
         _itemsDB.push(theItemModel)
-        _addItemToFolders(theItemModel, data, `${type}s`)
+        _addItemToFolders(theItemModel, `${type}s`)
         return
     }
 
@@ -122,24 +115,23 @@ const Database = (function() {
         switch (type) {
             case 'todo':
                 data.forEach(_dataItem => {
-                    const key = _dataItem[0]
-                    const value = _dataItem[1]
-                    if (key.includes('Name')) {
+                    const { id, value } = _dataItem
+                    if (id === 'todoName') {
                         dataObj.name = value
                     }
-                    if (key.includes('Note')) {
+                    if (id === 'todoNote') {
                         dataObj.todoNote = value
                     }
-                    if (key.includes('date')) {
+                    if (id === 'todo-dateControl') {
                         dataObj.duedate = value
                     }
-                    if (key.includes('time')) {
+                    if (id === 'todo-timeControl') {
                         dataObj.duetime = value
                     }
-                    if (key.includes('priority')) {
+                    if (id === 'todo-priorityControl') {
                         dataObj.priority = value
                     }
-                    if (key.includes('Folder')) {
+                    if (id === 'todoFolderSelect') {
                         dataObj.folderId = value
                     }
                 })
@@ -160,6 +152,8 @@ const Database = (function() {
                 })
                 break
         }
+        dataObj.canEdit = true
+        dataObj.canDelete = true
         return dataObj
     }
 
@@ -176,8 +170,20 @@ const Database = (function() {
     }
 
     function getItemsByFolderId(folderId) {
-        let theItemFolder = _filterFolder(folderId)
-        return theItemFolder.getItems()
+        let isString = typeof folderId === 'string'
+        let theFolder = _filterFolder(folderId)
+        switch (isString) {
+            case true:
+                if (!theFolder) {
+                    folderId = folderId + 's'
+                    theFolder = _filterFolder(folderId)
+                }
+                break
+            default:
+                break
+                
+        }
+        return theFolder.getItems()
     }
 
     function getFolderNameById(folderId) {
@@ -201,6 +207,15 @@ const Database = (function() {
                 return _getItemById(searchValue)
         }
     }
+    function getCanEdit(itemType, searchAttribute, searchValue) {
+        const item = itemType === 'folder' ? getFolder(searchAttribute, searchValue) : getItem(searchAttribute, searchValue)
+        let res = item.getCanEdit() ? item.getCanEdit() : true
+        return res
+    }
+    function getCanDelete(itemType, searchAttribute, searchValue) {
+        const item = itemType === 'folder' ? getFolder(searchAttribute, searchValue) : getItem(searchAttribute, searchValue)
+        return item.getCanDelete()
+    }
 
     function getItemNameById(folderId, itemId) {
         let theItems = getItemsByFolderId(folderId)
@@ -218,6 +233,30 @@ const Database = (function() {
         return _db
     }
 
+    function _turnValuesIntoObject(values) {
+        let arr = []
+        values.forEach(_value => {
+            const valueObj = {}
+            valueObj.id = _value.id
+            valueObj.value = _value.value
+            arr.push(valueObj)
+        })
+        return arr
+    }
+
+    function creationHandler(databaseItemType, values) {
+        const itemDataArr = _turnValuesIntoObject(values)
+        switch(databaseItemType) {
+            case 'folder':
+                addFolder(itemDataArr[0].value)
+                break
+            default:
+                addItem({type: databaseItemType, data: itemDataArr})
+                break
+        }
+        return
+    }
+
     return {
         init: init,
         getFolder: getFolder,
@@ -229,9 +268,12 @@ const Database = (function() {
         getFolderItemCountById: getFolderItemCountById,
         getItemNameById: getItemNameById,
         getItemTypeById: getItemTypeById,
+        getCanEdit: getCanEdit,
+        getCanDelete: getCanDelete,
         getEditableFolders: getEditableFolders,
         getItemsByFolderId: getItemsByFolderId,
-        getEntireDB: getEntireDB
+        getEntireDB: getEntireDB,
+        creationHandler: creationHandler
     }
 })()
 

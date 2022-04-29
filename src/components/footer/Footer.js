@@ -4,6 +4,8 @@ import '@fortawesome/fontawesome-free/js/fontawesome'
 import '@fortawesome/fontawesome-free/js/solid'
 import '@fortawesome/fontawesome-free/js/regular'
 import { SmallPopUpMenu } from '../elements'
+import PageViewControl from '../../controller/PageViewControl'
+import StateControl from '../../controller/StateControl'
 
 const Footer = (function() {
     let _footerContainer
@@ -11,15 +13,26 @@ const Footer = (function() {
     let _actions = [
         {
             name: 'create-folder',
-            icon: 'fa-folder-plus'
+            icon: 'fa-folder-plus',
+            action: 'open-form',
+            actionFunction: 'footer',
+            window: 'modal',
+            actionName: 'form',
+            form: 'folder'
         },
         {
             name: 'create-item',
-            icon: 'fa-pen-to-square'
+            icon: 'fa-pen-to-square',
+            action: 'toggle-popup',
+            actionFunction: 'footer',
+            window: 'popup'
         }
     ]
     let _popUpMenuContainer
     let _smallPopUpMenu
+
+    function _getFirstStringParam(str) { return str.substring(0, str.indexOf('-')) }
+    function _getSecondStringParam(str) { return str.split('-').pop() }
 
     // --- Initializes the DOM elements and returns the newly create DOM element
     function _init() {
@@ -53,9 +66,10 @@ const Footer = (function() {
             actionButton.appendChild(actionIcon)
 
             actionButton.addEventListener('click', (e) => {
-                let res
-                res = Controller.startItemCreation(e)
-                actionButton.setAttribute('data-is-toggled', `${res}`)
+                e.preventDefault()
+                StateControl.setWindowState(_action.window)
+                StateControl.setFormState(_action.form)
+                PageViewControl.setWindowView()
             })
 
             actionWrapper.appendChild(actionButton)

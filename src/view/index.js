@@ -48,6 +48,10 @@ const PageView = (() => {
         return
     }
 
+    function _changeTableView() {
+
+    }
+
     function loadItemViewFromItemType(itemType, itemId) {
         switch(itemType) {
             case 'todo':
@@ -77,39 +81,40 @@ const PageView = (() => {
 
     // --- Initializes the DOM elements of the app and appends to the DOM
     const init = (data, state) => {
-        Header.init()
-        _main = Main
-        _footer = Footer
-        _modal = Modal()
-        // - create the parent container for the app
-        _appContainer = document.createElement('div')
-        _appContainer.classList.add('flex', 'col')
-        _appContainer.setAttribute('id', 'appContainer')
+        // Header.init()
+        // _main = Main
+        // _footer = Footer
+        // _modal = Modal()
+        // // - create the parent container for the app
+        // _appContainer = document.createElement('div')
+        // _appContainer.classList.add('flex', 'col')
+        // _appContainer.setAttribute('id', 'appContainer')
 
-        // - initialize the DOM elements for each section and pass data where
-        //   needed
-        _header = Header.getHeaderContainer(true)
-        _main = _main.init(data)
-        _footer = _footer.init()
-        _modal = Modal()
+        // // - initialize the DOM elements for each section and pass data where
+        // //   needed
+        // _header = Header.getHeaderContainer(true)
+        // _main = _main.init(data)
+        // _footer = _footer.init()
+        // _modal = Modal()
 
-        // - append the DOM elements to the app container
-        _appContainer.appendChild(_header)
-        _appContainer.appendChild(_main)
-        _appContainer.appendChild(_footer)
-        _appContainer.appendChild(_modal)
-        document.body.appendChild(_appContainer)
+        // // - append the DOM elements to the app container
+        // _appContainer.appendChild(_header)
+        // _appContainer.appendChild(_main)
+        // _appContainer.appendChild(_footer)
+        // _appContainer.appendChild(_modal)
+        // document.body.appendChild(_appContainer)
     }
 
     function toggleModalVisibilityClasses() {
-        if (!_hideModal) {
-            _modal.classList.remove('hidden')
-            _appendFormToModal()
-        } else {
-            _modal.classList.add('hidden')
-            _clearParentContainer(_modal)
-        }
-        return
+        // console.log(_modal)
+        // if (!_hideModal) {
+        //     _modal.classList.remove('hidden')
+        //     _appendFormToModal()
+        // } else {
+        //     _modal.classList.add('hidden')
+        //     _clearParentContainer(_modal)
+        // }
+        // return
     }
 
     function toggleSmallPopUpMenuVisibilityClasses(popUpOpen) {
@@ -127,14 +132,16 @@ const PageView = (() => {
 
     function controlFormView(value) {
         _formComponent = _getFormComponent(value)
+        console.log(_formComponent)
         switch(value) {
             case 'create-folder':
             case 'create-todo':
             case 'create-checklist':
                 _hideModal = !_hideModal
-                toggleModalVisibilityClasses(value)
+                toggleModalVisibilityClasses()
                 break
             case 'create-note':
+                toggleFormInTable()
                 break
         }
         return
@@ -157,8 +164,23 @@ const PageView = (() => {
 
     function loadTable(tableType, folderId) {
         Main.loadFoldersTable(Database.getFolders())
+        // Main.loadItemsTable(Database.getItemsByFolderId(folderId))
+
         if (folderId !== null) {
             Main.loadItemsTable(Database.getItemsByFolderId(folderId))
+        }
+        return
+    }
+
+    function handleTableView(controllerFunction, e) {
+        switch (controllerFunction) {
+            case 'toggle-folder':
+                const { folderId, itemId } = e
+                break
+            case 'toggle-item':
+                break
+            case 'back':
+                break
         }
         return
     }
@@ -173,7 +195,8 @@ const PageView = (() => {
         handleViewAfterFormSubmission: handleViewAfterFormSubmission,
         handleViewAfterCancel: handleViewAfterCancel,
         updateTableElements: updateTableElements,
-        loadTable: loadTable
+        loadTable: loadTable,
+        handleTableView: handleTableView
     }
 })()
 

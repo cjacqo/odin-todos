@@ -4,6 +4,9 @@ import '@fortawesome/fontawesome-free/js/fontawesome'
 import '@fortawesome/fontawesome-free/js/solid'
 import '@fortawesome/fontawesome-free/js/regular'
 import PageView from '../../view'
+import PageViewControl from '../../controller/PageViewControl'
+import StateControl from '../../controller/StateControl'
+import Database from '../../data'
 
 // --- Returns a div
 // --- Params
@@ -13,12 +16,9 @@ import PageView from '../../view'
 //          + item data
 //              ~~ elementText
 //          + controllerFunction: string
-const ListItem = (dataAttribute, itemData, controllerFunction, typeAttribute) => {
-    const { attributeName, attributeValue } = dataAttribute
-    let attValue
-    if (typeAttribute) {
-        attValue = typeAttribute.attValue
-    }
+const ListItem = (dataAttributes, itemData) => {
+    let itemId
+    let itemType
     const { elementText } = itemData
 
     const li = document.createElement('div')
@@ -26,12 +26,24 @@ const ListItem = (dataAttribute, itemData, controllerFunction, typeAttribute) =>
     const textBox = document.createElement('div')
     const countBox = document.createElement('div')
 
+    dataAttributes.forEach(att => {
+        const { attributeName, attributeValue } = att
+        li.setAttribute(attributeName, attributeValue)
+        if (attributeName === 'data-id') {
+            itemId = attributeValue
+        } else {
+            itemType = attributeValue
+        }
+    })
+
+    const canDelete = Database.getCanDelete(itemType, 'id', itemId)
+
     iconBox.classList.add('small-flex')
     countBox.classList.add('small-flex', 'flex')
     textBox.classList.add('fill-item')
 
-    switch(attributeName) {
-        case 'data-folder-id':
+    switch(itemType) {
+        case 'folder':
             const icon = document.createElement('i')
             const text = document.createElement('p')
             const countText = document.createElement('p')
@@ -39,8 +51,8 @@ const ListItem = (dataAttribute, itemData, controllerFunction, typeAttribute) =>
             icon.classList.add('fa-solid', 'fa-folder', 'yellow')
             chevron.classList.add('fa-solid', 'fa-chevron-right')
             countBox.classList.add('countBox')
-            countBox.setAttribute('id', `${attributeValue}CountBox`)
-            let count = Controller.getItemCountInFolder(attributeValue)
+            countBox.setAttribute('id', `${itemId}CountBox`)
+            let count = Controller.getItemCountInFolder(itemId)
             countText.innerText = count
             iconBox.appendChild(icon)
             textBox.appendChild(text)
@@ -51,59 +63,58 @@ const ListItem = (dataAttribute, itemData, controllerFunction, typeAttribute) =>
             break
     }
 
+    li.setAttribute('value', `open-table`)
     li.classList.add('table-item', 'flex')
-    li.setAttribute(attributeName, attributeValue)
+    if (!canDelete) {
+        li.classList.add('cant-delete')
+    }
     textBox.innerText = elementText
     li.appendChild(textBox)
     const editIconsContainer = document.createElement('div')
     editIconsContainer.classList.add('edit-icon-container', 'hidden', 'flex')
-    const toggleEditMenuIcon = EditIcon({iconClass: 'fa-ellipsis', tableItemId: attributeValue, actionType: 'open-edit-modal', isYellow: true})
-    const dragEditItemIcon = EditIcon({iconClass: 'fa-bars', tableItemId: attributeValue, actionType: 'drag-table-item'})
-
-    li.addEventListener('click', (e) => {
-        Controller.controlTableView(controllerFunction, e)
-    })
+    const toggleEditMenuIcon = EditIcon({iconClass: 'fa-ellipsis', tableItemId: itemId, actionType: 'open-edit-modal', action: 'modal', isYellow: true, canDelete: canDelete })
+    const dragEditItemIcon = EditIcon({iconClass: 'fa-bars', tableItemId: itemId, actionType: 'drag-table-item', action: 'drag', canDelete: canDelete })
     
-    // li.addEventListener('click', (e) => {
-    //     switch(controllerFunction) {
-    //         case 'toggle-table':
-    //             console.log("TOTOTOT")
-    //             Controller.toggleTable({type: 'folder', value: attributeValue, title: elementText})
-    //             break
-    //         case 'toggle-item':
-    //             Controller.toggleItem({type: 'item', value: attributeValue, title: elementText, itemType: attValue})
-    //             break
-    //     }
-    // })
+    li.addEventListener('click', (e) => {
+        const data = e.currentTarget.dataset
+        const { modalOpen, popUpOpen, editOpen } = StateControl.getWindowState() 
+        if (modalOpen || popUpOpen || editOpen) {
+            return
+        } else {
+            StateControl.setTableState('open', data)
+            PageViewControl.setWindowView()
+        }
+    })
 
     // - run check of database to make sure that edit buttons are not available for default folders
-    if (Controller.checkCanDeleteFolder(attributeValue)) {
-        toggleEditMenuIcon.addEventListener('click', (e) => {
-            e.stopPropagation()
-            Controller.toggleModal(e)
-        })
-        dragEditItemIcon.addEventListener('ondrag', (e) => {
-            console.log("Hi")
-        })
-        editIconsContainer.appendChild(toggleEditMenuIcon)
-        editIconsContainer.appendChild(dragEditItemIcon)
-        li.appendChild(editIconsContainer)
-    } else {
-        li.classList.add('cant-delete')
-    }
-    
+    editIconsContainer.appendChild(toggleEditMenuIcon)
+    editIconsContainer.appendChild(dragEditItemIcon)
+    li.appendChild(editIconsContainer)
     return li
 }
 
 const EditIcon = (editObj) => {
-    const { iconClass, tableItemId, actionType, isYellow } = editObj
+    const { iconClass, tableItemId, actionType, action, isYellow, canDelete } = editObj
     const editIconContainer = document.createElement('div')
-    const editIcon = document.createElement('i')
-    editIconContainer.setAttribute('data-table-item-id', tableItemId)
-    editIconContainer.setAttribute('data-action', `${actionType}`)
-    editIconContainer.classList.add('edit-icon-wrapper')
-    editIcon.classList.add('fa-solid', `${iconClass}`, `${isYellow && 'yellow'}`)
-    editIconContainer.appendChild(editIcon)
+    if (canDelete) {
+        const editIcon = document.createElement('i')
+        editIconContainer.setAttribute('data-table-item-id', tableItemId)
+        editIconContainer.setAttribute('data-action', `${actionType}`)
+        editIconContainer.classList.add('edit-icon-wrapper')
+        editIcon.classList.add('fa-solid', `${iconClass}`, `${isYellow && 'yellow'}`)
+    
+        console.log(actionType)
+        
+        editIconContainer.addEventListener('click', (e) => {
+            e.stopPropagation()
+            e.stopImmediatePropagation()
+            const { tableValue } = StateControl.getTableState()
+            console.log(tableValue)
+            StateControl.setEditItem(tableValue, tableItemId, action)
+        })
+    
+        editIconContainer.appendChild(editIcon)
+    }
     return editIconContainer
 }
 
@@ -112,9 +123,15 @@ const EditCheckBox = () => {
     checkBox.setAttribute('id', 'editCheckBox')
     checkBox.setAttribute('type', 'checkbox')
     checkBox.addEventListener('click', (e) => {
-        Controller.toggleEdit(e.target.checked)
+        StateControl.clearWindowStates()
+        StateControl.setEditCheckedState(e.currentTarget.checked)
+        PageViewControl.setWindowView()
     })
     return checkBox
+}
+
+const EditWindow = (data) => {
+    
 }
 
 const SearchBar = () => {
@@ -199,22 +216,25 @@ const EditModal = (folderName) => {
 
 const SmallPopUpMenu = () => {
     const buttons = [
-        { action: 'create-todo', name: 'ToDo' },
-        { action: 'create-note', name: 'Note' },
-        { action: 'create-checklist', name: 'Checklist' }
+        { form: 'todo', window: 'modal', actionFunction: 'footer', action: 'open-form', valueName: 'create-todo', name: 'ToDo' },
+        { form: 'note', window: 'page', actionFunction: 'footer', action: 'open-form', valueName: 'create-note', name: 'Note' },
+        { form: 'checklist', window: 'modal', actionFunction: 'footer', action: 'open-form', valueName: 'create-checklist', name: 'Checklist' }
     ]
     const container = document.createElement('div')
     container.classList.add('small-popup-menu-container', 'hidden')
 
     buttons.forEach(button => {
         const btn = document.createElement('button')
-        btn.setAttribute('value', button.action)
+        btn.setAttribute('value', button.valueName)
         btn.setAttribute('type', 'button')
         btn.innerText = button.name
 
         btn.addEventListener('click', (e) => {
-            PageView.controlFormView(e.currentTarget.value)
-            // Controller.controlFormView(e)
+            e.preventDefault()
+            StateControl.clearWindowStates()
+            StateControl.setWindowState(button.window)
+            StateControl.setFormState(button.form)
+            PageViewControl.setWindowView()
         })
         
         container.appendChild(btn)

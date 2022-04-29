@@ -166,13 +166,12 @@ h4, h6 {
     font-size: 32px;
     font-weight: 600;
 }
-.back-button {
+.back-click {
     font-size: 16px;
     color: var(--yellow-1);
 }
 
-.main-title,
-#headerTitle.back-button {
+#headerTitle.back-click {
     transition: all 150ms ease-out;
 }
 

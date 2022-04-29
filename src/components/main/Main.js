@@ -1,3 +1,5 @@
+import StateControl from "../../controller/StateControl"
+import Database from "../../data"
 import { capitalizeString } from "../../functions"
 import { ListItem, Modal, SearchBar } from "../elements"
 import FormController from "../forms/FormController"
@@ -42,9 +44,9 @@ const Main = (function() {
         if (data) {
             data.forEach(folder => {
                 const folderName = capitalizeString(folder.getName())
-                const dataAttribute = { attributeName: 'data-folder-id', attributeValue: folder.getId() }
+                const dataAttributes = [ { attributeName: 'data-id', attributeValue: folder.getId() }, { attributeName: 'data-type', attributeValue: 'folder' } ]
                 const folderData = { elementText: folderName }
-                const li = ListItem(dataAttribute, folderData, 'toggle-folder')
+                const li = ListItem(dataAttributes, folderData, 'open-folder')
                 _foldersTable.appendChild(li)
             })
         }
@@ -65,46 +67,59 @@ const Main = (function() {
     }
 
     // --- Generates the folders table and it's data to be displayed on the DOM
-    function _loadFoldersTable(data) {
-        while (_foldersTable.children.length > 0) {
-            _foldersTable.children[0].remove()
-        }
+    function _loadFoldersTable() {
+        _clearTable('folder')
 
-        console.log(data)
-
+        const data = Database.getFolders()
         data.forEach(folder => {
             const folderName = capitalizeString(folder.getName())
-            const dataAttribute = { attributeName: 'data-folder-id', attributeValue: folder.getId() }
+            const dataAttributes = [ { attributeName: 'data-id', attributeValue: folder.getId() }, { attributeName: 'data-type', attributeValue: 'folder' } ]
             const folderData = { elementText: folderName }
-            const li = ListItem(dataAttribute, folderData, 'toggle-folder')
+            const li = ListItem(dataAttributes, folderData)
             _foldersTable.appendChild(li)
         })
         return
     }
     // --- Generates the items table and it's data to be displayed on the DOM
-    function _loadItemsTable(data, folderName) {
+    function _loadItemsTable() {
         // - clear the itemsTable
-        while (_itemsTable.children.length > 0) {
-            _itemsTable.children[0].remove()
-        }
+        _clearTable('item')
+
+        const activeFolder = StateControl.getFolderState()
+        const { name, data } = activeFolder
 
         // - check if the length of the data is greater then 0
         if (data.length > 0) {
             // TRUE: create table elements to append to the table
             data.forEach(item => {
                 const itemName = capitalizeString(item.getName())
-                const dataAttribute = { attributeName: 'data-item-id', attributeValue: item.getId() }
+                const dataAttributes = [ { attributeName: 'data-id', attributeValue: item.getId() }, { attributeName: 'data-type', attributeValue: 'item' } ]
                 const typeAttribute = { attName: 'data-type', attValue: item.getType() }
                 const itemData = { elementText: itemName }
-                const li = ListItem(dataAttribute, itemData, 'toggle-item', typeAttribute)
+                const li = ListItem(dataAttributes, itemData)
                 _itemsTable.appendChild(li)
             })
         } else {
             // FALSE: create a message to the user that will prompt them to create a new
             //        item that will assign it's folderId to the currently open folder
             let createItemInFolderMessage = document.createElement('h5')
-            createItemInFolderMessage.innerText = `There are no items in ${folderName}. Would you like to create an item?`
+            createItemInFolderMessage.innerText = `There are no items in ${capitalizeString(name)}. Would you like to create an item?`
             _itemsTable.appendChild(createItemInFolderMessage)
+        }
+        return
+    }
+    function _clearTable(table) {
+        let theTable
+        switch(table) {
+            case 'item':
+                theTable = _itemsTable
+                break
+            default:
+                theTable = _foldersTable
+                break
+        }
+        while (theTable.children.length > 0) {
+            theTable.children[0].remove()
         }
         return
     }
@@ -123,7 +138,20 @@ const Main = (function() {
         if (hide) {
             _searchBar.style.display = 'none'
         }
-        return    
+        return
+    }
+
+    function _loadTable() {
+        const activeTableData = StateControl.getActiveTableObj()
+        const { tableValue } = StateControl.getTableState()
+        if (tableValue === 'folder') {
+            return _loadItemsTable(activeTableData)
+        } else if (tableValue === 'item') {
+            return _loadItemsTable(activeTableData)
+        } else if (tableValue === 'home') {
+            _clearTable('item')
+            return _loadFoldersTable()
+        }
     }
 
     function init(data) { return _init(data) }
@@ -137,6 +165,7 @@ const Main = (function() {
     function loadItemsTable(data, folderName) { return _loadItemsTable(data, folderName) }
     function loadNoteFormTable(data) { return _loadNoteFormTable(data) }
     function toggleSearchBar(hide) { return _toggleSearchBar(hide) }
+    function loadTable() { return _loadTable() }
 
     return {
         init: init,
@@ -149,7 +178,8 @@ const Main = (function() {
         loadFoldersTable: loadFoldersTable,
         loadItemsTable: loadItemsTable,
         loadNoteFormTable: loadNoteFormTable,
-        toggleSearchBar: toggleSearchBar
+        toggleSearchBar: toggleSearchBar,
+        loadTable: loadTable
     }
 })()
 

@@ -1,79 +1,43 @@
 import Controller from "../../controller"
+import PageViewControl from "../../controller/PageViewControl"
+import StateControl from "../../controller/StateControl"
 import { EditCheckBox, SearchBar } from "../elements"
 
 const Header = (function() {
     let _title
     let _headerContainer
     let _headerTitle
+    let _mainTitleElement
+    let _subTitleElement
     let _subHeaderTitle
+    let _editCheckBoxElement
     let _editCheckBox
-    let _itemsCreated = false
-    let _mainHeaderContainer
-    let _secondaryHeaderContainer
 
-    function _getTitleElements() {
-        const titleElement = document.getElementById('headerTitle')
-        const subTitleElement = document.getElementById('subTitle')
-        return {titleElement, subTitleElement}
-    }
-
+    function _getTitleElements() { return {_mainTitleElement, _subTitleElement} }
     function _createElements() {
-        const titleElement = document.createElement('h4')
-        const subTitleElement = document.createElement('h4')
-        const editCheckBoxElement = EditCheckBox()
-        titleElement.classList.add('main-title')
-        titleElement.setAttribute('id', 'headerTitle')
-        subTitleElement.setAttribute('id', 'subTitle')
+        _mainTitleElement = document.createElement('h4')
+        _subTitleElement = document.createElement('h4')
+        _editCheckBoxElement = EditCheckBox()
+        _mainTitleElement.classList.add('main-title')
+        _mainTitleElement.setAttribute('id', 'headerTitle')
+        _subTitleElement.setAttribute('id', 'subTitle')
 
-        titleElement.addEventListener('click', (e) => {
-            if (e.target.dataset) {
-                Controller.controlTableView('back', e)
+        _mainTitleElement.addEventListener('click', (e) => {
+            const { tableValue } = StateControl.getTableState()
+            if (tableValue !== 'home') {
+                _handleStateChange(tableValue)
             }
+            return
         })
-
-        _itemsCreated = true
-        return {titleElement, subTitleElement, editCheckBoxElement}
-    }
-
-    function _createMainHeaderContainer() {
-        const elements = _createElements()
-        const {titleElement, subTitleElement, editCheckBoxElement} = elements
-        const headerContainer = document.createElement('header')
-        headerContainer.setAttribute('id', 'headerContainer')
-        titleElement.innerText = _title
-        headerContainer.appendChild(titleElement)
-        headerContainer.appendChild(subTitleElement)
-        headerContainer.appendChild(editCheckBoxElement)
-        return headerContainer
-    }
-
-    function _createSecondaryHeaderContainer() {
-        const elements = _createElements()
-        const {titleElement, subTitleElement} = elements
-        const headerContainer = document.createElement('header')
-        headerContainer.setAttribute('id', 'headerContainer')
-        headerContainer.appendChild(titleElement)
-        headerContainer.appendChild(subTitleElement)
-        return headerContainer
-    }
-
-    function _handleForwardClasses() {
-        const elements = _getTitleElements()
-        const { titleElement, subTitleElement } = elements
-        titleElement.classList.remove('main-title')
-        titleElement.classList.add('back-button')
-        subTitleElement.classList.remove('hidden')
-        subTitleElement.classList.add('main-title')
         return
     }
-
-    function _handleBackwardClasses() {
-        const elements = _getTitleElements()
-        const { titleElement, subTitleElement } = elements
-        subTitleElement.classList.remove('main-title')
-        subTitleElement.classList.add('hidden')
-        titleElement.classList.remove('back-button')
-        titleElement.classList.add('main-title')
+    function _createContainer() {
+        _headerContainer = document.createElement('header')
+        _headerContainer.setAttribute('id', 'headerContainer')
+        _mainTitleElement.innerText = _title
+        _headerContainer.appendChild(_mainTitleElement)
+        _headerContainer.appendChild(_subTitleElement)
+        _headerContainer.appendChild(_editCheckBoxElement)
         return
     }
 
@@ -82,19 +46,16 @@ const Header = (function() {
         _editCheckBox.remove()
         return
     }
-
     function _changeSubTitleToInput(input) {
         _subHeaderTitle = input
         _editCheckBox = EditCheckBox()
         return
     }
-
     function _changeSubTitleToText() {
         _subHeaderTitle = document.createElement('h6')
         _editCheckBox = EditCheckBox()
         return
     }
-
     function _appendSubTitleAndEditCheckBox(type, value) {
         _removeSubTitleAndEditCheckBox()
         switch (type) {
@@ -110,43 +71,32 @@ const Header = (function() {
         return
     }
 
-    function _setTitles(titles) {
-        const { header, subHeader } = titles
-        const titleElement = document.getElementById('headerTitle')
-        const subTitleElement = document.getElementById('subTitle')
-        titleElement.innerText = header
-        subTitleElement.innerText = subHeader
+    function _handleTitles(tableOpen) {
+        let titleState
+        if (tableOpen === 'home') {
+            _mainTitleElement.innerText = 'Folders'
+            _subTitleElement.innerText = ''
+        } else if (tableOpen === 'folder') {
+            titleState = StateControl.getTableFolderState()
+            _subTitleElement.innerText = titleState.name
+            _mainTitleElement.innerText = 'Folders'
+        } else if (tableOpen === 'item') {
+            console.log("ITEM CLICKED")
+        }
         return
     }
 
     // --- Initializes the DOM elements and returns the newly create DOM element
     function _init() {
         _title = 'Folders'
-        _mainHeaderContainer = _createMainHeaderContainer()
-        _secondaryHeaderContainer = _createSecondaryHeaderContainer()
-        return
+        _createElements()
+        _createContainer()
+        return _headerContainer
     }
 
     function init() { return _init() }
-    function getHeaderContainer(headerType) {
-        if (!headerType) {
-            return _secondaryHeaderContainer
-        } else {
-            return _mainHeaderContainer
-        }
-    }
     function getHeaderTitle() { return _headerTitle }
     function getSubHeaderTitle() { return _subHeaderTitle }
-    function getTitle() { return _title }
-    function handleClasses(direction) {
-        switch (direction) {
-            case 0:
-                return _handleForwardClasses()
-            case 1:
-                return _handleBackwardClasses()
-        }
-    }
-    function setTitles(titles) { return _setTitles(titles) }
     function setHeaderTitleAttributes(arr, add) {
         const { titleElement } = _getTitleElements()
         arr.forEach(obj => {
@@ -169,18 +119,48 @@ const Header = (function() {
     }
     function appendSubTitleAndEditCheckBox(type, value) { return _appendSubTitleAndEditCheckBox(type, value) }
 
+    function _addBackClickStyles() { return _mainTitleElement.classList.add('back-click') }
+    function _handleStateChange(currentTable) {
+        StateControl.clearWindowStates()
+        if (currentTable === 'folder') {
+            StateControl.resetTableState()
+        } else if (currentTable === 'item') {
+            const currentFolderId = StateControl.getTableObjIds()
+            const data = { id: currentFolderId, type: 'folder'}
+            StateControl.setTableState('open', data)
+        }
+        PageViewControl.setWindowView()
+        return
+    }
+    function _swapMainClass(tableValue) {
+        _mainTitleElement.removeAttribute('class')
+        if (tableValue !== 'home') {
+            _addBackClickStyles()
+            _subTitleElement.classList.add('main-title')
+        } else if (tableValue === 'home') {
+            _subTitleElement.removeAttribute('class')
+            _mainTitleElement.classList.add('main-title')
+        }
+        return
+    }
+    function updateHeader() {
+        const { tableValue } = StateControl.getTableState()
+        _handleTitles(tableValue)
+        _swapMainClass(tableValue)
+        return
+    }
+    function getTitleElements() { return _getTitleElements() }
+    
     return {
         init: init,
-        getHeaderContainer: getHeaderContainer,
         getHeaderTitle: getHeaderTitle,
         getSubHeaderTitle: getSubHeaderTitle,
-        getTitle: getTitle,
-        handleClasses: handleClasses,
-        setTitles: setTitles,
         setHeaderTitleAttributes: setHeaderTitleAttributes,
         changeSubTitleToInput: changeSubTitleToInput,
         changeSubTitleToText: changeSubTitleToText,
-        appendSubTitleAndEditCheckBox: appendSubTitleAndEditCheckBox
+        appendSubTitleAndEditCheckBox: appendSubTitleAndEditCheckBox,
+        updateHeader: updateHeader,
+        getTitleElements: getTitleElements
     }
 })()
 

@@ -11,6 +11,8 @@ import Database from "../data"
 import { Folders, Items } from "../data/data"
 import { capitalizeString, dateValueToString, getDateAnswerAsString, getDayText, getMonthText, getTodaysDate } from "../functions"
 import PageView from "../view"
+import StateControl from "./StateControl"
+import PageViewControl from "./PageViewControl"
 
 const Controller = (() => {
     let _state = { folder: {id: null, name: null}, item: {id: null, name: null} }
@@ -207,12 +209,6 @@ const Controller = (() => {
     const appendToMainContainer = (form) => {
         const mainContainer = document.getElementById('mainContainer')
         mainContainer.appendChild(form)
-        return
-    }
-    // --- Act as Middleman for PageView Loading
-    const loadPageView = (value) => {
-        // PageView.handleViewAfterFormSubmission(value)
-        // PageView.updateTableElements(_state)
         return
     }
     // --- Open Edit Modal
@@ -513,6 +509,8 @@ const Controller = (() => {
     }
     // --- Control The View of the Table When a Table List Item is Clicked
     const controlTableView = (controllerFunction, e) => {
+        // const test = StateControl.getFolder()
+        // console.log(test)
         const { folderId, itemId } = e.currentTarget.dataset
         switch (controllerFunction) {
             case 'toggle-folder':
@@ -744,7 +742,6 @@ const Controller = (() => {
     
     return {
         init: init,
-        loadPageView: loadPageView,
         getFolders: getFolders,
         getItems: getItems,
         getItemCountInFolder: getItemCountInFolder,

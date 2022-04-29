@@ -2,7 +2,10 @@ const DatabaseItem = (type, id, data) => {
     const getType       = () => {return type}
     const getId         = () => {return id}
     const getName       = () => {return data.name}
-    return {getType, getId, getName}
+    const getData       = () => {return data}
+    const getCanEdit    = () => {return data.canEdit}
+    const getCanDelete  = () => {return data.canDelete}
+    return {getType, getId, getName, getData, getCanEdit, getCanDelete}
 }
 
 const FolderItem = (type, id, data) => {
@@ -13,8 +16,7 @@ const FolderItem = (type, id, data) => {
     const getItemCount  = () => {return _items.length}
     const setItems      = (data) => {_items.push(data.items)}
     const getPinned     = () => {return data.items.filter(item => item.pinned)}
-    const getCanDelete  = () => {return data.canDelete}
-    return Object.assign({}, prototype, {getId, getItems, getItemCount, setItems, getPinned, getCanDelete})
+    return Object.assign({}, prototype, {getId, getItems, getItemCount, setItems, getPinned})
 }
 
 const ToDoItem = (type, id, data) => {
